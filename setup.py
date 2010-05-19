@@ -72,7 +72,7 @@ else:
 
 
 setup(
-    name='celery',
+    name='django-celery',
     version=distmeta.__version__,
     description=distmeta.__doc__,
     author=distmeta.__author__,
