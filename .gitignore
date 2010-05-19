@@ -1,0 +1,14 @@
+.DS_Store
+*.pyc
+*~
+.*.sw[po]
+dist/
+*.egg-info
+doc/__build/*
+build/
+.build/
+pip-log.txt
+.directory
+erl_crash.dump
+*.db
+Documentation/
