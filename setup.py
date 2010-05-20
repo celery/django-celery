@@ -47,23 +47,6 @@ class RunTests(Command):
 class QuickRunTests(RunTests):
     extra_env = dict(SKIP_RLIMITS=1, QUICKTEST=1)
 
-install_requires = []
-
-try:
-    import django
-except ImportError:
-    install_requires.append("django")
-
-try:
-    import importlib
-except ImportError:
-    install_requires.append("importlib")
-
-
-install_requires.extend([
-    "anyjson",
-    "django-picklefield",
-    "celery>=1.0.3"])
 
 if os.path.exists("README.rst"):
     long_description = codecs.open("README.rst", "r", "utf-8").read()
@@ -83,14 +66,16 @@ setup(
     packages=find_packages(exclude=['ez_setup', 'tests', 'tests.*']),
     scripts=[],
     zip_safe=False,
-    install_requires=install_requires,
+    install_requires=[
+        "django-picklefield",
+        "celery>=1.1.0",
+    ],
     cmdclass = {"test": RunTests, "quicktest": QuickRunTests},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Framework :: Django",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Environment :: No Input/Output (Daemon)",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: POSIX",
