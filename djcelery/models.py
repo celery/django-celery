@@ -27,6 +27,7 @@ class TaskMeta(models.Model):
         """Model meta-data."""
         verbose_name = _(u"task meta")
         verbose_name_plural = _(u"task meta")
+        db_table = "celery_taskmeta"
 
     def to_dict(self):
         return {"task_id": self.task_id,
@@ -51,6 +52,7 @@ class TaskSetMeta(models.Model):
         """Model meta-data."""
         verbose_name = _(u"taskset meta")
         verbose_name_plural = _(u"taskset meta")
+        db_table = "celery_tasksetmeta"
 
     def to_dict(self):
         return {"taskset_id": self.taskset_id,
