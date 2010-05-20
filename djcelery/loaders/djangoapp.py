@@ -10,6 +10,10 @@ class Loader(BaseLoader):
     """The Django loader."""
     _db_reuse = 0
 
+    override_backends = {
+            "database": "djcelery.backends.database.DatabaseBackend",
+            "cache": "djcelery.backends.cache.CacheBackend"}
+
     def read_configuration(self):
         """Load configuration from Django settings."""
         from django.conf import settings
