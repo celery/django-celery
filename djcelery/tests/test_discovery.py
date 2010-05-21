@@ -4,7 +4,7 @@ from django.conf import settings
 
 from celery.task import tasks
 
-from djcelery.loaders.djangoapp import autodiscover
+from djcelery.loaders import autodiscover
 
 
 class TestDiscovery(unittest.TestCase):

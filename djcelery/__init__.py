@@ -1,6 +1,8 @@
 """Django Celery Integration."""
 import os
-os.environ["CELERY_LOADER"] = "djcelery.loaders.djangoapp.Loader"
+
+# Importing this module enables the Celery Django loader.
+os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
 
 VERSION = (1, 0, 3)
 

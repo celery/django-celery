@@ -2,13 +2,13 @@ import unittest2 as unittest
 
 from celery import loaders
 
-from djcelery.loaders import djangoapp
+from djcelery import loaders as djloaders
 
 
 class TestDjangoLoader(unittest.TestCase):
 
     def setUp(self):
-        self.loader = djangoapp.Loader()
+        self.loader = djloaders.DjangoLoader()
 
     def test_get_loader_cls(self):
 
@@ -28,15 +28,15 @@ class TestDjangoLoader(unittest.TestCase):
             settings.CELERY_IMPORTS = old_imports
 
     def test_race_protection(self):
-        djangoapp._RACE_PROTECTION = True
+        djloaders._RACE_PROTECTION = True
         try:
             self.assertFalse(self.loader.on_worker_init())
         finally:
-            djangoapp._RACE_PROTECTION = False
+            djloaders._RACE_PROTECTION = False
 
     def test_find_related_module_no_path(self):
-        self.assertFalse(djangoapp.find_related_module("sys", "tasks"))
+        self.assertFalse(djloaders.find_related_module("sys", "tasks"))
 
     def test_find_related_module_no_related(self):
-        self.assertFalse(djangoapp.find_related_module("someapp",
+        self.assertFalse(djloaders.find_related_module("someapp",
                                                        "frobulators"))

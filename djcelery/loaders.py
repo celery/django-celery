@@ -6,7 +6,7 @@ from celery.loaders.base import BaseLoader
 _RACE_PROTECTION = False
 
 
-class Loader(BaseLoader):
+class DjangoLoader(BaseLoader):
     """The Django loader."""
     _db_reuse = 0
 
