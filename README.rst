@@ -42,8 +42,8 @@ databases (`SQLAlchemy`_ / `Django`_) is also available.
 Documentation
 =============
 
-The `latest documentation`_ with user guides, tutorials and API reference
-is hosted at Github. Be sure to also read the `Celery User Manual`_.
+The `latest documentation`_ contains user guides, tutorials and an API reference.
+Be sure to also read the `Celery User Manual`_.
 
 .. _`latest documentation`: http://celeryproject.org/docs/django-celery/
 .. _`Celery User Manual`: http://celeryproject.org/docs/
