@@ -1,0 +1,2 @@
+django-picklefield
+celery>=1.1.0
