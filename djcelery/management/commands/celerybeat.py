@@ -5,7 +5,7 @@ Start the celery clock service from the Django management command.
 """
 from django.core.management.base import BaseCommand
 
-from celery.bin.celerybeat import run_clockservice, OPTION_LIST
+from celery.bin.celerybeat import run_celerybeat, OPTION_LIST
 
 
 class Command(BaseCommand):
@@ -15,4 +15,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Handle the management command."""
-        run_clockservice(**options)
+        run_celerybeat(**options)
