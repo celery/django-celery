@@ -17,6 +17,7 @@ class DjangoLoader(BaseLoader):
     def read_configuration(self):
         """Load configuration from Django settings."""
         from django.conf import settings
+        self.configured = True
         return settings
 
     def close_database(self):
