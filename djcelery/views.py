@@ -1,7 +1,7 @@
 from django.http import HttpResponse, Http404
 
 from anyjson import serialize as JSON_dump
-from billiard.utils.functional import wraps
+from celery.utils.functional import wraps
 
 from celery.utils import get_full_cls_name
 from celery.result import AsyncResult

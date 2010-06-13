@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
 
 from anyjson import deserialize as JSON_load
-from billiard.utils.functional import curry
+from celery.utils.functional import curry
 
 from celery import conf
 from celery import states

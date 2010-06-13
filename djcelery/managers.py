@@ -1,7 +1,7 @@
 from itertools import count
 from datetime import datetime
 
-from billiard.utils.functional import wraps
+from celery.utils.functional import wraps
 
 from django.db import models
 from django.db import transaction

@@ -1,7 +1,7 @@
 import sys
 import unittest2 as unittest
 
-from billiard.serialization import pickle
+from celery.serialization import pickle
 from django.core.cache.backends.base import InvalidCacheBackendError
 
 from celery import result
