@@ -49,7 +49,6 @@ CELERY_QUEUES = {"testcelery": {"binding_key": "testcelery"}}
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = ':memory'
 DATABASE_USER = ''
 DATABASE_PASSWORD = ''
 DATABASE_HOST = ''
