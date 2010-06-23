@@ -28,12 +28,10 @@ class TestDatabaseBackend(unittest.TestCase):
         b = DatabaseBackend()
         tid = gen_unique_id()
 
-        self.assertFalse(b.is_successful(tid))
         self.assertEqual(b.get_status(tid), states.PENDING)
         self.assertIsNone(b.get_result(tid))
 
         b.mark_as_done(tid, 42)
-        self.assertTrue(b.is_successful(tid))
         self.assertEqual(b.get_status(tid), states.SUCCESS)
         self.assertEqual(b.get_result(tid), 42)
 
@@ -51,7 +49,6 @@ class TestDatabaseBackend(unittest.TestCase):
         except KeyError, exception:
             pass
         b.mark_as_failure(tid3, exception)
-        self.assertFalse(b.is_successful(tid3))
         self.assertEqual(b.get_status(tid3), states.FAILURE)
         self.assertIsInstance(b.get_result(tid3), KeyError)
 

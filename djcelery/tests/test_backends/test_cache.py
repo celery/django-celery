@@ -24,12 +24,10 @@ class TestCacheBackend(unittest.TestCase):
 
         tid = gen_unique_id()
 
-        self.assertFalse(cb.is_successful(tid))
         self.assertEqual(cb.get_status(tid), states.PENDING)
         self.assertIsNone(cb.get_result(tid))
 
         cb.mark_as_done(tid, 42)
-        self.assertTrue(cb.is_successful(tid))
         self.assertEqual(cb.get_status(tid), states.SUCCESS)
         self.assertEqual(cb.get_result(tid), 42)
         self.assertTrue(cb.get_result(tid), 42)
@@ -67,7 +65,6 @@ class TestCacheBackend(unittest.TestCase):
             einfo = ExceptionInfo(sys.exc_info())
             pass
         cb.mark_as_failure(tid3, exception, traceback=einfo.traceback)
-        self.assertFalse(cb.is_successful(tid3))
         self.assertEqual(cb.get_status(tid3), states.FAILURE)
         self.assertIsInstance(cb.get_result(tid3), KeyError)
         self.assertEqual(cb.get_traceback(tid3), einfo.traceback)
