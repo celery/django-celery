@@ -10,8 +10,8 @@ from celery.utils.timeutils import timedelta_seconds
 from celery.backends.base import KeyValueStoreBackend
 
 # CELERY_CACHE_BACKEND overrides the django-global(tm) backend settings.
-if conf.CELERY_CACHE_BACKEND:
-    cache = get_cache(conf.CELERY_CACHE_BACKEND)
+if conf.CACHE_BACKEND:
+    cache = get_cache(conf.CACHE_BACKEND)
 
 
 class DjangoMemcacheWrapper(object):

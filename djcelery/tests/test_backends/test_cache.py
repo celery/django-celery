@@ -78,9 +78,9 @@ class TestCustomCacheBackend(unittest.TestCase):
 
     def test_custom_cache_backend(self):
         from celery import conf
-        prev_backend = conf.CELERY_CACHE_BACKEND
+        prev_backend = conf.CACHE_BACKEND
         prev_module = sys.modules["djcelery.backends.cache"]
-        conf.CELERY_CACHE_BACKEND = "dummy://"
+        conf.CACHE_BACKEND = "dummy://"
         sys.modules.pop("djcelery.backends.cache")
         try:
             from djcelery.backends.cache import cache
@@ -89,7 +89,7 @@ class TestCustomCacheBackend(unittest.TestCase):
                               "django.core.cache.backends.dummy")
             self.assertIsNot(cache, django_cache)
         finally:
-            conf.CELERY_CACHE_BACKEND = prev_backend
+            conf.CACHE_BACKEND = prev_backend
             sys.modules["djcelery.backends.cache"] = prev_module
 
 
