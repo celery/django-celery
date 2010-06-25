@@ -30,10 +30,8 @@ class DjangoLoader(BaseLoader):
             return connection.close()
         self._db_reuse += 1
 
-    def on_task_return(self, task_id, task, status, retval):
-        """This method is called before a task is executed.
-
-        Does everything necessary for Django to work in a long-living,
+    def on_process_cleanup(self):
+        """Does everything necessary for Django to work in a long-living,
         multiprocessing environment.
 
         """
