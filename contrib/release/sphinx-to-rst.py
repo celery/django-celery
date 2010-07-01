@@ -66,7 +66,6 @@ def sphinx_to_rst(fh):
 
 
 if __name__ == "__main__":
-    global dirname
     dirname = os.path.dirname(sys.argv[1])
     fh = open(sys.argv[1])
     try:
