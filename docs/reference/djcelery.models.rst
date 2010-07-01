@@ -2,6 +2,9 @@
 Django Models - celery.models
 ===============================
 
+.. contents::
+    :local:
+
 .. data:: TASK_STATUS_PENDING
 
     The string status of a pending task.

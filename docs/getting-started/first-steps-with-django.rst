@@ -7,21 +7,23 @@ Configuring your Django project to use Celery
 
 You only need three simple steps to use celery with your Django project.
 
-    1. Add ``celery`` to ``INSTALLED_APPS``.
+    1. Add ``djcelery`` to ``INSTALLED_APPS``.
 
     2. Create the celery database tables::
 
             $ python manage.py syncdb
 
-    3. Configure celery to use the AMQP user and virtual host we created
-        before, by adding the following to your ``settings.py``::
+    3. Configure the broker settings, by adding the following to your
+       ``settings.py``::
 
             BROKER_HOST = "localhost"
             BROKER_PORT = 5672
-            BROKER_USER = "myuser"
-            BROKER_PASSWORD = "mypassword"
-            BROKER_VHOST = "myvhost"
+            BROKER_USER = "guest"
+            BROKER_PASSWORD = "guest"
+            BROKER_VHOST = "/"
 
+      Note that we use the guest account here, for production use you probably
+      want to set up a custom account and virtual host for your instance.
 
 That's it.
 
@@ -36,14 +38,13 @@ this should do. For all of the options available, please see the
 because SQLite doesn't allow concurrent writes.
 
 
-
 Running the celery worker server
 ================================
 
 To test this we'll be running the worker server in the foreground, so we can
 see what's going on without consulting the logfile::
 
-    $ python manage.py celeryd
+    $ python manage.py celeryd -l info
 
 However, in production you probably want to run the worker in the
 background as a daemon. To do this you need to use to tools provided by your
@@ -117,3 +118,13 @@ So, let's execute the task again, but this time we'll keep track of the task:
 If the task raises an exception, the return value of ``result.successful()``
 will be ``False``, and ``result.result`` will contain the exception instance
 raised by the task.
+
+Where to go from here
+=====================
+
+To learn more you should read the `Celery User Guide`_, and the
+`Celery Documentation`_ in general
+
+
+.. _`Celery User Guide`: http://celeryproject.org/docs/userguide/
+.. _`Celery Documentation`: http://celeryproject.org/docs/
