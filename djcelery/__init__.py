@@ -4,13 +4,14 @@ import os
 # Importing this module enables the Celery Django loader.
 os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
 
-VERSION = (1, 2, 0)
+VERSION = (2, 0, 0)
 
 __version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
 __author__ = "Ask Solem"
 __contact__ = "ask@celeryproject.org"
 __homepage__ = "http://celeryproject.org"
 __docformat__ = "restructuredtext"
+__license__ = "BSD (3 clause)"
 
 
 def is_stable_release():

@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/ask/celery/celery_favicon_128.png
 
-:Version: 1.2.0
+:Version: 2.0.0
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/ask/django-celery/
@@ -35,6 +35,7 @@ databases (`SQLAlchemy`_ / `Django`_) is also available.
 .. _`Celery`: http://celeryproject.org/
 .. _`RabbitMQ`: http://www.rabbitmq.com/
 .. _`Redis`: http://code.google.com/p/redis/
+.. _`Django`: http://www.djangoproject.org/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`operate with other languages using webhooks`:
     http://ask.github.com/celery/userguide/remote-tasks.html
