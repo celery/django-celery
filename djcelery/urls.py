@@ -2,6 +2,14 @@
 
 URLs defined for celery.
 
+* ``/$task_id/done/``
+
+    URL to :func:`~celery.views.is_successful`.
+
+* ``/$task_id/status/``
+
+    URL  to :func:`~celery.views.task_status`.
+
 """
 from django.conf.urls.defaults import patterns, url
 

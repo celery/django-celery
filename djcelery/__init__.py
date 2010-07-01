@@ -4,7 +4,7 @@ import os
 # Importing this module enables the Celery Django loader.
 os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
 
-VERSION = (1, 1, 2)
+VERSION = (1, 2, 0)
 
 __version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
 __author__ = "Ask Solem"
