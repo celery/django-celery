@@ -67,7 +67,7 @@ class DjangoLoader(BaseLoader):
 
 
 def autodiscover():
-    """Include tasks for all applications in :setting:`INSTALLED_APPS`."""
+    """Include tasks for all applications in ``INSTALLED_APPS``."""
     from django.conf import settings
     global _RACE_PROTECTION
 

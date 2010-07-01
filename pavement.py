@@ -25,6 +25,14 @@ def html(options):
 
 
 @task
+@needs("paver.doctools.html")
+def qhtml(options):
+    destdir = path("Documentation")
+    builtdocs = sphinx_builddir(options)
+    sh("rsync -az %s/ %s" % (builtdocs, destdir))
+
+
+@task
 @needs("clean_docs", "paver.doctools.html")
 def ghdocs(options):
     builtdocs = sphinx_builddir(options)
@@ -73,7 +81,7 @@ def clean_readme(options):
 @task
 @needs("clean_readme")
 def readme(options):
-    sh("python contrib/release/sphinx-to-rst.py docs/templates/readme.txt \
+    sh("python contrib/release/sphinx-to-rst.py docs/introduction.rst \
             > README.rst")
     sh("ln -sf README.rst README")
 
@@ -90,14 +98,7 @@ def bump(options):
     ("verbose", "V", "Make more noise"),
 ])
 def test(options):
-    cmd = "python manage.py test"
-    if getattr(options, "coverage", False):
-        cmd += " --coverage"
-    if getattr(options, "quick", False):
-        cmd = "env QUICKTEST=1 SKIP_RLIMITS=1 %s" % cmd
-    if getattr(options, "verbose", False):
-        cmd += " --verbosity=2"
-    sh(cmd, cwd="tests")
+    sh("python setup.py test")
 
 
 @task

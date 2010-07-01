@@ -25,14 +25,16 @@ own if you have other things that need to be done.
 http://docs.djangoproject.com/en/dev/topics/testing/#defining-a-test-runner
 
 For this example, we'll use the ``celery.contrib.test_runner`` to test the
-``add`` task from the :doc:`User Guide: Tasks<../userguide/tasks>` examples.
+``add`` task from the `User Guide: Tasks`_ examples in the Celery
+documentation.
+
+.. _`User Guide: Tasks`: http://celeryq.org/docs/userguide/tasks.html
 
 To enable the test runner, set the following settings:
 
 .. code-block:: python
 
     TEST_RUNNER = 'celery.contrib.test_runner.run_tests'
-
 
 Then we can write our actually test in a ``tests.py`` somewhere:
 

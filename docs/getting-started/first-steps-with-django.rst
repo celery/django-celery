@@ -31,7 +31,12 @@ There are more options available, like how many processes you want to
 work in parallel (the ``CELERY_CONCURRENCY`` setting). You can also
 configure the backend used for storing task statuses. For now though,
 this should do. For all of the options available, please see the 
-:doc:`configuration directive reference<../configuration>`.
+`configuration directive reference`_. Note that when using ``django-celery``,
+all configurations listed there should be added to ``settings.py``.
+
+.. _`configuration directive reference`:
+    http://celeryq.org/docs/configuration.html
+
 
 **Note:** If you're using SQLite as the Django database back-end,
 ``celeryd`` will only be able to process one task at a time, this is
@@ -48,7 +53,10 @@ see what's going on without consulting the logfile::
 
 However, in production you probably want to run the worker in the
 background as a daemon. To do this you need to use to tools provided by your
-platform. See :doc:`daemon mode reference<../cookbook/daemonizing>`.
+platform. See `Running Celery as a daemon`_.
+
+.. _`Running Celery as a Daemon`:
+    http://celeryq.org/docs/cookbook/daemonizing.html
 
 For a complete listing of the command line options available, use the help command::
 
@@ -81,7 +89,10 @@ This is a task that adds two numbers:
 To execute this task, we can use the ``delay`` method of the task class.
 This is a handy shortcut to the ``apply_async`` method which gives
 greater control of the task execution.
-See :doc:`Executing Tasks<../userguide/executing>` for more information.
+See `Executing Tasks`_ for more information.
+
+.. _`Executing Tasks`:
+    http://celeryq.org/docs/userguide/executing.html
 
     >>> from myapp.tasks import MyTask
     >>> MyTask.delay(some_arg="foo")

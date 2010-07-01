@@ -1,11 +1,11 @@
-========================
- Views - djcelery.views
-========================
+======================
+ URLs - djcelery.urls
+======================
 
 .. contents::
     :local:
-.. currentmodule:: djcelery.views
+.. currentmodule:: djcelery.urls
 
-.. automodule:: djcelery.views
+.. automodule:: djcelery.urls
     :members:
     :undoc-members:
