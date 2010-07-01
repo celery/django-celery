@@ -1,0 +1,158 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Frequently Asked Questions &mdash; django-celery v1.1.2 (unstable) documentation</title>
+    <link rel="stylesheet" href="static/classy.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.1.2 (unstable)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="django-celery v1.1.2 (unstable) documentation" href="index.html" />
+    <link rel="next" title="Change history" href="changelog.html" />
+    <link rel="prev" title="Contrib: Test Runner - djcelery.contrib.test_runner" href="reference/djcelery.contrib.test_runner.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="changelog.html" title="Change history"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reference/djcelery.contrib.test_runner.html" title="Contrib: Test Runner - djcelery.contrib.test_runner"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-celery v1.1.2 (unstable) documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="frequently-asked-questions">
+<h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="generating-a-template-in-a-task-doesn-t-seem-to-respect-my-i18n-settings">
+<h2>Generating a template in a task doesn&#8217;t seem to respect my i18n settings?<a class="headerlink" href="#generating-a-template-in-a-task-doesn-t-seem-to-respect-my-i18n-settings" title="Permalink to this headline">¶</a></h2>
+<p><strong>Answer</strong>: To enable the Django translation machinery you need to activate
+it with a language. <strong>Note</strong>: Be sure to reset to the previous language when
+done.</p>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">translation</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prev_language</span> <span class="o">=</span> <span class="n">translation</span><span class="o">.</span><span class="n">get_language</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">translation</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">language</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">render_template</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">finally</span><span class="p">:</span>
+<span class="go">        translation.activate(prev_language)</span>
+</pre></div>
+</div>
+</blockquote>
+<p>The common pattern here would be for the task to take a <tt class="docutils literal"><span class="pre">language</span></tt>
+argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">celery.decorators</span> <span class="kn">import</span> <span class="n">task</span>
+
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">translation</span>
+<span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="kn">import</span> <span class="n">render_to_string</span>
+
+<span class="nd">@task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">generate_report</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="s">&quot;report.html&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">prev_language</span> <span class="o">=</span> <span class="n">translation</span><span class="o">.</span><span class="n">get_language</span><span class="p">()</span>
+    <span class="n">language</span> <span class="ow">and</span> <span class="n">translation</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">language</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">render_to_string</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">translation</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">prev_language</span><span class="p">)</span>
+    <span class="n">save_report_somewhere</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-celery-test-suite-is-failing">
+<h2>The celery test-suite is failing<a class="headerlink" href="#the-celery-test-suite-is-failing" title="Permalink to this headline">¶</a></h2>
+<p><strong>Answer</strong>: If you&#8217;re running tests from your Django project, and the celery
+test suite is failing in that context, then follow the steps below. If the
+celery tests are failing in another context, please report an issue to our
+issue tracker at GitHub:</p>
+<blockquote>
+<a class="reference external" href="http://github.com/ask/celery/issues/">http://github.com/ask/celery/issues/</a></blockquote>
+<p>That Django is running tests for all applications in <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt>
+by default is a pet peeve for many. You should use a test runner that either</p>
+<blockquote>
+<ol class="arabic simple">
+<li>Explicitly lists the apps you want to run tests for, or</li>
+<li>Make a test runner that skips tests for apps you don&#8217;t want to run.</li>
+</ol>
+</blockquote>
+<p>For example the test runner that celery is using:</p>
+<blockquote>
+<a class="reference external" href="http://bit.ly/NVKep">http://bit.ly/NVKep</a></blockquote>
+<p>To use this test runner, add the following to your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s">&quot;djcelery.tests.runners.run_tests&quot;</span><span class="p">,</span>
+<span class="n">TEST_APPS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s">&quot;app1&quot;</span><span class="p">,</span>
+    <span class="s">&quot;app2&quot;</span><span class="p">,</span>
+    <span class="s">&quot;app3&quot;</span><span class="p">,</span>
+    <span class="s">&quot;app4&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Or, if you just want to skip the celery tests:</p>
+<div class="highlight-python"><pre>INSTALLED_APPS = (.....)
+TEST_RUNNER = "djcelery.tests.runners.run_tests",
+TEST_APPS = filter(lambda k: k != "celery", INSTALLED_APPS)</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="changelog.html" title="Change history"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reference/djcelery.contrib.test_runner.html" title="Contrib: Test Runner - djcelery.contrib.test_runner"
+             >previous</a> |</li>
+        <li><a href="index.html">django-celery v1.1.2 (unstable) documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>

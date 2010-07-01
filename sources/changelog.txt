@@ -1,0 +1,8 @@
+================
+ Change history
+================
+
+1.1.0 [xxxx-xx-xx xx:xx x.x xxxx]
+=================================
+
+* Initial release

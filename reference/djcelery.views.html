@@ -1,0 +1,142 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Views - djcelery.views &mdash; django-celery v1.1.2 (unstable) documentation</title>
+    <link rel="stylesheet" href="../static/classy.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.1.2 (unstable)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="django-celery v1.1.2 (unstable) documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="index.html" />
+    <link rel="next" title="URLs - djcelery.urls" href="djcelery.urls.html" />
+    <link rel="prev" title="API Reference" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="djcelery.urls.html" title="URLs - djcelery.urls"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="API Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">django-celery v1.1.2 (unstable) documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="views-djcelery-views">
+<h1>Views - djcelery.views<a class="headerlink" href="#views-djcelery-views" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-djcelery.views"></span><dl class="function">
+<dt id="djcelery.views.apply">
+<tt class="descclassname">djcelery.views.</tt><tt class="descname">apply</tt><big>(</big><em>request</em>, <em>task_name</em><big>)</big><a class="headerlink" href="#djcelery.views.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>View applying a task.</p>
+<dl class="docutils">
+<dt><strong>Note:</strong> Please use this with caution. Preferably you shouldn&#8217;t make this</dt>
+<dd>publicly accessible without ensuring your code is safe!</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="djcelery.views.is_task_successful">
+<tt class="descclassname">djcelery.views.</tt><tt class="descname">is_task_successful</tt><big>(</big><em>request</em>, <em>task_id</em><big>)</big><a class="headerlink" href="#djcelery.views.is_task_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns task execute status in JSON format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="djcelery.views.task_status">
+<tt class="descclassname">djcelery.views.</tt><tt class="descname">task_status</tt><big>(</big><em>request</em>, <em>task_id</em><big>)</big><a class="headerlink" href="#djcelery.views.task_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns task status and result in JSON format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="djcelery.views.task_view">
+<tt class="descclassname">djcelery.views.</tt><tt class="descname">task_view</tt><big>(</big><em>task</em><big>)</big><a class="headerlink" href="#djcelery.views.task_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator turning any task into a view that applies the task
+asynchronously.</p>
+<dl class="docutils">
+<dt>Returns a JSON dictionary containing the keys <tt class="docutils literal"><span class="pre">ok</span></tt>, and</dt>
+<dd><tt class="docutils literal"><span class="pre">task_id</span></tt>.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="djcelery.views.task_webhook">
+<tt class="descclassname">djcelery.views.</tt><tt class="descname">task_webhook</tt><big>(</big><em>fun</em><big>)</big><a class="headerlink" href="#djcelery.views.task_webhook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator turning a function into a task webhook.</p>
+<p>If an exception is raised within the function, the decorated
+function catches this and returns an error JSON response, otherwise
+it returns the result as a JSON response.</p>
+<p>Example:</p>
+<div class="highlight-python"><pre>@task_webhook
+def add(request):
+    x = int(request.GET["x"])
+    y = int(request.GET["y"])
+    return x + y
+
+&gt;&gt;&gt; response = add(request)
+&gt;&gt;&gt; response.content
+'{"status": "success", "retval": 100}'</pre>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="djcelery.urls.html" title="URLs - djcelery.urls"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="API Reference"
+             >previous</a> |</li>
+        <li><a href="../index.html">django-celery v1.1.2 (unstable) documentation</a> &raquo;</li>
+          <li><a href="index.html" >API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
