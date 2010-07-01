@@ -9,7 +9,7 @@ VERSION = (1, 1, 2)
 __version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
 __author__ = "Ask Solem"
 __contact__ = "ask@celeryproject.org"
-__homepage__ = "http://github.com/ask/django-celery/"
+__homepage__ = "http://celeryproject.org"
 __docformat__ = "restructuredtext"
 
 
