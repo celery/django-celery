@@ -69,6 +69,15 @@ your Django projects ``settings.py`` module.
 If you're getting started for the first time you should read
 `Getting started with django-celery`_
 
+Special note for mod_wsgi users
+-------------------------------
+
+If you're using ``mod_wsgi`` to deploy your Django application you need to
+include the following in your ``.wsgi`` module::
+
+    import os
+    os.environ["CELERY_LOADER"] = "django"
+
 Documentation
 =============
 
