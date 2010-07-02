@@ -1,9 +1,9 @@
 # Create your views here.
 
-from tasks import add
+from demoapp import tasks
 from django.http import HttpResponse
 
 
 def foo(request):
-    r = add.delay(2, 2)
+    r = tasks.add.delay(2, 2)
     return HttpResponse(r.task_id)
