@@ -21,8 +21,8 @@ for applications listed in ``INSTALLED_APPS``, and more.
 It is focused on real-time operation, but supports scheduling as well.
 
 The execution units, called tasks, are executed concurrently on a single or
-more worker servers. Tasks can execute asynchronously (in the background) or synchronously
-(wait until ready).
+more worker servers. Tasks can execute asynchronously (in the background) or
+synchronously (wait until ready).
 
 Celery is already used in production to process millions of tasks a day.
 
@@ -51,8 +51,8 @@ To enable ``django-celery`` for your project you need to add ``djcelery`` to
 
     INSTALLED_APPS += ("djcelery", )
 
-Everything works the same as described in the `Celery User Manual`_, except you need
-to invoke the programs through ``manage.py``:
+Everything works the same as described in the `Celery User Manual`_, except you
+need to invoke the programs through ``manage.py``:
 
 =====================================  =====================================
 **Program**                            **Replace with**
@@ -63,10 +63,11 @@ to invoke the programs through ``manage.py``:
 ``celeryev``                           ``python manage.py celeryev``
 =====================================  =====================================
 
-and instead of storing configuration values in ``celeryconfig.py``, you should use
-your Django projects ``settings.py`` module.
+The other main difference is that configuration values are stored in 
+your Django projects' ``settings.py`` module rather than in
+``celeryconfig.py``.
 
-If you're getting started for the first time you should read
+If you're trying celery for the first time you should start by reading
 `Getting started with django-celery`_
 
 Special note for mod_wsgi users
@@ -121,7 +122,7 @@ You can install it by doing the following,::
 Using the development version
 ------------------------------
 
-You can clone the repository by doing the following::
+You can clone the git repository by doing the following::
 
     $ git clone git://github.com/ask/django-celery.git
 

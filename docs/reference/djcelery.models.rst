@@ -27,8 +27,8 @@ Django Models - celery.models
 
 .. data:: TASK_STATUSES_CHOICES
    
-    Django choice tuple of possible task statuses, for usage in model/form
-    fields ``choices`` argument.
+    Django tuple of possible values for the task statuses, for usage in
+    model/form fields ``choices`` argument.
 
 .. class:: TaskMeta
    
