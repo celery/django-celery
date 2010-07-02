@@ -5,7 +5,7 @@
 Configuring your Django project to use Celery
 =============================================
 
-You only need three simple steps to use celery with your Django project.
+You need three simple steps to use celery with your Django project.
 
     1. Add ``djcelery`` to ``INSTALLED_APPS``.
 
@@ -22,7 +22,7 @@ You only need three simple steps to use celery with your Django project.
             BROKER_PASSWORD = "guest"
             BROKER_VHOST = "/"
 
-      Note that we use the guest account here, for production use you probably
+      Note that we use the guest account here. For production use you probably
       want to set up a custom account and virtual host for your instance.
 
 That's it.
@@ -60,7 +60,7 @@ see what's going on without consulting the logfile::
     $ python manage.py celeryd -l info
 
 However, in production you probably want to run the worker in the
-background as a daemon. To do this you need to use to tools provided by your
+background as a daemon. To do this you need to use the tools provided by your
 platform. See `Running Celery as a daemon`_.
 
 .. _`Running Celery as a Daemon`:
@@ -109,7 +109,7 @@ At this point, the task has been sent to the message broker. The message
 broker will hold on to the task until a celery worker server has successfully
 picked it up.
 
-*Note:* If everything is just hanging when you execute ``delay``, please check
+*Note:* If everything is just hanging when you execute ``delay``, check
 that RabbitMQ is running, and that the user/password has access to the virtual
 host you configured earlier.
 

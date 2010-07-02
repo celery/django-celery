@@ -77,8 +77,8 @@ for applications listed in <tt class="docutils literal"><span class="pre">INSTAL
 <p><a class="reference external" href="http://celeryproject.org/">Celery</a> is a task queue/job queue based on distributed message passing.
 It is focused on real-time operation, but supports scheduling as well.</p>
 <p>The execution units, called tasks, are executed concurrently on a single or
-more worker servers. Tasks can execute asynchronously (in the background) or synchronously
-(wait until ready).</p>
+more worker servers. Tasks can execute asynchronously (in the background) or
+synchronously (wait until ready).</p>
 <p>Celery is already used in production to process millions of tasks a day.</p>
 <p>Celery is written in Python, but the protocol can be implemented in any
 language. It can also <a class="reference external" href="http://ask.github.com/celery/userguide/remote-tasks.html">operate with other languages using webhooks</a>.</p>
@@ -114,8 +114,8 @@ databases (<a class="reference external" href="http://www.sqlalchemy.org/">SQLAl
 <div class="highlight-python"><div class="highlight"><pre><span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&quot;djcelery&quot;</span><span class="p">,</span> <span class="p">)</span>
 </pre></div>
 </div>
-<p>Everything works the same as described in the <a class="reference external" href="http://celeryproject.org/docs/">Celery User Manual</a>, except you need
-to invoke the programs through <tt class="docutils literal"><span class="pre">manage.py</span></tt>:</p>
+<p>Everything works the same as described in the <a class="reference external" href="http://celeryproject.org/docs/">Celery User Manual</a>, except you
+need to invoke the programs through <tt class="docutils literal"><span class="pre">manage.py</span></tt>:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="50%" />
@@ -141,9 +141,10 @@ to invoke the programs through <tt class="docutils literal"><span class="pre">ma
 </tr>
 </tbody>
 </table>
-<p>and instead of storing configuration values in <tt class="docutils literal"><span class="pre">celeryconfig.py</span></tt>, you should use
-your Django projects <tt class="docutils literal"><span class="pre">settings.py</span></tt> module.</p>
-<p>If you&#8217;re getting started for the first time you should read
+<p>The other main difference is that configuration values are stored in
+your Django projects&#8217; <tt class="docutils literal"><span class="pre">settings.py</span></tt> module rather than in
+<tt class="docutils literal"><span class="pre">celeryconfig.py</span></tt>.</p>
+<p>If you&#8217;re trying celery for the first time you should start by reading
 <a class="reference external" href="http://celeryq.org/docs/django-celery/getting-started/first-steps-with-django.html">Getting started with django-celery</a></p>
 <div class="section" id="special-note-for-mod-wsgi-users">
 <h3><a class="toc-backref" href="#id3">Special note for mod_wsgi users</a><a class="headerlink" href="#special-note-for-mod-wsgi-users" title="Permalink to this headline">¶</a></h3>
@@ -184,7 +185,7 @@ $ python setup.py build
 </div>
 <div class="section" id="using-the-development-version">
 <h3><a class="toc-backref" href="#id7">Using the development version</a><a class="headerlink" href="#using-the-development-version" title="Permalink to this headline">¶</a></h3>
-<p>You can clone the repository by doing the following:</p>
+<p>You can clone the git repository by doing the following:</p>
 <div class="highlight-python"><pre>$ git clone git://github.com/ask/django-celery.git</pre>
 </div>
 </div>

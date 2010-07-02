@@ -57,7 +57,7 @@ by default is a pet peeve for many. You should use a test runner that either
 
 For example the test runner that celery is using:
 
-    http://bit.ly/NVKep
+    http://github.com/ask/celery/blob/f90491fe0194aa472b5aecdefe5cc83289e65e69/celery/tests/runners.py
 
 To use this test runner, add the following to your ``settings.py``:
 

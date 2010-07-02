@@ -5,11 +5,11 @@
 Testing with Django
 -------------------
 
-The problem that you'll first run in to when trying to write a test that runs a
-task is that Django's test runner doesn't use the same database that your celery
+The first problem you'll run in to when trying to write a test that runs a
+task is that Django's test runner doesn't use the same database as your celery
 daemon is using. If you're using the database backend, this means that your
-tombstones won't show up in your test database and you won't be able to check
-on your tasks to get the return value or check the status.
+tombstones won't show up in your test database and you won't be able to
+get the return value or check the status of your tasks.
 
 There are two ways to get around this. You can either take advantage of
 ``CELERY_ALWAYS_EAGER = True`` to skip the daemon, or you can avoid testing
@@ -36,7 +36,7 @@ To enable the test runner, set the following settings:
 
     TEST_RUNNER = 'celery.contrib.test_runner.run_tests'
 
-Then we can write our actually test in a ``tests.py`` somewhere:
+Then we can put the tests in a ``tests.py`` somewhere:
 
 .. code-block:: python
 
@@ -55,4 +55,4 @@ Then we can write our actually test in a ``tests.py`` somewhere:
 
 
 This test assumes that you put your example ``add`` task in ``maypp.tasks``
-so of course adjust the import for wherever you actually put the class.
+so adjust the import for wherever you put the class.
