@@ -42,6 +42,14 @@ all configurations listed there should be added to ``settings.py``.
 ``celeryd`` will only be able to process one task at a time, this is
 because SQLite doesn't allow concurrent writes.
 
+Special note for mod_wsgi users
+-------------------------------
+
+If you're using ``mod_wsgi`` to deploy your Django application you need to
+include the following in your ``.wsgi`` module::
+
+    import os
+    os.environ["CELERY_LOADER"] = "django"
 
 Running the celery worker server
 ================================
