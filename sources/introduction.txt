@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/ask/celery/celery_favicon_128.png
 
-:Version: 1.1.2
+:Version: 2.0.0
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/ask/django-celery/
@@ -35,6 +35,7 @@ databases (`SQLAlchemy`_ / `Django`_) is also available.
 .. _`Celery`: http://celeryproject.org/
 .. _`RabbitMQ`: http://www.rabbitmq.com/
 .. _`Redis`: http://code.google.com/p/redis/
+.. _`Django`: http://www.djangoproject.org/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`operate with other languages using webhooks`:
     http://ask.github.com/celery/userguide/remote-tasks.html
@@ -67,6 +68,15 @@ your Django projects ``settings.py`` module.
 
 If you're getting started for the first time you should read
 `Getting started with django-celery`_
+
+Special note for mod_wsgi users
+-------------------------------
+
+If you're using ``mod_wsgi`` to deploy your Django application you need to
+include the following in your ``.wsgi`` module::
+
+    import os
+    os.environ["CELERY_LOADER"] = "django"
 
 Documentation
 =============

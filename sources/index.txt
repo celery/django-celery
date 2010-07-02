@@ -11,9 +11,9 @@ Contents:
 
     introduction
     getting-started/index
+    faq
     cookbook/index
     reference/index
-    faq
     changelog
 
 
