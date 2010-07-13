@@ -69,7 +69,7 @@ def task_status(request, task_id):
     return HttpResponse(JSON_dump({"task": response_data}),
             mimetype="application/json")
 
-def tasks(request):
+def celery_tasks(request):
     """
     A view returning all defined tasks as a JSON object.
     """
