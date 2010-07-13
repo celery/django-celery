@@ -15,11 +15,12 @@ from django.conf.urls.defaults import patterns, url
 
 from djcelery import views
 
+task_pattern = r'(?P<task_id>[\w\d\-\.]+)'
 
 urlpatterns = patterns("",
-    url(r'^(?P<task_id>[\w\d\-]+)/done/?$', views.is_task_successful,
+    url(r'^%s/done/?$' % task_pattern, views.is_task_successful,
         name="celery-is_task_successful"),
-    url(r'^(?P<task_id>[\w\d\-]+)/status/?$', views.task_status,
+    url(r'^%s/status/?$' % task_pattern, views.task_status,
         name="celery-task_status"),
     url(r'^tasks/?$', views.celery_tasks, name='celery-tasks'),
 )
