@@ -22,5 +22,5 @@ urlpatterns = patterns("",
         name="celery-is_task_successful"),
     url(r'^%s/status/?$' % task_pattern, views.task_status,
         name="celery-task_status"),
-    url(r'^tasks/?$', views.celery_tasks, name='celery-tasks'),
+    url(r'^tasks/?$', views.registered_tasks, name='celery-tasks'),
 )

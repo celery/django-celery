@@ -7,6 +7,7 @@ from celery.utils import get_full_cls_name
 from celery.result import AsyncResult
 from celery.registry import tasks
 from celery.backends import default_backend
+
 # Ensure builtin tasks are loaded for task_list view
 import celery.task.builtins
 
@@ -69,13 +70,15 @@ def task_status(request, task_id):
     return HttpResponse(JSON_dump({"task": response_data}),
             mimetype="application/json")
 
-def celery_tasks(request):
+
+def registered_tasks(request):
     """
     A view returning all defined tasks as a JSON object.
     """
-    response_data = {'regular' : tasks.regular().keys(),
-                     'periodic' : tasks.periodic().keys()}
+    response_data = {"regular": tasks.regular().keys(),
+                     "periodic": tasks.periodic().keys()}
     return HttpResponse(JSON_dump(response_data), mimetype="application/json")
+
 
 def task_webhook(fun):
     """Decorator turning a function into a task webhook.
