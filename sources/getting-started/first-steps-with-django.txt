@@ -9,11 +9,16 @@ You need three simple steps to use celery with your Django project.
 
     1. Add ``djcelery`` to ``INSTALLED_APPS``.
 
-    2. Create the celery database tables::
+    2. Add the following lines to ``settings.py``::
+
+        import djcelery
+        djcelery.setup_loader()
+
+    3. Create the celery database tables::
 
             $ python manage.py syncdb
 
-    3. Configure the broker settings, by adding the following to your
+    4. Configure the broker settings, by adding the following to your
        ``settings.py``::
 
             BROKER_HOST = "localhost"
