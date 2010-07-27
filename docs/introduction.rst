@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/ask/celery/celery_favicon_128.png
 
-:Version: 2.0.0
+:Version: 2.0.2
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/ask/django-celery/
@@ -51,7 +51,7 @@ To enable ``django-celery`` for your project you need to add ``djcelery`` to
 
     INSTALLED_APPS += ("djcelery", )
 
-Then add the following lines to ``settings.py``::
+then add the following lines to your ``settings.py``::
 
     import djcelery
     djcelery.setup_loader()

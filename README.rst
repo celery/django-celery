@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/ask/celery/celery_favicon_128.png
 
-:Version: 2.0.0
+:Version: 2.0.2
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/ask/django-celery/
@@ -51,7 +51,7 @@ To enable ``django-celery`` for your project you need to add ``djcelery`` to
 
     INSTALLED_APPS += ("djcelery", )
 
-And add the following line to your ``settings.py``::
+Then add the following lines to ``settings.py``::
 
     import djcelery
     djcelery.setup_loader()
@@ -81,8 +81,8 @@ Special note for mod_wsgi users
 If you're using ``mod_wsgi`` to deploy your Django application you need to
 include the following in your ``.wsgi`` module::
 
-    import djcelery
-    djcelery.setup_loader()
+    import os
+    os.environ["CELERY_LOADER"] = "django"
 
 Documentation
 =============
