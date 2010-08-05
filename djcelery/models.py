@@ -7,7 +7,7 @@ from picklefield.fields import PickledObjectField
 from celery import conf
 from celery import states
 
-from djcelery.managers import TaskManager, TaskSetManager
+from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
 
 TASK_STATUSES_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
 
@@ -61,6 +61,54 @@ class TaskSetMeta(models.Model):
 
     def __unicode__(self):
         return u"<TaskSet: %s>" % (self.taskset_id)
+
+
+class WorkerState(models.Model):
+    hostname = models.CharField(_("hostname"), max_length=255, unique=True)
+    last_heartbeat = models.DateTimeField(_("last heartbeat"), null=True)
+
+    objects = ExtendedManager()
+
+    class Meta:
+        """Model meta-data."""
+        verbose_name = _(u"worker")
+        verbose_name_plural = _(u"workers")
+
+    def __unicode__(self):
+        return self.hostname
+
+    def __repr__(self):
+        return "<WorkerState: %s>" % (self.hostname, )
+
+
+class TaskState(models.Model):
+    task_id = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=200, null=True)
+    timestamp = models.DateTimeField()
+    args = models.CharField(max_length=200, null=True)
+    kwargs = models.CharField(max_length=200, null=True)
+    eta = models.DateTimeField(null=True)
+    expires = models.DateTimeField(null=True)
+    state = models.CharField(max_length=64)
+    result = models.CharField(max_length=200, null=True)
+    traceback = models.TextField(null=True)
+    runtime = models.FloatField(null=True)
+    retries = models.IntegerField(default=0),
+    worker = models.ForeignKey(WorkerState, null=True)
+
+    objects = ExtendedManager()
+
+    class Meta:
+        """Model meta-data."""
+        verbose_name = _(u"task")
+        verbose_name_plural = _(u"tasks")
+
+    def __unicode__(self):
+        return self.hostname
+
+    def __repr__(self):
+        return "<TaskState: %s>" % (self.task_id, )
+
 
 if (django.VERSION[0], django.VERSION[1]) >= (1, 1):
     # keep models away from syncdb/reset if database backend is not
