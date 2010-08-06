@@ -85,20 +85,30 @@ class WorkerState(models.Model):
 
 
 class TaskState(models.Model):
-    state = models.CharField(max_length=64, choices=TASK_STATE_CHOICES)
-    task_id = models.CharField(max_length=64, unique=True)
-    name = models.CharField(max_length=200, null=True)
-    timestamp = models.DateTimeField()
-    args = models.CharField(max_length=200, null=True)
-    kwargs = models.CharField(max_length=200, null=True)
-    eta = models.DateTimeField(null=True)
-    expires = models.DateTimeField(null=True)
-    result = models.CharField(max_length=200, null=True)
-    traceback = models.TextField(null=True)
-    runtime = models.FloatField(null=True)
-    retries = models.IntegerField(default=0),
+    state = models.CharField(_("state"),
+                max_length=64,
+                choices=TASK_STATE_CHOICES)
+    task_id = models.CharField(_("UUID"),
+                max_length=36, unique=True)
+    name = models.CharField(_("name"),
+                max_length=200, null=True)
+    timestamp = models.DateTimeField(_("event received at"),
+                editable=False)
+    args = models.CharField(_("Arguments"),
+                max_length=200, null=True)
+    kwargs = models.CharField(_("Keyword arguments"),
+                max_length=200, null=True)
+    eta = models.DateTimeField(_("ETA"), null=True,
+                help_text="date to execute")
+    expires = models.DateTimeField(_("expires"), null=True)
+    result = models.CharField(_("result"),
+                max_length=200, null=True)
+    traceback = models.TextField(_("traceback"), null=True)
+    runtime = models.FloatField(_("execution time"), null=True,
+                help_text=_("in seconds if task successful"))
+    retries = models.IntegerField(_("number of retries"), default=0),
     worker = models.ForeignKey(WorkerState, null=True)
-    hidden = models.BooleanField(default=False)
+    hidden = models.BooleanField(editable=False, default=False)
 
     objects = TaskStateManager()
 
@@ -115,7 +125,7 @@ class TaskState(models.Model):
                            self.task_id.ljust(36),
                            self.name)
         if self.eta:
-            s = "%s eta:%s" % (self.eta, )
+            s += " eta:%s" % (self.eta, )
         return s
 
     def __repr__(self):

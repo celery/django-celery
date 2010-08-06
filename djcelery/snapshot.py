@@ -13,7 +13,7 @@ class Camera(Polaroid):
     WorkerState = WorkerState
     TaskState = TaskState
 
-    expire_states = {SUCCESS_STATES: timedelta(seconds=30),
+    expire_states = {SUCCESS_STATES: timedelta(days=1),
                      states.EXCEPTION_STATES: timedelta(days=3),
                      states.UNREADY_STATES: timedelta(days=5)}
 
@@ -50,4 +50,3 @@ class Camera(Polaroid):
             self.debug("Cleanup: Marked %s objects as dirty." % (dirty, ))
             self.TaskState.objects.purge()
             self.debug("Cleanup: %s objects purged." % (dirty, ))
-
