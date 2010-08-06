@@ -4,6 +4,7 @@ from datetime import datetime
 from celery.utils.functional import wraps
 
 from django.db import models
+from django.db.models import F
 from django.db import transaction
 from django.db.models.query import QuerySet
 
@@ -147,3 +148,19 @@ class TaskSetManager(ResultManager):
         """
         return self.update_or_create(taskset_id=taskset_id,
                                      defaults={"result": result})
+
+
+class TaskStateManager(ExtendedManager):
+
+    def active(self):
+        return self.filter(hidden=False)
+
+    def expired(self, states, expires):
+        return self.filter(state__in=states,
+                           timestamp__lte=datetime.now() - expires)
+
+    def expire_by_states(self, states, expires):
+        return self.expired(states, expires).update(hidden=True)
+
+    def purge(self):
+        self.filter(hidden=True).delete()

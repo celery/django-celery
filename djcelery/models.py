@@ -8,15 +8,16 @@ from celery import conf
 from celery import states
 
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
+from djcelery.managers import TaskStateManager
 
-TASK_STATUSES_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
+TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
 
 
 class TaskMeta(models.Model):
     """Task result/status."""
     task_id = models.CharField(_(u"task id"), max_length=255, unique=True)
     status = models.CharField(_(u"task status"), max_length=50,
-            default=states.PENDING, choices=TASK_STATUSES_CHOICES)
+            default=states.PENDING, choices=TASK_STATE_CHOICES)
     result = PickledObjectField(null=True, default=None)
     date_done = models.DateTimeField(_(u"done at"), auto_now=True)
     traceback = models.TextField(_(u"traceback"), blank=True, null=True)
@@ -73,6 +74,8 @@ class WorkerState(models.Model):
         """Model meta-data."""
         verbose_name = _(u"worker")
         verbose_name_plural = _(u"workers")
+        get_latest_by = "last_heartbeat"
+        ordering = ["-last_heartbeat"]
 
     def __unicode__(self):
         return self.hostname
@@ -82,6 +85,7 @@ class WorkerState(models.Model):
 
 
 class TaskState(models.Model):
+    state = models.CharField(max_length=64, choices=TASK_STATE_CHOICES)
     task_id = models.CharField(max_length=64, unique=True)
     name = models.CharField(max_length=200, null=True)
     timestamp = models.DateTimeField()
@@ -89,25 +93,34 @@ class TaskState(models.Model):
     kwargs = models.CharField(max_length=200, null=True)
     eta = models.DateTimeField(null=True)
     expires = models.DateTimeField(null=True)
-    state = models.CharField(max_length=64)
     result = models.CharField(max_length=200, null=True)
     traceback = models.TextField(null=True)
     runtime = models.FloatField(null=True)
     retries = models.IntegerField(default=0),
     worker = models.ForeignKey(WorkerState, null=True)
+    hidden = models.BooleanField(default=False)
 
-    objects = ExtendedManager()
+    objects = TaskStateManager()
 
     class Meta:
         """Model meta-data."""
         verbose_name = _(u"task")
         verbose_name_plural = _(u"tasks")
+        get_latest_by = "timestamp"
+        ordering = ["-timestamp"]
 
     def __unicode__(self):
-        return self.hostname
+        name = self.name or "UNKNOWN"
+        s = u"%s %s %s" % (self.state.ljust(10),
+                           self.task_id.ljust(36),
+                           self.name)
+        if self.eta:
+            s = "%s eta:%s" % (self.eta, )
+        return s
 
     def __repr__(self):
-        return "<TaskState: %s>" % (self.task_id, )
+        name = self.name or "UNKNOWN"
+        return "<TaskState: %s %s(%s)>" % (self.state, name, self.task_id, )
 
 
 if (django.VERSION[0], django.VERSION[1]) >= (1, 1):

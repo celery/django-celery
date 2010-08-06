@@ -7,7 +7,7 @@ ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
-CELERY_RESULT_BACKEND = "database"
+CELERY_RESULT_BACKEND = "amqp"
 BROKER_HOST = "localhost"
 BROKER_PORT = 5672
 BROKER_USER = "guest"
@@ -30,6 +30,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.admin',
     'djcelery',
     'demoapp',
     'twitterfollow',
