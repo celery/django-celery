@@ -1,3 +1,5 @@
+from time import time, mktime
+
 import django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -10,6 +12,7 @@ from celery import states
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
 from djcelery.managers import TaskStateManager
 
+HEARTBEAT_EXPIRE = 150 # 2 minutes, 30 seconds
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
 
 
@@ -82,6 +85,15 @@ class WorkerState(models.Model):
 
     def __repr__(self):
         return "<WorkerState: %s>" % (self.hostname, )
+
+    def is_alive(self):
+        if self.last_heartbeat:
+            return time() < self.heartbeat_timestamp + HEARTBEAT_EXPIRE
+        return False
+
+    @property
+    def heartbeat_timestamp(self):
+        return mktime(self.last_heartbeat.timetuple())
 
 
 class TaskState(models.Model):
