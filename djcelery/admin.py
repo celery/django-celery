@@ -1,5 +1,8 @@
+from pprint import pformat
+
 from django.contrib import admin
 from django.contrib.admin import helpers
+from django.contrib.admin.views import main as main_views
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.encoding import force_unicode
@@ -13,6 +16,7 @@ from celery.utils.functional import wraps
 
 from .models import TaskState, WorkerState
 
+
 TASK_STATE_COLORS = {states.SUCCESS: "green",
                      states.FAILURE: "red",
                      states.REVOKED: "magenta",
@@ -21,6 +25,14 @@ TASK_STATE_COLORS = {states.SUCCESS: "green",
                      "RECEIVED": "blue"}
 NODE_STATE_COLORS = {"ONLINE": "green",
                      "OFFLINE": "gray"}
+
+
+class MonitorList(main_views.ChangeList):
+
+    def __init__(self, *args, **kwargs):
+        super(MonitorList, self).__init__(*args, **kwargs)
+        self.title = self.model_admin.list_page_title
+
 
 def attrs(**kwargs):
     def _inner(fun):
@@ -60,14 +72,42 @@ def eta(task):
             """<span style="color: gray;">disabled</span>"""
 
 
-def fixedwidth(field, name=None):
+def fixedwidth(field, name=None, width=24):
     @display_field(name or field, field)
     def f(task):
-        return """<code>%s</code>""" % getattr(task, field)
+        return """<code>%s</code>""" % pformat(getattr(task, field),
+                                               width=width)
     return f
 
 
-class TaskMonitor(admin.ModelAdmin):
+class ModelMonitor(admin.ModelAdmin):
+    can_add = False
+    can_delete = False
+
+    def get_changelist(self, request, **kwargs):
+        return MonitorList
+
+    def change_view(self, request, object_id, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context.setdefault("title", self.detail_title)
+        return super(ModelMonitor, self).change_view(request, object_id,
+                                                     extra_context)
+
+    def has_delete_permission(self, request, obj=None):
+        if not self.can_delete:
+            return False
+        return super(ModelMonitor, self).has_delete_permission(request, obj)
+
+    def has_add_permission(self, request):
+        if not self.can_add:
+            return False
+        return super(ModelMonitor, self).has_add_permission(request)
+
+
+
+class TaskMonitor(ModelMonitor):
+    detail_title = _("Task detail")
+    list_page_title = _("Tasks")
     rate_limit_confirmation_template = "djcelery/confirm_rate_limit.html"
     date_hierarchy = "timestamp"
     fieldsets = (
@@ -107,13 +147,10 @@ class TaskMonitor(admin.ModelAdmin):
 
     @action(_("Rate limit selected tasks"))
     def rate_limit_tasks(self, request, queryset):
-        import sys
-        sys.stderr.write("GOT REQUEST: %s\n" % (request, ))
         tasks = set([task.name for task in queryset])
         opts = self.model._meta
         app_label = opts.app_label
         if request.POST.get("post"):
-            sys.stderr.write("GOT POST!!!\n")
             rate = request.POST["rate_limit"]
             connection = establish_connection()
             try:
@@ -143,7 +180,10 @@ class TaskMonitor(admin.ModelAdmin):
         return actions
 
 
-class WorkerMonitor(admin.ModelAdmin):
+class WorkerMonitor(ModelMonitor):
+    can_add = True
+    detail_title = _("Node detail")
+    list_page_title = _("Worker Nodes")
     list_display = ("hostname", node_state)
     readonly_fields = ("last_heartbeat", )
     actions = ["shutdown_nodes",
