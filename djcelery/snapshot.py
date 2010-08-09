@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from celery import states
 from celery.events.snapshot import Polaroid
 from celery.events.state import Worker
@@ -8,6 +10,8 @@ from celery.utils import maybe_iso8601
 from djcelery.models import WorkerState, TaskState
 
 SUCCESS_STATES = frozenset([states.SUCCESS])
+KEEP_FROM_RECEIVED = ("name", "args", "kwargs",
+                      "retries", "eta", "expires")
 
 class Camera(Polaroid):
     WorkerState = WorkerState
@@ -17,15 +21,23 @@ class Camera(Polaroid):
                      states.EXCEPTION_STATES: timedelta(days=3),
                      states.UNREADY_STATES: timedelta(days=5)}
 
+    def get_heartbeat(self, worker):
+        try:
+            heartbeat = worker.heartbeats[-1]
+        except IndexError:
+            return
+        return datetime.fromtimestamp(heartbeat)
+
     def handle_worker(self, (hostname, worker)):
-        return self.WorkerState.objects.update_or_create(hostname=hostname,
+        return self.WorkerState.objects.update_or_create(
+                    hostname=hostname,
                     defaults={"last_heartbeat":
-                            datetime.fromtimestamp(worker.heartbeats[-1])})
+                        self.get_heartbeat(worker)})
 
     def handle_task(self, (uuid, task), worker=None):
         if task.worker.hostname:
             worker = self.handle_worker((task.worker.hostname, task.worker))
-        return self.TaskState.objects.update_or_create(task_id=uuid,
+        return self.update_task(task.state, task_id=uuid,
                 defaults={"name": task.name,
                           "args": task.args,
                           "kwargs": task.kwargs,
@@ -37,6 +49,30 @@ class Camera(Polaroid):
                           "traceback": task.traceback,
                           "runtime": task.runtime,
                           "worker": worker})
+
+    def update_or_create(self, **kwargs):
+        objects = self.TaskState.objects
+        defaults = kwargs.pop("defaults", None) or {}
+        try:
+            obj = objects.get(**kwargs)
+        except ObjectDoesNotExist:
+            if not defaults.get("name"):
+                return
+            return objects.create(**dict(kwargs, **defaults))
+
+        for k, v in defaults.items():
+            setattr(obj, k, v)
+        obj.save()
+
+        return obj
+
+
+    def update_task(self, state, **kwargs):
+        if state != "RECEIVED":
+            kwargs["defaults"] = dict((k, v)
+                            for k, v in kwargs["defaults"].items()
+                                if k not in KEEP_FROM_RECEIVED)
+        return self.update_or_create(**kwargs)
 
     def on_shutter(self, state):
         if state.event_count:
