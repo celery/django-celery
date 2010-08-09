@@ -6,12 +6,14 @@ from django.contrib.admin.views import main as main_views
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.encoding import force_unicode
+from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
 from celery import states
 from celery.messaging import establish_connection
 from celery.registry import tasks
 from celery.task.control import broadcast, revoke, rate_limit
+from celery.utils import truncate_text, abbrtask
 from celery.utils.functional import wraps
 
 from .models import TaskState, WorkerState
@@ -55,9 +57,10 @@ def action(short_description, **kwargs):
 
 @display_field(_("state"), "state")
 def colored_state(task):
+    state = escape(task.state)
     color = TASK_STATE_COLORS.get(task.state, "black")
-    return """<b><span style="color: %s;">%s</span></b>""" % (color,
-                                                              task.state)
+    return """<b><span style="color: %s;">%s</span></b>""" % (color, state)
+
 
 @display_field(_("state"), "last_timestamp")
 def node_state(node):
@@ -68,15 +71,32 @@ def node_state(node):
 
 @display_field(_("ETA"), "eta")
 def eta(task):
-    return task.eta or \
+    return escape(task.eta) or \
             """<span style="color: gray;">disabled</span>"""
 
 
-def fixedwidth(field, name=None, width=24):
+@display_field(_("name"), "name")
+def name(task):
+    return """<b>%s</b>""" % (escape(abbrtask(task.name, 16)), )
+
+
+def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
+
     @display_field(name or field, field)
     def f(task):
-        return """<code>%s</code>""" % pformat(getattr(task, field),
-                                               width=width)
+        val = getattr(task, field)
+        if pretty:
+            val = pformat(val, width=width)
+        if val.startswith("u'") or val.startswith('u"'):
+            val = val[2:-1]
+        val.replace(",", ",\n")
+        val.replace("\n", "<br />")
+
+        if len(val) > maxlen:
+            val = val[:maxlen] + "..."
+        return """<span style="font-size: %spt;
+                               font-family: Menlo, Courier;
+                  ">%s</span>""" % (pt, escape(val), )
     return f
 
 
@@ -104,7 +124,6 @@ class ModelMonitor(admin.ModelAdmin):
         return super(ModelMonitor, self).has_add_permission(request)
 
 
-
 class TaskMonitor(ModelMonitor):
     detail_title = _("Task detail")
     list_page_title = _("Tasks")
@@ -121,11 +140,11 @@ class TaskMonitor(ModelMonitor):
                 "fields": ("result", "traceback", "expires"),
             }),
     )
-    list_display = (fixedwidth("task_id", name=_("UUID")),
+    list_display = (fixedwidth("task_id", name=_("UUID"), pt=8),
                     colored_state,
-                    "name",
-                    fixedwidth("args"),
-                    fixedwidth("kwargs"),
+                    name,
+                    fixedwidth("args", pretty=True),
+                    fixedwidth("kwargs", pretty=True),
                     eta,
                     "worker")
     readonly_fields = ("state", "task_id", "name", "args", "kwargs",
@@ -173,7 +192,6 @@ class TaskMonitor(ModelMonitor):
         return render_to_response(self.rate_limit_confirmation_template,
                 context, context_instance=RequestContext(request))
 
-
     def get_actions(self, request):
         actions = super(TaskMonitor, self).get_actions(request)
         actions.pop("delete_selected", None)
@@ -212,4 +230,3 @@ class WorkerMonitor(ModelMonitor):
 
 admin.site.register(TaskState, TaskMonitor)
 admin.site.register(WorkerState, WorkerMonitor)
-
