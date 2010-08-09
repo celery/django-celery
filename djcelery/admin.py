@@ -69,8 +69,9 @@ def node_state(node):
 
 @display_field(_("ETA"), "eta")
 def eta(task):
-    return escape(task.eta) or \
-            """<span style="color: gray;">disabled</span>"""
+    if not task.eta:
+        return """<span style="color: gray;">none</span>"""
+    return escape(task.eta)
 
 
 @display_field(_("name"), "name")
