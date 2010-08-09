@@ -28,6 +28,7 @@ def osx_install_data(install_data):
         self.set_undefined_options("install", ("install_lib", "install_dir"))
         install_data.finalize_options(self)
 
+
 def fullsplit(path, result=None):
     if result is None:
         result = []
@@ -64,7 +65,6 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
         else:
             data_files.append([dirpath, [os.path.join(dirpath, f) for f in
                 filenames]])
-
 
 
 class RunTests(Command):

@@ -135,7 +135,7 @@ class TaskState(models.Model):
         name = self.name or "UNKNOWN"
         s = u"%s %s %s" % (self.state.ljust(10),
                            self.task_id.ljust(36),
-                           self.name)
+                           name)
         if self.eta:
             s += " eta:%s" % (self.eta, )
         return s

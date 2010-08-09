@@ -11,10 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from celery import states
 from celery.messaging import establish_connection
-from celery.registry import tasks
 from celery.task.control import broadcast, revoke, rate_limit
-from celery.utils import truncate_text, abbrtask
-from celery.utils.functional import wraps
+from celery.utils import abbrtask
 
 from .models import TaskState, WorkerState
 

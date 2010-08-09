@@ -4,7 +4,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from celery import states
 from celery.events.snapshot import Polaroid
-from celery.events.state import Worker
 from celery.utils import maybe_iso8601
 
 from djcelery.models import WorkerState, TaskState
@@ -65,7 +64,6 @@ class Camera(Polaroid):
         obj.save()
 
         return obj
-
 
     def update_task(self, state, **kwargs):
         if state != "RECEIVED":
