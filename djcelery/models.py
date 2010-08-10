@@ -1,13 +1,21 @@
+from datetime import timedelta
 from time import time, mktime
 
 import django
+
+from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.utils import DatabaseError
+from django.template.defaultfilters import pluralize
 from django.utils.translation import ugettext_lazy as _
 
 from picklefield.fields import PickledObjectField
 
 from celery import conf
+from celery import schedules
 from celery import states
+from celery.registry import tasks
 
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
 from djcelery.managers import TaskStateManager
@@ -67,9 +75,142 @@ class TaskSetMeta(models.Model):
         return u"<TaskSet: %s>" % (self.taskset_id)
 
 
+PERIOD_CHOICES = (("days", _(u"Days")),
+                  ("seconds", _(u"Seconds")),
+                  ("microseconds", _(u"Microseconds")))
+
+
+def get_task_choices():
+    t = tasks.regular()
+    return zip(t.keys(), t.keys())
+
+class IntervalSchedule(models.Model):
+    every = models.IntegerField(_(u"every"), null=False)
+    period = models.CharField(_(u"period"), max_length=24,
+                                            choices=PERIOD_CHOICES)
+
+    class Meta:
+        verbose_name = _(u"interval")
+        verbose_name_plural = _(u"intervals")
+
+    @property
+    def schedule(self):
+        return schedules.schedule(timedelta(**{self.period: self.every}))
+
+    def __unicode__(self):
+        if self.every == 1:
+            return _(u"every %s") % self.period[:-1]
+        return _(u"every %s %s") % (self.every, self.period)
+
+
+class CrontabSchedule(models.Model):
+    minute = models.CharField(_(u"minute"),
+                        max_length=64,
+                        default="*")
+    hour = models.CharField(_(u"hour"),
+                        max_length=64,
+                        default="*")
+    day_of_week = models.CharField(_(u"day of week"),
+                        max_length=64,
+                        default="*")
+
+    class Meta:
+        verbose_name = _(u"crontab")
+        verbose_name_plural = _(u"crontabs")
+
+    def __unicode__(self):
+        return u"%s %s %s (m/h/d)" % (self.minute or "*",
+                              self.hour or "*",
+                              self.day_of_week or "*")
+
+    @property
+    def schedule(self):
+        return schedules.crontab(minute=self.minute,
+                                hour=self.hour,
+                                day_of_week=self.day_of_week)
+
+
+try:
+    SCHEDULE_CHOICES = (
+        (ContentType.objects.get_for_model(IntervalSchedule), _(u"Interval")),
+        (ContentType.objects.get_for_model(CrontabSchedule), _(u"Crontab"))
+    )
+except DatabaseError:
+    # Tables have not been created yet.
+    SCHEDULE_CHOICES = ()
+
+class PeriodicTask(models.Model):
+    name = models.CharField(_(u"name"), max_length=200, unique=True,
+                            help_text=_(u"Useful description"))
+    task = models.CharField(_(u"task name"),
+                            max_length=200,
+                            choices=get_task_choices())
+    interval = models.ForeignKey(IntervalSchedule, null=True, blank=True,
+                                 verbose_name=_(u"interval"))
+    crontab = models.ForeignKey(CrontabSchedule, null=True, blank=True,
+                                verbose_name=_(u"crontab"),
+                                help_text=_(u"Use one of interval/schedule"))
+    args = models.TextField(_(u"Arguments"),
+                            blank=True,
+                            default="[]",
+                            help_text=_(u"JSON encoded positional arguments"))
+    kwargs = models.TextField(_(u"Keyword arguments"),
+                              blank=True,
+                              default="{}",
+                              help_text=_("JSON encoded keyword arguments"))
+    queue = models.CharField(_("queue"),
+                             max_length=200,
+                             blank=True,
+                             null=True,
+                             default=None,
+                             help_text=_(u"Queue defined in CELERY_QUEUES"))
+    exchange = models.CharField(_(u"exchange"),
+                              max_length=200,
+                              blank=True,
+                              null=True,
+                              default=None)
+    routing_key = models.CharField(_(u"routing key"),
+                              max_length=200,
+                              blank=True,
+                              null=True,
+                              default=None)
+    expires = models.DateTimeField(_(u"expires"),
+                              blank=True,
+                              null=True)
+    enabled = models.BooleanField(_(u"enabled"), default=True)
+    last_run_at = models.DateTimeField(
+                              auto_now=False,
+                              auto_now_add=False,
+                              editable=False,
+                              blank=True,
+                              null=True)
+    total_run_count = models.PositiveIntegerField(default=0, editable=False)
+
+    def __unicode__(self):
+        if self.interval:
+            return u"%s: %s" % (self.name, unicode(self.interval))
+        if self.crontab:
+            return u"%s crontab:%s" % (self.name, unicode(self.crontab))
+        return u"%s {no schedule}" % (self.name, )
+
+    def save(self, *args, **kwargs):
+        self.exchange = self.exchange or None
+        self.routing_key = self.routing_key or None
+        self.queue = self.queue or None
+        super(PeriodicTask, self).save(*args, **kwargs)
+
+    @property
+    def schedule(self):
+        if self.interval:
+            return self.interval.schedule
+        if self.crontab:
+            return self.crontab.schedule
+
+
+
 class WorkerState(models.Model):
-    hostname = models.CharField(_("hostname"), max_length=255, unique=True)
-    last_heartbeat = models.DateTimeField(_("last heartbeat"), null=True)
+    hostname = models.CharField(_(u"hostname"), max_length=255, unique=True)
+    last_heartbeat = models.DateTimeField(_(u"last heartbeat"), null=True)
 
     objects = ExtendedManager()
 
@@ -97,29 +238,30 @@ class WorkerState(models.Model):
 
 
 class TaskState(models.Model):
-    state = models.CharField(_("state"),
+    state = models.CharField(_(u"state"),
                 max_length=64,
                 choices=TASK_STATE_CHOICES)
-    task_id = models.CharField(_("UUID"),
+    task_id = models.CharField(_(u"UUID"),
                 max_length=36, unique=True)
-    name = models.CharField(_("name"),
+    name = models.CharField(_(u"name"),
                 max_length=200, null=True)
-    timestamp = models.DateTimeField(_("event received at"),
+    timestamp = models.DateTimeField(_(u"event received at"),
                 editable=False)
-    args = models.CharField(_("Arguments"),
+    args = models.CharField(_(u"Arguments"),
                 max_length=200, null=True)
-    kwargs = models.CharField(_("Keyword arguments"),
+    kwargs = models.CharField(_(u"Keyword arguments"),
                 max_length=200, null=True)
-    eta = models.DateTimeField(_("ETA"), null=True,
-                help_text="date to execute")
-    expires = models.DateTimeField(_("expires"), null=True)
-    result = models.CharField(_("result"),
+    eta = models.DateTimeField(_(u"ETA"), null=True,
+                help_text=u"date to execute")
+    expires = models.DateTimeField(_(u"expires"), null=True)
+    result = models.CharField(_(u"result"),
                 max_length=200, null=True)
-    traceback = models.TextField(_("traceback"), null=True)
-    runtime = models.FloatField(_("execution time"), null=True,
-                help_text=_("in seconds if task successful"))
-    retries = models.IntegerField(_("number of retries"), default=0),
-    worker = models.ForeignKey(WorkerState, null=True)
+    traceback = models.TextField(_(u"traceback"), null=True)
+    runtime = models.FloatField(_(u"execution time"), null=True,
+                help_text=_(u"in seconds if task successful"))
+    retries = models.IntegerField(_(u"number of retries"), default=0),
+    worker = models.ForeignKey(WorkerState, null=True,
+                               verbose_name=_("worker"))
     hidden = models.BooleanField(editable=False, default=False)
 
     objects = TaskStateManager()
@@ -137,7 +279,7 @@ class TaskState(models.Model):
                            self.task_id.ljust(36),
                            name)
         if self.eta:
-            s += " eta:%s" % (self.eta, )
+            s += u" eta:%s" % (self.eta, )
         return s
 
     def __repr__(self):
