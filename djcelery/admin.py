@@ -1,8 +1,10 @@
 from pprint import pformat
 
+from django import forms
 from django.contrib import admin
 from django.contrib.admin import helpers
 from django.contrib.admin.views import main as main_views
+from django.contrib.contenttypes.generic import GenericStackedInline
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.encoding import force_unicode
@@ -10,11 +12,13 @@ from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
 from celery import states
+from celery import registry
 from celery.messaging import establish_connection
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
 from djcelery.models import TaskState, WorkerState
+from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 
 
 TASK_STATE_COLORS = {states.SUCCESS: "green",
@@ -229,3 +233,65 @@ class WorkerMonitor(ModelMonitor):
 
 admin.site.register(TaskState, TaskMonitor)
 admin.site.register(WorkerState, WorkerMonitor)
+
+
+# ### Periodic Tasks
+
+def periodic_task_form():
+    tasks = registry.tasks.regular().keys()
+    choices = (("", ""), ) + tuple(zip(tasks, tasks))
+
+    class PeriodicTaskForm(forms.ModelForm):
+        regtask = forms.ChoiceField(label=_(u"Task (registered)"),
+                                    choices=choices, required=False)
+        task = forms.CharField(label=_("Task (custom)"), required=False,
+                               max_length=200)
+
+        class Meta:
+            model = PeriodicTask
+
+        def clean(self):
+            data = super(PeriodicTaskForm, self).clean()
+            regtask = data.get("regtask")
+            task = data.get("task")
+            if regtask:
+                data["task"] = regtask
+            if not data["task"]:
+                exc = ValidationError(_(u"Need name of task"))
+                self._errors["task"] = self.error_class(exc.messages)
+                raise exc
+            return data
+
+    return PeriodicTaskForm
+
+
+class PeriodicTaskAdmin(admin.ModelAdmin):
+    model = PeriodicTask
+    form = periodic_task_form()
+    fieldsets = (
+            (None, {
+                "fields": ("name", "regtask", "task", "enabled"),
+                "classes": ("extrapretty", "wide"),
+            }),
+            ("Schedule", {
+                "fields": ("interval", "crontab"),
+                "classes": ("extrapretty", "wide", ),
+            }),
+            ("Arguments", {
+                "fields": ("args", "kwargs"),
+                "classes": ("extrapretty", "wide", "collapse"),
+            }),
+            ("Execution Options", {
+                "fields": ("expires", "queue", "exchange", "routing_key"),
+                "classes": ("extrapretty", "wide", "collapse"),
+            }),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(PeriodicTaskAdmin, self).__init__(*args, **kwargs)
+        self.form = periodic_task_form()
+
+
+admin.site.register(IntervalSchedule)
+admin.site.register(CrontabSchedule)
+admin.site.register(PeriodicTask, PeriodicTaskAdmin)
