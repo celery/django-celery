@@ -14,7 +14,7 @@ from celery.messaging import establish_connection
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
-from .models import TaskState, WorkerState
+from djcelery.models import TaskState, WorkerState
 
 
 TASK_STATE_COLORS = {states.SUCCESS: "green",
