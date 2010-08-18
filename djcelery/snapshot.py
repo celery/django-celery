@@ -43,7 +43,7 @@ class Camera(Polaroid):
                           "eta": maybe_iso8601(task.eta),
                           "expires": maybe_iso8601(task.expires),
                           "state": task.state,
-                          "timestamp": datetime.fromtimestamp(task.timestamp),
+                          "tstamp": datetime.fromtimestamp(task.timestamp),
                           "result": task.result or task.exception,
                           "traceback": task.traceback,
                           "runtime": task.runtime,

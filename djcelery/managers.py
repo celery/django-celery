@@ -80,6 +80,12 @@ class ResultManager(ExtendedManager):
         self.get_all_expired().delete()
 
 
+class PeriodicTaskManager(ExtendedManager):
+
+    def enabled(self):
+        return self.filter(enabled=True)
+
+
 class TaskManager(ResultManager):
     """Manager for :class:`celery.models.Task` models."""
 
@@ -124,6 +130,7 @@ class TaskManager(ResultManager):
                                         "traceback": traceback})
 
 
+
 class TaskSetManager(ResultManager):
     """Manager for :class:`celery.models.TaskSet` models."""
 
@@ -156,7 +163,7 @@ class TaskStateManager(ExtendedManager):
 
     def expired(self, states, expires):
         return self.filter(state__in=states,
-                           timestamp__lte=datetime.now() - expires)
+                           tstamp__lte=datetime.now() - expires)
 
     def expire_by_states(self, states, expires):
         return self.expired(states, expires).update(hidden=True)

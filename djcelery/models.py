@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from time import time, mktime
 
 import django
@@ -6,6 +6,7 @@ import django
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models import signals
 from django.db.utils import DatabaseError
 from django.template.defaultfilters import pluralize
 from django.utils.translation import ugettext_lazy as _
@@ -18,7 +19,7 @@ from celery import states
 from celery.registry import tasks
 
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
-from djcelery.managers import TaskStateManager
+from djcelery.managers import TaskStateManager, PeriodicTaskManager
 
 HEARTBEAT_EXPIRE = 150 # 2 minutes, 30 seconds
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
@@ -139,6 +140,27 @@ except DatabaseError:
     # Tables have not been created yet.
     SCHEDULE_CHOICES = ()
 
+
+class PeriodicTasks(models.Model):
+    ident = models.SmallIntegerField(default=1, primary_key=True, unique=True)
+    last_update = models.DateTimeField(null=False)
+
+    objects = ExtendedManager()
+
+    @classmethod
+    def changed(cls, instance, **kwargs):
+        if not instance.no_changes:
+            now = datetime.now()
+            cls.objects.update_or_create(ident=1,
+                                         defaults={"last_update": now})
+
+    @classmethod
+    def last_change(cls):
+        try:
+            return cls.objects.get(ident=1).last_update
+        except cls.DoesNotExist:
+            pass
+
 class PeriodicTask(models.Model):
     name = models.CharField(_(u"name"), max_length=200, unique=True,
                             help_text=_(u"Useful description"))
@@ -151,40 +173,42 @@ class PeriodicTask(models.Model):
                                 verbose_name=_(u"crontab"),
                                 help_text=_(u"Use one of interval/schedule"))
     args = models.TextField(_(u"Arguments"),
-                            blank=True,
-                            default="[]",
+                            blank=True, default="[]",
                             help_text=_(u"JSON encoded positional arguments"))
     kwargs = models.TextField(_(u"Keyword arguments"),
-                              blank=True,
-                              default="{}",
+                              blank=True, default="{}",
                               help_text=_("JSON encoded keyword arguments"))
     queue = models.CharField(_("queue"),
-                             max_length=200,
-                             blank=True,
-                             null=True,
-                             default=None,
+                             max_length=200, blank=True,
+                             null=True, default=None,
                              help_text=_(u"Queue defined in CELERY_QUEUES"))
     exchange = models.CharField(_(u"exchange"),
-                              max_length=200,
-                              blank=True,
-                              null=True,
-                              default=None)
+                              max_length=200, blank=True,
+                              null=True, default=None)
     routing_key = models.CharField(_(u"routing key"),
-                              max_length=200,
-                              blank=True,
-                              null=True,
-                              default=None)
+                              max_length=200, blank=True,
+                              null=True, default=None)
     expires = models.DateTimeField(_(u"expires"),
-                              blank=True,
-                              null=True)
+                              blank=True, null=True)
     enabled = models.BooleanField(_(u"enabled"), default=True)
     last_run_at = models.DateTimeField(
-                              auto_now=False,
-                              auto_now_add=False,
-                              editable=False,
-                              blank=True,
-                              null=True)
+                              auto_now=False, auto_now_add=False,
+                              editable=False, blank=True, null=True)
     total_run_count = models.PositiveIntegerField(default=0, editable=False)
+    date_changed = models.DateTimeField(auto_now=True)
+
+    objects = PeriodicTaskManager()
+    no_changes = False
+
+    class Meta:
+        verbose_name = _(u"periodic task")
+        verbose_name_plural = _(u"periodic tasks")
+
+    def save(self, *args, **kwargs):
+        self.exchange = self.exchange or None
+        self.routing_key = self.routing_key or None
+        self.queue = self.queue or None
+        super(PeriodicTask, self).save(*args, **kwargs)
 
     def __unicode__(self):
         if self.interval:
@@ -193,18 +217,15 @@ class PeriodicTask(models.Model):
             return u"%s crontab:%s" % (self.name, unicode(self.crontab))
         return u"%s {no schedule}" % (self.name, )
 
-    def save(self, *args, **kwargs):
-        self.exchange = self.exchange or None
-        self.routing_key = self.routing_key or None
-        self.queue = self.queue or None
-        super(PeriodicTask, self).save(*args, **kwargs)
-
     @property
     def schedule(self):
         if self.interval:
             return self.interval.schedule
         if self.crontab:
             return self.crontab.schedule
+
+signals.pre_delete.connect(PeriodicTasks.changed, sender=PeriodicTask)
+signals.pre_save.connect(PeriodicTasks.changed, sender=PeriodicTask)
 
 
 
@@ -245,7 +266,7 @@ class TaskState(models.Model):
                 max_length=36, unique=True)
     name = models.CharField(_(u"name"),
                 max_length=200, null=True)
-    timestamp = models.DateTimeField(_(u"event received at"),
+    tstamp = models.DateTimeField(_(u"event received at"),
                 editable=False)
     args = models.CharField(_(u"Arguments"),
                 max_length=200, null=True)
@@ -270,8 +291,8 @@ class TaskState(models.Model):
         """Model meta-data."""
         verbose_name = _(u"task")
         verbose_name_plural = _(u"tasks")
-        get_latest_by = "timestamp"
-        ordering = ["-timestamp"]
+        get_latest_by = "tstamp"
+        ordering = ["-tstamp"]
 
     def __unicode__(self):
         name = self.name or "UNKNOWN"

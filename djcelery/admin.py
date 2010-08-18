@@ -131,7 +131,7 @@ class TaskMonitor(ModelMonitor):
     detail_title = _("Task detail")
     list_page_title = _("Tasks")
     rate_limit_confirmation_template = "djcelery/confirm_rate_limit.html"
-    date_hierarchy = "timestamp"
+    date_hierarchy = "tstamp"
     fieldsets = (
             (None, {
                 "fields": ("state", "task_id", "name", "args", "kwargs",
@@ -153,7 +153,7 @@ class TaskMonitor(ModelMonitor):
     readonly_fields = ("state", "task_id", "name", "args", "kwargs",
                        "eta", "runtime", "worker", "result", "traceback",
                        "expires")
-    list_filter = ("state", "name", "timestamp", "eta", "worker")
+    list_filter = ("state", "name", "tstamp", "eta", "worker")
     search_fields = ("name", "task_id", "args", "kwargs", "worker__hostname")
     actions = ["revoke_tasks",
                "rate_limit_tasks"]
