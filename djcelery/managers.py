@@ -89,7 +89,6 @@ class PeriodicTaskManager(ExtendedManager):
 class TaskManager(ResultManager):
     """Manager for :class:`celery.models.Task` models."""
 
-    @transaction_retry(max_retries=1)
     def get_task(self, task_id):
         """Get task meta for task by ``task_id``.
 
