@@ -99,8 +99,10 @@ class TaskManager(ResultManager):
             create the same task. The default is to retry once.
 
         """
-        task, created = self.get_or_create(task_id=task_id)
-        return task
+        try:
+            return self.get(task_id=task_id)
+        except self.model.DoesNotExist:
+            return self.model(task_id=task_id)
 
     @transaction_retry(max_retries=2)
     def store_result(self, task_id, result, status, traceback=None):
