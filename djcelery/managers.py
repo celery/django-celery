@@ -1,11 +1,18 @@
+import warnings
+
 from itertools import count
 from datetime import datetime
 
 from celery.utils.functional import wraps
 
+from django.db import connection
 from django.db import models
 from django.db import transaction
 from django.db.models.query import QuerySet
+
+
+class TxIsolationWarning(UserWarning):
+    pass
 
 
 def transaction_retry(max_retries=1):
@@ -86,6 +93,7 @@ class PeriodicTaskManager(ExtendedManager):
 
 class TaskManager(ResultManager):
     """Manager for :class:`celery.models.Task` models."""
+    _last_id = None
 
     def get_task(self, task_id):
         """Get task meta for task by ``task_id``.
@@ -99,6 +107,9 @@ class TaskManager(ResultManager):
         try:
             return self.get(task_id=task_id)
         except self.model.DoesNotExist:
+            if self._last_id == task_id:
+                self.warn_if_repeatable_read()
+            self._last_id = task_id
             return self.model(task_id=task_id)
 
     @transaction_retry(max_retries=2)
@@ -127,6 +138,18 @@ class TaskManager(ResultManager):
                                      defaults={"status": status,
                                                "result": result,
                                                "traceback": traceback})
+
+    def warn_if_repeatable_read(self):
+        if settings.DATABASE_ENGINE.lower() == "mysql":
+            cursor = connection.cursor()
+            if cursor.execute("SELECT @@tx_isolation"):
+                isolation = cursor.fetchone()[0]
+                if isolation == 'REPEATABLE-READ':
+                    warnings.warn(TxIsolationWarning(
+                        "Polling results with transaction isolation level "
+                        "repeatable-read within the same transaction "
+                        "may give outdated results. Be sure to commit the "
+                        "transaction for each poll iteration."))
 
 
 class TaskSetManager(ResultManager):

@@ -51,6 +51,11 @@ News
 Fixes
 -----
 
+* database backend: Now shows warning if polling results with transaction isolation level
+  repeatable-read on MySQL.
+
+    See http://github.com/ask/django-celery/issues/issue/6
+
 * database backend: get result does no longer store the default result to
   database.
 
