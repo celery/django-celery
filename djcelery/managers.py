@@ -131,10 +131,8 @@ class TaskManager(ResultManager):
                                         "traceback": traceback})
 
 
-
 class TaskSetManager(ResultManager):
     """Manager for :class:`celery.models.TaskSet` models."""
-
 
     @transaction_retry(max_retries=1)
     def restore_taskset(self, taskset_id):

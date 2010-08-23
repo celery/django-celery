@@ -3,12 +3,8 @@ from time import time, mktime
 
 import django
 
-from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import signals
-from django.db.utils import DatabaseError
-from django.template.defaultfilters import pluralize
 from django.utils.translation import ugettext_lazy as _
 
 from picklefield.fields import PickledObjectField
@@ -86,6 +82,7 @@ def get_task_choices():
     t = tasks.regular()
     return zip(t.keys(), t.keys())
 
+
 class IntervalSchedule(models.Model):
     every = models.IntegerField(_(u"every"), null=False)
     period = models.CharField(_(u"period"), max_length=24,
@@ -143,17 +140,6 @@ class CrontabSchedule(models.Model):
                    day_of_week=schedule.day_of_week)
 
 
-
-try:
-    SCHEDULE_CHOICES = (
-        (ContentType.objects.get_for_model(IntervalSchedule), _(u"Interval")),
-        (ContentType.objects.get_for_model(CrontabSchedule), _(u"Crontab"))
-    )
-except DatabaseError:
-    # Tables have not been created yet.
-    SCHEDULE_CHOICES = ()
-
-
 class PeriodicTasks(models.Model):
     ident = models.SmallIntegerField(default=1, primary_key=True, unique=True)
     last_update = models.DateTimeField(null=False)
@@ -173,6 +159,7 @@ class PeriodicTasks(models.Model):
             return cls.objects.get(ident=1).last_update
         except cls.DoesNotExist:
             pass
+
 
 class PeriodicTask(models.Model):
     name = models.CharField(_(u"name"), max_length=200, unique=True,
@@ -239,7 +226,6 @@ class PeriodicTask(models.Model):
 
 signals.pre_delete.connect(PeriodicTasks.changed, sender=PeriodicTask)
 signals.pre_save.connect(PeriodicTasks.changed, sender=PeriodicTask)
-
 
 
 class WorkerState(models.Model):

@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from itertools import count
 from time import time
 
-from anyjson import deserialize
 from celery.schedules import schedule, crontab
 
 from djcelery import schedulers

@@ -4,7 +4,6 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin import helpers
 from django.contrib.admin.views import main as main_views
-from django.contrib.contenttypes.generic import GenericStackedInline
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.encoding import force_unicode
@@ -253,11 +252,10 @@ def periodic_task_form():
         def clean(self):
             data = super(PeriodicTaskForm, self).clean()
             regtask = data.get("regtask")
-            task = data.get("task")
             if regtask:
                 data["task"] = regtask
             if not data["task"]:
-                exc = ValidationError(_(u"Need name of task"))
+                exc = forms.ValidationError(_(u"Need name of task"))
                 self._errors["task"] = self.error_class(exc.messages)
                 raise exc
             return data

@@ -8,7 +8,7 @@ from celery.result import AsyncResult
 from celery.registry import tasks
 from celery.backends import default_backend
 
-# Ensure builtin tasks are loaded for task_list view
+# Ensure built-in tasks are loaded for task_list view
 import celery.task.builtins
 
 
