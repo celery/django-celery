@@ -19,7 +19,7 @@ ADMINS = (
 
 TEST_RUNNER = "django_nose.run_tests"
 here = os.path.abspath(os.path.dirname(__file__))
-COVERAGE_EXCLUDE_MODULES = ("djcelery.__init__",
+COVERAGE_EXCLUDE_MODULES = ("djcelery",
                             "djcelery.tests.*",
                             "djcelery.management.*",
                             "djcelery.contrib.*",

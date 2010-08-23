@@ -17,6 +17,7 @@ from celery import conf
 from celery import schedules
 from celery import states
 from celery.registry import tasks
+from celery.utils.timeutils import timedelta_seconds
 
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
 from djcelery.managers import TaskStateManager, PeriodicTaskManager
@@ -98,6 +99,11 @@ class IntervalSchedule(models.Model):
     def schedule(self):
         return schedules.schedule(timedelta(**{self.period: self.every}))
 
+    @classmethod
+    def from_schedule(cls, schedule):
+        return cls(every=timedelta_seconds(schedule.run_every),
+                   period="seconds")
+
     def __unicode__(self):
         if self.every == 1:
             return _(u"every %s") % self.period[:-1]
@@ -129,6 +135,13 @@ class CrontabSchedule(models.Model):
         return schedules.crontab(minute=self.minute,
                                 hour=self.hour,
                                 day_of_week=self.day_of_week)
+
+    @classmethod
+    def from_schedule(cls, schedule):
+        return cls(minute=schedule.minute,
+                   hour=schedule.hour,
+                   day_of_week=schedule.day_of_week)
+
 
 
 try:

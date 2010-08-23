@@ -10,9 +10,11 @@ from djcelery.models import PeriodicTask, PeriodicTasks
 
 
 class ModelEntry(ScheduleEntry):
+    _save_fields = ["last_run_at", "total_run_count", "no_changes"]
 
     def __init__(self, model):
-        self.name = model.task
+        self.name = model.name
+        self.task = model.task
         self.schedule = model.schedule
         self.args = deserialize(model.args)
         self.kwargs = deserialize(model.kwargs)
@@ -34,7 +36,12 @@ class ModelEntry(ScheduleEntry):
         return self.__class__(self.model)
 
     def save(self):
-        self.model.save()
+        # Object may not be synchronized, so only
+        # change the fields we care about.
+        obj = self.model._default_manager.get(pk=self.model.pk)
+        for field in self._save_fields:
+            setattr(obj, field, getattr(self.model, field))
+        obj.save()
 
 
 class DatabaseScheduler(Scheduler):
@@ -64,21 +71,22 @@ class DatabaseScheduler(Scheduler):
             ts = self.Changes.last_change()
             if not ts or ts < self._last_timestamp:
                 return False
-            self.logger.debug("LAST TIMESTAMP:%s CURRENT: %s" % (
-                self._last_timestamp, ts))
 
         self._last_timestamp = datetime.now()
         return True
 
+    def should_flush(self):
+        return not self._last_flush or \
+                    (time() - self._last_flush) > self._flush_every
+
     def reserve(self, entry):
         new_entry = Scheduler.reserve(self, entry)
+        # Need to story entry by name, because the entry may change
+        # in the mean time.
         self._dirty.add(new_entry.name)
-        now = time()
-        if not self._last_flush or \
-                now - self._last_flush > self._flush_every:
-            self.logger.debug("Celerybest: Writing schedule changes...")
+        if self.should_flush():
+            self.logger.debug("Celerybeat: Writing schedule changes...")
             self.flush()
-            self._last_flush = now
         return new_entry
 
     @transaction.commit_manually()
@@ -88,17 +96,20 @@ class DatabaseScheduler(Scheduler):
         try:
             while self._dirty:
                 try:
-                    n = self._dirty.pop()
+                    name = self._dirty.pop()
+                    self.schedule[name].save()
                 except KeyError:
-                    break
-                self[n].save()
+                    continue
         except:
             transaction.rollback()
+            raise
         else:
             transaction.commit()
+            self._last_flush = time()
 
     def get_schedule(self):
         if self.schedule_changed():
+            self.flush()
             self.logger.debug("DatabaseScheduler: Schedule changed.")
             self._schedule = self.all_as_schedule()
         return self._schedule
