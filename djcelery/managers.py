@@ -134,13 +134,12 @@ class TaskManager(ResultManager):
 class TaskSetManager(ResultManager):
     """Manager for :class:`celery.models.TaskSet` models."""
 
-    @transaction_retry(max_retries=1)
     def restore_taskset(self, taskset_id):
         """Get taskset meta for task by ``taskset_id``."""
         try:
             return self.get(taskset_id=taskset_id)
         except self.model.DoesNotExist:
-            return None
+            pass
 
     @transaction_retry(max_retries=2)
     def store_result(self, taskset_id, result):
