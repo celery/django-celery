@@ -55,6 +55,8 @@ class test_Camera(unittest.TestCase):
         self.assertTrue(m.hostname)
         self.assertTrue(m.last_heartbeat)
         self.assertTrue(m.is_alive())
+        self.assertEqual(unicode(m), unicode(m.hostname))
+        self.assertTrue(repr(m))
 
     def test_handle_task_received(self):
         worker = Worker(hostname="fuzzie")
@@ -66,6 +68,11 @@ class test_Camera(unittest.TestCase):
         self.assertEqual(task.state, "RECEIVED")
         mt = self.cam.handle_task((task.uuid, task))
         self.assertEqual(mt.name, task.name)
+        self.assertTrue(unicode(mt))
+        self.assertTrue(repr(mt))
+        mt.eta = datetime.now()
+        self.assertIn("eta", unicode(mt))
+        self.assertIn(mt, models.TaskState.objects.active())
 
     def test_handle_task(self):
         worker1 = Worker(hostname="fuzzie")
@@ -166,9 +173,3 @@ class test_Camera(unittest.TestCase):
         self.assertEqual(t2.worker.hostname, ws[1])
 
         self.cam.on_shutter(state)
-
-
-
-
-
-

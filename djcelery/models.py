@@ -123,9 +123,10 @@ class CrontabSchedule(models.Model):
         verbose_name_plural = _(u"crontabs")
 
     def __unicode__(self):
-        return u"%s %s %s (m/h/d)" % (self.minute or "*",
-                              self.hour or "*",
-                              self.day_of_week or "*")
+        rfield = lambda f: f and str(f).replace(" ", "") or "*"
+        return u"%s %s %s (m/h/d)" % (rfield(self.minute),
+                                      rfield(self.hour),
+                                      rfield(self.day_of_week))
 
     @property
     def schedule(self):
@@ -135,9 +136,9 @@ class CrontabSchedule(models.Model):
 
     @classmethod
     def from_schedule(cls, schedule):
-        return cls(minute=schedule.minute,
-                   hour=schedule.hour,
-                   day_of_week=schedule.day_of_week)
+        return cls(minute=schedule._orig_minute,
+                   hour=schedule._orig_hour,
+                   day_of_week=schedule._orig_day_of_week)
 
 
 class PeriodicTasks(models.Model):
@@ -214,8 +215,8 @@ class PeriodicTask(models.Model):
         if self.interval:
             return u"%s: %s" % (self.name, unicode(self.interval))
         if self.crontab:
-            return u"%s crontab:%s" % (self.name, unicode(self.crontab))
-        return u"%s {no schedule}" % (self.name, )
+            return u"%s: %s" % (self.name, unicode(self.crontab))
+        return u"%s: {no schedule}" % (self.name, )
 
     @property
     def schedule(self):
