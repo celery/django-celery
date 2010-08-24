@@ -1,12 +1,18 @@
+from celery import conf
 from celery.backends.base import BaseDictBackend
 
 from djcelery.models import TaskMeta, TaskSetMeta
 
 
 class DatabaseBackend(BaseDictBackend):
-    """The database backends. Using Django models to store task metadata."""
+    """The database backend.
+
+    Using Django models to store task state.
+
+    """
     TaskModel = TaskMeta
     TaskSetModel = TaskSetMeta
+    expires = conf.TASK_RESULT_EXPIRES
 
     def _store_result(self, task_id, result, status, traceback=None):
         """Store return value and status of an executed task."""
@@ -32,4 +38,4 @@ class DatabaseBackend(BaseDictBackend):
     def cleanup(self):
         """Delete expired metadata."""
         for model in self.TaskModel, self.TaskSetModel:
-            model._default_manager.delete_expired()
+            model._default_manager.delete_expired(self.expires)

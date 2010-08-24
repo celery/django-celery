@@ -69,15 +69,13 @@ class ExtendedManager(models.Manager):
 
 class ResultManager(ExtendedManager):
 
-    def get_all_expired(self):
+    def get_all_expired(self, expires):
         """Get all expired task results."""
-        from celery import conf
-        expires = conf.TASK_RESULT_EXPIRES
         return self.filter(date_done__lt=datetime.now() - expires)
 
-    def delete_expired(self):
+    def delete_expired(self, expires):
         """Delete all expired taskset results."""
-        self.get_all_expired().delete()
+        self.get_all_expired(expires).delete()
 
 
 class PeriodicTaskManager(ExtendedManager):
@@ -125,10 +123,10 @@ class TaskManager(ResultManager):
             create the same task. The default is to retry twice.
 
         """
-        return self.update_or_create(task_id=task_id, defaults={
-                                        "status": status,
-                                        "result": result,
-                                        "traceback": traceback})
+        return self.update_or_create(task_id=task_id,
+                                     defaults={"status": status,
+                                               "result": result,
+                                               "traceback": traceback})
 
 
 class TaskSetManager(ResultManager):
