@@ -2,6 +2,60 @@
  Change history
 ================
 
+2.1.0
+=====
+
+Important Notes
+---------------
+
+This release depends on Celery version 2.1.0.
+Be sure to read the Celery changelog before you upgrade.
+
+News
+----
+
+* The periodic task schedule can now be stored in the database and edited via
+  the Django Admin interface.
+
+    To use the new database schedule you need to start ``celerybeat`` with the
+    following argument::
+
+        $ python manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler
+
+    Note that you need to add your old periodic tasks to the database manually
+    (using the Django admin interface for example).
+
+* New Celery monitor for the Django Admin interface.
+
+    To start monitoring your workers you have to start your workers
+    in event mode::
+
+        $ python manage.py celeryd -E
+
+    (you can do this without restarting the server too::
+
+        >>> from celery.task.control import broadcast
+        >>> broadcast("enable_events")
+
+    You need to do a syncdb to create the new tables:
+
+        python manage.py syncdb
+
+    Then you need to start the snapshot camera::
+
+        $ python manage.py celerycam -f 2.0
+
+    This will take a snapshot of the events every 2 seconds and store it in
+    the database.
+
+Fixes
+-----
+
+* database backend: get result does no longer store the default result to
+  database.
+
+    See http://github.com/ask/django-celery/issues/issue/6
+
 2.0.2
 =====
 
