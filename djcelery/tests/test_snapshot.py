@@ -1,13 +1,12 @@
 import unittest2 as unittest
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from itertools import count
 from time import time
 
 from celery.events import Event
 from celery.events.state import State, Worker, Task
 from celery.utils import gen_unique_id
-from celery.utils.functional import curry
 
 from djcelery import snapshot
 from djcelery import models
@@ -61,7 +60,7 @@ class test_Camera(unittest.TestCase):
     def test_handle_task_received(self):
         worker = Worker(hostname="fuzzie")
         worker.on_online(timestamp=time())
-        mw = self.cam.handle_worker((worker.hostname, worker))
+        self.cam.handle_worker((worker.hostname, worker))
 
         task = create_task(worker)
         task.on_received(timestamp=time())
@@ -135,7 +134,7 @@ class test_Camera(unittest.TestCase):
                   Event("task-revoked", uuid=uus[2], name="C",
                                         hostname=ws[2])]
         map(state.event, events)
-        self.cam.on_shutter(state)
+        cam.on_shutter(state)
 
         for host in ws:
             worker = models.WorkerState.objects.get(hostname=host)
@@ -157,7 +156,7 @@ class test_Camera(unittest.TestCase):
                                       hostname=ws[1]),
                  Event("worker-offline", hostname=ws[0])]
         map(state.event, events)
-        self.cam.on_shutter(state)
+        cam.on_shutter(state)
 
         w1 = models.WorkerState.objects.get(hostname=ws[0])
         self.assertFalse(w1.is_alive())
@@ -172,4 +171,4 @@ class test_Camera(unittest.TestCase):
         self.assertEqual(t2.result, u"KeyError('foo')")
         self.assertEqual(t2.worker.hostname, ws[1])
 
-        self.cam.on_shutter(state)
+        cam.on_shutter(state)

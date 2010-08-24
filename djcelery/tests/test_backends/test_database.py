@@ -70,22 +70,15 @@ class TestDatabaseBackend(unittest.TestCase):
     def test_cleanup(self):
         b = DatabaseBackend()
         b.TaskModel._default_manager.all().delete()
-        id1 = gen_unique_id()
-        id2 = gen_unique_id()
-        id3 = gen_unique_id()
-        b.mark_as_done(id1, 16)
-        b.mark_as_done(id2, 32)
-        b.mark_as_done(id3, 64)
-
-        A = b.TaskModel._default_manager.get(task_id=id1)
-        B = b.TaskModel._default_manager.get(task_id=id2)
-        C = b.TaskModel._default_manager.get(task_id=id3)
+        ids = [gen_unique_id() for _ in xrange(3)]
+        for i, res in enumerate((16, 32, 64)):
+            b.mark_as_done(ids[i], res)
 
         self.assertEqual(b.TaskModel._default_manager.count(), 3)
 
         then = datetime.now() - conf.TASK_RESULT_EXPIRES * 2
         # Have to avoid save() because it applies the auto_now=True.
-        b.TaskModel._default_manager.filter(task_id__in=[id1, id2]) \
+        b.TaskModel._default_manager.filter(task_id__in=ids[:-1]) \
                                     .update(date_done=then)
 
         b.cleanup()

@@ -52,7 +52,7 @@ class TestDjangoLoader(unittest.TestCase):
         def with_db_reuse_max(reuse_max, fun):
             prev = getattr(self.loader.conf, "CELERY_DB_REUSE_MAX", None)
             from django import db
-            prev_con = db.connection
+            prev_conn = db.connection
             self.loader.conf.CELERY_DB_REUSE_MAX = reuse_max
             conn = db.connection = Connection()
             try:
@@ -60,6 +60,7 @@ class TestDjangoLoader(unittest.TestCase):
                 return conn
             finally:
                 self.loader.conf.CELERY_DB_REUSE_MAX = prev
+                db.connection = prev_conn
 
         def test_max_3(conn):
             for i in range(3):

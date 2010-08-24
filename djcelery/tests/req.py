@@ -3,28 +3,25 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.core.handlers.base import BaseHandler
 
 class RequestFactory(Client):
-    """
-    Class that lets you create mock Request objects for use in testing.
-    
+    """Class that lets you create mock Request objects for use in testing.
+
     Usage:
-    
+
     rf = RequestFactory()
     get_request = rf.get('/hello/')
     post_request = rf.post('/submit/', {'foo': 'bar'})
-    
+
     This class re-uses the django.test.client.Client interface, docs here:
     http://www.djangoproject.com/documentation/testing/#the-test-client
-    
-    Once you have a request object you can pass it to any view function, 
+
+    Once you have a request object you can pass it to any view function,
     just as if that view had been hooked up using a URLconf.
-    
+
     """
 
     def request(self, **request):
-        """
-        Similar to parent class, but returns the request object as soon as it
-        has created it.
-        """
+        """Similar to parent class, but returns the request object as
+        soon as it has created it."""
         environ = {
             'HTTP_COOKIE': self.cookies,
             'HTTP_USER_AGENT': 'Django UnitTest Client 1.0',
@@ -42,6 +39,7 @@ class RequestFactory(Client):
         environ.update(request)
         return WSGIRequest(environ)
 
+
 class MockRequest(object):
 
     def __init__(self):
@@ -51,11 +49,11 @@ class MockRequest(object):
         self.middleware = handler._request_middleware
 
     def _make_request(self, request_method, *args, **kwargs):
-       request_method_handler = getattr(self.request_factory, request_method)
-       request = request_method_handler(*args, **kwargs)
-       [middleware_processor(request)
-               for middleware_processor in self.middleware]
-       return request
+        request_method_handler = getattr(self.request_factory, request_method)
+        request = request_method_handler(*args, **kwargs)
+        [middleware_processor(request)
+            for middleware_processor in self.middleware]
+        return request
 
     def get(self, *args, **kwargs):
         return self._make_request("get", *args, **kwargs)
