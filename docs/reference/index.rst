@@ -13,6 +13,8 @@
     djcelery.models
     djcelery.managers
     djcelery.loaders
+    djcelery.schedulers
+    djcelery.snapshot
     djcelery.backends.database
     djcelery.backends.cache
     djcelery.contrib.test_runner
