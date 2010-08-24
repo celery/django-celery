@@ -1,6 +1,8 @@
 import sys
 import unittest2 as unittest
 
+from datetime import timedelta
+
 from celery.serialization import pickle
 from django.core.cache.backends.base import InvalidCacheBackendError
 
@@ -11,13 +13,14 @@ from celery.datastructures import ExceptionInfo
 
 from djcelery.backends.cache import CacheBackend
 
+
 class SomeClass(object):
 
     def __init__(self, data):
         self.data = data
 
 
-class TestCacheBackend(unittest.TestCase):
+class test_CacheBackend(unittest.TestCase):
 
     def test_mark_as_done(self):
         cb = CacheBackend()
@@ -73,8 +76,14 @@ class TestCacheBackend(unittest.TestCase):
         cb = CacheBackend()
         cb.process_cleanup()
 
+    def test_set_expires(self):
+        cb1 = CacheBackend(expires=timedelta(seconds=16))
+        self.assertEqual(cb1.expires, 16)
+        cb2 = CacheBackend(expires=32)
+        self.assertEqual(cb2.expires, 32)
 
-class TestCustomCacheBackend(unittest.TestCase):
+
+class test_custom_CacheBackend(unittest.TestCase):
 
     def test_custom_cache_backend(self):
         from celery import conf
@@ -93,7 +102,7 @@ class TestCustomCacheBackend(unittest.TestCase):
             sys.modules["djcelery.backends.cache"] = prev_module
 
 
-class TestMemcacheWrapper(unittest.TestCase):
+class test_MemcacheWrapper(unittest.TestCase):
 
     def test_memcache_wrapper(self):
 

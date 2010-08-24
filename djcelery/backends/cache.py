@@ -50,9 +50,9 @@ class CacheBackend(KeyValueStoreBackend):
 
     def __init__(self, *args, **kwargs):
         super(CacheBackend, self).__init__(self, *args, **kwargs)
-        expires = conf.TASK_RESULT_EXPIRES
+        expires = kwargs.get("expires", conf.TASK_RESULT_EXPIRES)
         if isinstance(expires, timedelta):
-            expires = int(timedelta_seconds(conf.TASK_RESULT_EXPIRES))
+            expires = int(timedelta_seconds(expires))
         self.expires = expires
 
     def get(self, key):
