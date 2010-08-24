@@ -20,6 +20,10 @@ class Camera(Polaroid):
                      states.EXCEPTION_STATES: timedelta(days=3),
                      states.UNREADY_STATES: timedelta(days=5)}
 
+    def __init__(self, *args, **kwargs):
+        super(Camera, self).__init__(*args, **kwargs)
+        self.prev_count = 0
+
     def get_heartbeat(self, worker):
         try:
             heartbeat = worker.heartbeats[-1]
@@ -49,7 +53,7 @@ class Camera(Polaroid):
                           "runtime": task.runtime,
                           "worker": worker})
 
-    def update_or_create(self, **kwargs):
+    def update_task(self, state, **kwargs):
         objects = self.TaskState.objects
         defaults = kwargs.pop("defaults", None) or {}
         try:
@@ -58,6 +62,11 @@ class Camera(Polaroid):
             if not defaults.get("name"):
                 return
             return objects.create(**dict(kwargs, **defaults))
+        else:
+            if state != "RECEIVED":
+                defaults = dict((k, v)
+                            for k, v in defaults.items()
+                                if k not in KEEP_FROM_RECEIVED)
 
         for k, v in defaults.items():
             setattr(obj, k, v)
@@ -65,17 +74,12 @@ class Camera(Polaroid):
 
         return obj
 
-    def update_task(self, state, **kwargs):
-        if state != "RECEIVED":
-            kwargs["defaults"] = dict((k, v)
-                            for k, v in kwargs["defaults"].items()
-                                if k not in KEEP_FROM_RECEIVED)
-        return self.update_or_create(**kwargs)
-
     def on_shutter(self, state):
-        if state.event_count:
+        event_count = state.event_count
+        if event_count != self.prev_count:
             map(self.handle_worker, state.workers.items())
             map(self.handle_task, state.tasks.items())
+        self.prev_count = event_count
 
     def on_cleanup(self):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)
@@ -84,3 +88,5 @@ class Camera(Polaroid):
             self.debug("Cleanup: Marked %s objects as dirty." % (dirty, ))
             self.TaskState.objects.purge()
             self.debug("Cleanup: %s objects purged." % (dirty, ))
+            return dirty
+        return 0

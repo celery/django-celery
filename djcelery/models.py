@@ -303,8 +303,10 @@ class TaskState(models.Model):
         return s
 
     def __repr__(self):
-        name = self.name or "UNKNOWN"
-        return "<TaskState: %s %s(%s)>" % (self.state, name, self.task_id, )
+        return "<TaskState: %s %s(%s) ts:%s>" % (self.state,
+                                                 self.name or "UNKNOWN",
+                                                 self.task_id,
+                                                 self.tstamp)
 
 
 if (django.VERSION[0], django.VERSION[1]) >= (1, 1):
