@@ -37,7 +37,7 @@ copyright = u'2009, Ask Solem'
 # The short X.Y version.
 version = ".".join(map(str, djcelery.VERSION[0:2]))
 # The full version, including alpha/beta/rc tags.
-release = djcelery.version_with_meta()
+release = djcelery.__version__
 
 exclude_trees = ['.build']
 
