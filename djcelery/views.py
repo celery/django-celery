@@ -63,7 +63,7 @@ def task_status(request, task_id):
     response_data = dict(id=task_id, status=status, result=res)
     if status in default_backend.EXCEPTION_STATES:
         traceback = default_backend.get_traceback(task_id)
-        response_data.update({"result": str(res.args[0]),
+        response_data.update({"result": repr(res),
                               "exc": get_full_cls_name(res.__class__),
                               "traceback": traceback})
 
