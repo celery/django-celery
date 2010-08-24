@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; django-celery v2.0.2 (stable) documentation</title>
+    <title>Index &mdash; django-celery v2.1.0a2 documentation</title>
     <link rel="stylesheet" href="static/celery.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.0.2 (stable)',
+        VERSION:     '2.1.0a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.0.2 (stable) documentation" href="index.html" /> 
+    <link rel="top" title="django-celery v2.1.0a2 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">django-celery v2.0.2 (stable) documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -46,11 +46,12 @@
    <h1 id="index">Index</h1>
 
    <div class="genindex-jumpbox">
-   <a href="#A"><strong>A</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> 
+   <a href="#A"><strong>A</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#W"><strong>W</strong></a> 
    </div>
 <h2 id="A">A</h2>
 <table width="100%" class="indextable genindextable"><tr>
   <td width="33%" valign="top"><dl>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskStateManager.active">active() (djcelery.managers.TaskStateManager method)</a></dt>
     <dt><a href="reference/djcelery.views.html#djcelery.views.apply">apply() (in module djcelery.views)</a></dt>
 </dl></td>
   <td width="33%" valign="top"><dl>
@@ -93,9 +94,12 @@
 <h2 id="E">E</h2>
 <table width="100%" class="indextable genindextable"><tr>
   <td width="33%" valign="top"><dl>
-    <dt><a href="reference/djcelery.managers.html#djcelery.managers.ExtendedManager">ExtendedManager (class in djcelery.managers)</a></dt>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.PeriodicTaskManager.enabled">enabled() (djcelery.managers.PeriodicTaskManager method)</a></dt>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskStateManager.expire_by_states">expire_by_states() (djcelery.managers.TaskStateManager method)</a></dt>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskStateManager.expired">expired() (djcelery.managers.TaskStateManager method)</a></dt>
 </dl></td>
   <td width="33%" valign="top"><dl>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.ExtendedManager">ExtendedManager (class in djcelery.managers)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.ExtendedQuerySet">ExtendedQuerySet (class in djcelery.managers)</a></dt>
 </dl></td>
 </tr></table>
@@ -156,7 +160,11 @@
 <h2 id="P">P</h2>
 <table width="100%" class="indextable genindextable"><tr>
   <td width="33%" valign="top"><dl>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.PeriodicTaskManager">PeriodicTaskManager (class in djcelery.managers)</a></dt>
     <dt><a href="reference/djcelery.models.html#PeriodicTaskMeta">PeriodicTaskMeta (built-in class)</a></dt>
+</dl></td>
+  <td width="33%" valign="top"><dl>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskStateManager.purge">purge() (djcelery.managers.TaskStateManager method)</a></dt>
 </dl></td>
 </tr></table>
 
@@ -202,16 +210,20 @@
     <dt><a href="reference/djcelery.models.html#TASK_STATUS_PENDING">TASK_STATUS_PENDING (built-in variable)</a></dt>
     <dt><a href="reference/djcelery.models.html#TASK_STATUS_RETRY">TASK_STATUS_RETRY (built-in variable)</a></dt>
     <dt><a href="reference/djcelery.models.html#TASK_STATUSES">TASK_STATUSES (built-in variable)</a></dt>
-</dl></td>
-  <td width="33%" valign="top"><dl>
     <dt><a href="reference/djcelery.models.html#TASK_STATUSES_CHOICES">TASK_STATUSES_CHOICES (built-in variable)</a></dt>
     <dt><a href="reference/djcelery.views.html#djcelery.views.task_view">task_view() (in module djcelery.views)</a></dt>
+</dl></td>
+  <td width="33%" valign="top"><dl>
     <dt><a href="reference/djcelery.views.html#djcelery.views.task_webhook">task_webhook() (in module djcelery.views)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskManager">TaskManager (class in djcelery.managers)</a></dt>
     <dt><a href="reference/djcelery.models.html#TaskMeta">TaskMeta (built-in class)</a></dt>
+    <dt><a href="reference/djcelery.backends.database.html#djcelery.backends.database.DatabaseBackend.TaskModel">TaskModel (djcelery.backends.database.DatabaseBackend attribute)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskSetManager">TaskSetManager (class in djcelery.managers)</a></dt>
+    <dt><a href="reference/djcelery.backends.database.html#djcelery.backends.database.DatabaseBackend.TaskSetModel">TaskSetModel (djcelery.backends.database.DatabaseBackend attribute)</a></dt>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskStateManager">TaskStateManager (class in djcelery.managers)</a></dt>
     <dt><a href="reference/djcelery.models.html#PeriodicTaskMeta.total_run_count">total_run_count (PeriodicTaskMeta attribute)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.transaction_retry">transaction_retry() (in module djcelery.managers)</a></dt>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.TxIsolationWarning">TxIsolationWarning</a></dt>
 </dl></td>
 </tr></table>
 
@@ -225,6 +237,13 @@
     <dd><dl>
       <dt><a href="reference/djcelery.managers.html#djcelery.managers.ExtendedQuerySet.update_or_create">(djcelery.managers.ExtendedQuerySet method)</a></dt>
   </dl></dd>
+</dl></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table width="100%" class="indextable genindextable"><tr>
+  <td width="33%" valign="top"><dl>
+    <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskManager.warn_if_repeatable_read">warn_if_repeatable_read() (djcelery.managers.TaskManager method)</a></dt>
 </dl></td>
 </tr></table>
 
@@ -263,12 +282,12 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">django-celery v2.0.2 (stable) documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>

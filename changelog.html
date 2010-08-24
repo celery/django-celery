@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Change history &mdash; django-celery v2.0.2 (stable) documentation</title>
+    <title>Change history &mdash; django-celery v2.1.0a2 documentation</title>
     <link rel="stylesheet" href="static/celery.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.0.2 (stable)',
+        VERSION:     '2.1.0a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.0.2 (stable) documentation" href="index.html" />
+    <link rel="top" title="django-celery v2.1.0a2 documentation" href="index.html" />
     <link rel="prev" title="Contrib: Test Runner - djcelery.contrib.test_runner" href="reference/djcelery.contrib.test_runner.html" /> 
   </head>
   <body>
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="reference/djcelery.contrib.test_runner.html" title="Contrib: Test Runner - djcelery.contrib.test_runner"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">django-celery v2.0.2 (stable) documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -49,9 +49,72 @@
   <div class="section" id="change-history">
 <h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>2.0.2<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>2.1.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="important-notes">
-<h3>Important notes<a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h3>
+<h3>Important Notes<a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h3>
+<p>This release depends on Celery version 2.1.0.
+Be sure to read the Celery changelog before you upgrade.</p>
+</div>
+<div class="section" id="news">
+<h3>News<a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">The periodic task schedule can now be stored in the database and edited via
+the Django Admin interface.</p>
+<blockquote>
+<p>To use the new database schedule you need to start <tt class="docutils literal"><span class="pre">celerybeat</span></tt> with the
+following argument:</p>
+<div class="highlight-python"><pre>$ python manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler</pre>
+</div>
+<p>Note that you need to add your old periodic tasks to the database manually
+(using the Django admin interface for example).</p>
+</blockquote>
+</li>
+<li><p class="first">New Celery monitor for the Django Admin interface.</p>
+<blockquote>
+<p>To start monitoring your workers you have to start your workers
+in event mode:</p>
+<div class="highlight-python"><pre>$ python manage.py celeryd -E</pre>
+</div>
+<p>(you can do this without restarting the server too:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">celery.task.control</span> <span class="kn">import</span> <span class="n">broadcast</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast</span><span class="p">(</span><span class="s">&quot;enable_events&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You need to do a syncdb to create the new tables:</p>
+<blockquote>
+<p>python manage.py syncdb</p>
+</blockquote>
+<p>Then you need to start the snapshot camera:</p>
+<div class="highlight-python"><pre>$ python manage.py celerycam -f 2.0</pre>
+</div>
+<p>This will take a snapshot of the events every 2 seconds and store it in
+the database.</p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="fixes">
+<h3>Fixes<a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">database backend: Now shows warning if polling results with transaction isolation level
+repeatable-read on MySQL.</p>
+<blockquote>
+<p>See <a class="reference external" href="http://github.com/ask/django-celery/issues/issue/6">http://github.com/ask/django-celery/issues/issue/6</a></p>
+</blockquote>
+</li>
+<li><p class="first">database backend: get result does no longer store the default result to
+database.</p>
+<blockquote>
+<p>See <a class="reference external" href="http://github.com/ask/django-celery/issues/issue/6">http://github.com/ask/django-celery/issues/issue/6</a></p>
+</blockquote>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>2.0.2<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Important notes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">Due to some applications loading the Django models lazily, it is recommended
 that you add the following lines to your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
@@ -64,16 +127,16 @@ model modules haven't been imported yet.</pre>
 </li>
 </ul>
 </div>
-<div class="section" id="news">
-<h3>News<a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>News<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">djcelery.views.registered_tasks</span></tt>: Added a view to list currently known
 tasks.</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>2.0.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>2.0.0<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -99,12 +162,18 @@ tasks.</li>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Change history</a><ul>
-<li><a class="reference internal" href="#id1">2.0.2</a><ul>
-<li><a class="reference internal" href="#important-notes">Important notes</a></li>
+<li><a class="reference internal" href="#id1">2.1.0</a><ul>
+<li><a class="reference internal" href="#important-notes">Important Notes</a></li>
 <li><a class="reference internal" href="#news">News</a></li>
+<li><a class="reference internal" href="#fixes">Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id2">2.0.0</a></li>
+<li><a class="reference internal" href="#id2">2.0.2</a><ul>
+<li><a class="reference internal" href="#id3">Important notes</a></li>
+<li><a class="reference internal" href="#id4">News</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id5">2.0.0</a></li>
 </ul>
 </li>
 </ul>
@@ -146,12 +215,12 @@ tasks.</li>
         <li class="right" >
           <a href="reference/djcelery.contrib.test_runner.html" title="Contrib: Test Runner - djcelery.contrib.test_runner"
              >previous</a> |</li>
-        <li><a href="index.html">django-celery v2.0.2 (stable) documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>

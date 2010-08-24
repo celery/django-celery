@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Database Backend - djcelery.backends.database &mdash; django-celery v2.0.2 (stable) documentation</title>
+    <title>Database Backend - djcelery.backends.database &mdash; django-celery v2.1.0a2 documentation</title>
     <link rel="stylesheet" href="../static/celery.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.0.2 (stable)',
+        VERSION:     '2.1.0a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.0.2 (stable) documentation" href="../index.html" />
+    <link rel="top" title="django-celery v2.1.0a2 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="Cache Backend - djcelery.backends.cache" href="djcelery.backends.cache.html" />
     <link rel="prev" title="Celery Loaders - djcelery.loaders" href="djcelery.loaders.html" /> 
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="djcelery.loaders.html" title="Celery Loaders - djcelery.loaders"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.0.2 (stable) documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -57,7 +57,20 @@
 <span class="target" id="module-djcelery.backends.database"></span><dl class="class">
 <dt id="djcelery.backends.database.DatabaseBackend">
 <em class="property">class </em><tt class="descclassname">djcelery.backends.database.</tt><tt class="descname">DatabaseBackend</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.backends.database.DatabaseBackend" title="Permalink to this definition">¶</a></dt>
-<dd><p>The database backends. Using Django models to store task metadata.</p>
+<dd><p>The database backend.</p>
+<p>Using Django models to store task state.</p>
+<dl class="attribute">
+<dt id="djcelery.backends.database.DatabaseBackend.TaskModel">
+<tt class="descname">TaskModel</tt><a class="headerlink" href="#djcelery.backends.database.DatabaseBackend.TaskModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="djcelery.models.html#TaskMeta" title="TaskMeta"><tt class="xref py py-class docutils literal"><span class="pre">TaskMeta</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="djcelery.backends.database.DatabaseBackend.TaskSetModel">
+<tt class="descname">TaskSetModel</tt><a class="headerlink" href="#djcelery.backends.database.DatabaseBackend.TaskSetModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">TaskSetMeta</span></tt></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="djcelery.backends.database.DatabaseBackend.cleanup">
 <tt class="descname">cleanup</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.backends.database.DatabaseBackend.cleanup" title="Permalink to this definition">¶</a></dt>
@@ -119,13 +132,13 @@
         <li class="right" >
           <a href="djcelery.loaders.html" title="Celery Loaders - djcelery.loaders"
              >previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.0.2 (stable) documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>

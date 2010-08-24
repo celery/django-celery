@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Managers - djcelery.managers &mdash; django-celery v2.0.2 (stable) documentation</title>
+    <title>Managers - djcelery.managers &mdash; django-celery v2.1.0a2 documentation</title>
     <link rel="stylesheet" href="../static/celery.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.0.2 (stable)',
+        VERSION:     '2.1.0a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.0.2 (stable) documentation" href="../index.html" />
+    <link rel="top" title="django-celery v2.1.0a2 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="Celery Loaders - djcelery.loaders" href="djcelery.loaders.html" />
     <link rel="prev" title="Django Models - celery.models" href="djcelery.models.html" /> 
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="djcelery.models.html" title="Django Models - celery.models"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.0.2 (stable) documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -80,17 +80,27 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="djcelery.managers.PeriodicTaskManager">
+<em class="property">class </em><tt class="descclassname">djcelery.managers.</tt><tt class="descname">PeriodicTaskManager</tt><a class="headerlink" href="#djcelery.managers.PeriodicTaskManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="djcelery.managers.PeriodicTaskManager.enabled">
+<tt class="descname">enabled</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.managers.PeriodicTaskManager.enabled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="djcelery.managers.ResultManager">
 <em class="property">class </em><tt class="descclassname">djcelery.managers.</tt><tt class="descname">ResultManager</tt><a class="headerlink" href="#djcelery.managers.ResultManager" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="djcelery.managers.ResultManager.delete_expired">
-<tt class="descname">delete_expired</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.managers.ResultManager.delete_expired" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">delete_expired</tt><big>(</big><em>expires</em><big>)</big><a class="headerlink" href="#djcelery.managers.ResultManager.delete_expired" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete all expired taskset results.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="djcelery.managers.ResultManager.get_all_expired">
-<tt class="descname">get_all_expired</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.managers.ResultManager.get_all_expired" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_all_expired</tt><big>(</big><em>expires</em><big>)</big><a class="headerlink" href="#djcelery.managers.ResultManager.get_all_expired" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all expired task results.</p>
 </dd></dl>
 
@@ -102,7 +112,7 @@
 <dd><p>Manager for <tt class="xref py py-class docutils literal"><span class="pre">celery.models.Task</span></tt> models.</p>
 <dl class="method">
 <dt id="djcelery.managers.TaskManager.get_task">
-<tt class="descname">get_task</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.managers.TaskManager.get_task" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_task</tt><big>(</big><em>task_id</em><big>)</big><a class="headerlink" href="#djcelery.managers.TaskManager.get_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get task meta for task by <tt class="docutils literal"><span class="pre">task_id</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -148,6 +158,11 @@ create the same task. The default is to retry twice.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="djcelery.managers.TaskManager.warn_if_repeatable_read">
+<tt class="descname">warn_if_repeatable_read</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.managers.TaskManager.warn_if_repeatable_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -156,7 +171,7 @@ create the same task. The default is to retry twice.</li>
 <dd><p>Manager for <tt class="xref py py-class docutils literal"><span class="pre">celery.models.TaskSet</span></tt> models.</p>
 <dl class="method">
 <dt id="djcelery.managers.TaskSetManager.restore_taskset">
-<tt class="descname">restore_taskset</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.managers.TaskSetManager.restore_taskset" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">restore_taskset</tt><big>(</big><em>taskset_id</em><big>)</big><a class="headerlink" href="#djcelery.managers.TaskSetManager.restore_taskset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get taskset meta for task by <tt class="docutils literal"><span class="pre">taskset_id</span></tt>.</p>
 </dd></dl>
 
@@ -179,6 +194,36 @@ create the same task. The default is to retry twice.</li>
 </dd></dl>
 
 </dd></dl>
+
+<dl class="class">
+<dt id="djcelery.managers.TaskStateManager">
+<em class="property">class </em><tt class="descclassname">djcelery.managers.</tt><tt class="descname">TaskStateManager</tt><a class="headerlink" href="#djcelery.managers.TaskStateManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="djcelery.managers.TaskStateManager.active">
+<tt class="descname">active</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.managers.TaskStateManager.active" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.managers.TaskStateManager.expire_by_states">
+<tt class="descname">expire_by_states</tt><big>(</big><em>states</em>, <em>expires</em><big>)</big><a class="headerlink" href="#djcelery.managers.TaskStateManager.expire_by_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.managers.TaskStateManager.expired">
+<tt class="descname">expired</tt><big>(</big><em>states</em>, <em>expires</em><big>)</big><a class="headerlink" href="#djcelery.managers.TaskStateManager.expired" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.managers.TaskStateManager.purge">
+<tt class="descname">purge</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.managers.TaskStateManager.purge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="djcelery.managers.TxIsolationWarning">
+<em class="property">exception </em><tt class="descclassname">djcelery.managers.</tt><tt class="descname">TxIsolationWarning</tt><a class="headerlink" href="#djcelery.managers.TxIsolationWarning" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="djcelery.managers.transaction_retry">
@@ -246,13 +291,13 @@ at most <tt class="docutils literal"><span class="pre">max_retries</span></tt> t
         <li class="right" >
           <a href="djcelery.models.html" title="Django Models - celery.models"
              >previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.0.2 (stable) documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>
