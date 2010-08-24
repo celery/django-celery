@@ -90,5 +90,3 @@ class TestDatabaseBackend(unittest.TestCase):
 
         b.cleanup()
         self.assertEqual(b.TaskModel._default_manager.count(), 1)
-
-

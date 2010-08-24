@@ -40,3 +40,37 @@ class TestDjangoLoader(unittest.TestCase):
     def test_find_related_module_no_related(self):
         self.assertFalse(djloaders.find_related_module("someapp",
                                                        "frobulators"))
+
+    def test_close_database(self):
+
+        class Connection(object):
+            closed = False
+
+            def close(self):
+                self.closed = True
+
+        def with_db_reuse_max(reuse_max, fun):
+            prev = getattr(self.loader.conf, "CELERY_DB_REUSE_MAX", None)
+            from django import db
+            prev_con = db.connection
+            self.loader.conf.CELERY_DB_REUSE_MAX = reuse_max
+            conn = db.connection = Connection()
+            try:
+                fun(conn)
+                return conn
+            finally:
+                self.loader.conf.CELERY_DB_REUSE_MAX = prev
+
+        def test_max_3(conn):
+            for i in range(3):
+                self.loader.close_database()
+                self.assertFalse(conn.closed)
+            self.loader.close_database()
+            self.assertTrue(conn.closed)
+
+        def test_max_None(conn):
+            self.loader.close_database()
+            self.assertTrue(conn.closed)
+
+        with_db_reuse_max(3, test_max_3)
+        with_db_reuse_max(None, test_max_None)
