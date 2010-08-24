@@ -85,7 +85,7 @@ class TestTaskStatus(ViewTestCase):
         if status in default_backend.EXCEPTION_STATES:
             instore = default_backend.get_result(uuid)
             self.assertEqual(str(instore.args), str(res.args))
-            expect["result"] = str(res.args[0])
+            expect["result"] = repr(res)
             expect["exc"] = get_full_cls_name(res.__class__)
             expect["traceback"] = traceback
 

@@ -16,14 +16,12 @@ class DatabaseBackend(BaseDictBackend):
 
     def _save_taskset(self, taskset_id, result):
         """Store the result of an executed taskset."""
-        self.TaskModel._default_manager.store_result(taskset_id, result)
+        self.TaskSetModel._default_manager.store_result(taskset_id, result)
         return result
 
     def _get_task_meta_for(self, task_id):
         """Get task metadata for a task by id."""
-        meta = self.TaskModel._default_manager.get_task(task_id)
-        if meta:
-            return meta.to_dict()
+        return self.TaskModel._default_manager.get_task(task_id).to_dict()
 
     def _restore_taskset(self, taskset_id):
         """Get taskset metadata for a taskset by id."""
