@@ -9,6 +9,7 @@ from django.db import connection
 from django.db import models
 from django.db import transaction
 from django.db.models.query import QuerySet
+from django.conf import settings
 
 
 class TxIsolationWarning(UserWarning):
