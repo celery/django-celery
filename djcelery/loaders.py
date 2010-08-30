@@ -20,12 +20,15 @@ class DjangoLoader(BaseLoader):
         self.configured = True
         return settings
 
+    def on_task_init(self, task_id, task):
+        self.close_database()
+
     def close_database(self):
         from django.db import connection
         db_reuse_max = getattr(self.conf, "CELERY_DB_REUSE_MAX", None)
         if not db_reuse_max:
             return connection.close()
-        if self._db_reuse >= db_reuse_max:
+        if self._db_reuse >= db_reuse_max * 2:
             self._db_reuse = 0
             return connection.close()
         self._db_reuse += 1
