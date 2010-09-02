@@ -275,8 +275,7 @@ class TaskState(models.Model):
     eta = models.DateTimeField(_(u"ETA"), null=True,
                 help_text=u"date to execute")
     expires = models.DateTimeField(_(u"expires"), null=True)
-    result = models.CharField(_(u"result"),
-                max_length=200, null=True)
+    result = models.TextField(_(u"result"), null=True)
     traceback = models.TextField(_(u"traceback"), null=True)
     runtime = models.FloatField(_(u"execution time"), null=True,
                 help_text=_(u"in seconds if task successful"))
