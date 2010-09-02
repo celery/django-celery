@@ -1,18 +1,31 @@
 from datetime import datetime
 from time import time
 
-from anyjson import deserialize
+from anyjson import deserialize, serialize
 from django.db import transaction
 
 from celery.beat import Scheduler, ScheduleEntry
 
-from djcelery.models import PeriodicTask, PeriodicTasks
+from djcelery.models import PeriodicTask, PeriodicTasks, CrontabSchedule, IntervalSchedule
 
 
 class ModelEntry(ScheduleEntry):
     _save_fields = ["last_run_at", "total_run_count", "no_changes"]
 
-    def __init__(self, model):
+    def __init__(self, name=None, model=None, *args, **kwargs):
+        if not model:
+            model = PeriodicTask(name=name,*args,**dict([(a,b) for a,b in kwargs.items() if a not in [ 'relative', 'options']]))
+            try:
+                crontab = CrontabSchedule.from_schedule(kwargs['schedule'])
+                crontab.save()
+                model.crontab = crontab
+            except:
+                interval = IntervalSchedule.from_schedule(kwargs['schedule'])
+                interval.save()
+                model.interval = interval
+            model.args = serialize(kwargs['args'])
+            model.kwargs = serialize(kwargs['kwargs'])
+            model.save()
         self.name = model.name
         self.task = model.task
         self.schedule = model.schedule
@@ -31,9 +44,10 @@ class ModelEntry(ScheduleEntry):
 
     def next(self):
         self.model.last_run_at = datetime.now()
+        self.last_run_at = datetime.now()
         self.model.total_run_count += 1
         self.model.no_changes = True
-        return self.__class__(self.model)
+        return self.__class__(model=self.model)
 
     def save(self):
         # Object may not be synchronized, so only
@@ -42,6 +56,13 @@ class ModelEntry(ScheduleEntry):
         for field in self._save_fields:
             setattr(obj, field, getattr(self.model, field))
         obj.save()
+
+    def __repr__(self):
+        return "<ScheduleEntry: %s %s(*%s, **%s) {%s}>" % (self.name,
+                                                   self.task,
+                                                   self.args,
+                                                   self.kwargs,
+                                                   self.schedule)
 
 
 class DatabaseScheduler(Scheduler):
@@ -63,7 +84,7 @@ class DatabaseScheduler(Scheduler):
 
     def all_as_schedule(self):
         self.logger.debug("DatabaseScheduler: Fetching database schedule")
-        return dict((model.name, self.Entry(model))
+        return dict((model.name, self.Entry(model=model))
                         for model in self.Model.objects.enabled())
 
     def schedule_changed(self):
@@ -112,4 +133,5 @@ class DatabaseScheduler(Scheduler):
             self.flush()
             self.logger.debug("DatabaseScheduler: Schedule changed.")
             self._schedule = self.all_as_schedule()
+            self._schedule.update(self.data)
         return self._schedule
