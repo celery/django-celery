@@ -6,26 +6,16 @@ from django.db import transaction
 
 from celery.beat import Scheduler, ScheduleEntry
 
-from djcelery.models import PeriodicTask, PeriodicTasks, CrontabSchedule, IntervalSchedule
-
+from djcelery.models import *
+from django.core.exceptions import ObjectDoesNotExist
 
 class ModelEntry(ScheduleEntry):
     _save_fields = ["last_run_at", "total_run_count", "no_changes"]
 
     def __init__(self, name=None, model=None, *args, **kwargs):
         if not model:
-            model = PeriodicTask(name=name,*args,**dict([(a,b) for a,b in kwargs.items() if a not in [ 'relative', 'options']]))
-            try:
-                crontab = CrontabSchedule.from_schedule(kwargs['schedule'])
-                crontab.save()
-                model.crontab = crontab
-            except:
-                interval = IntervalSchedule.from_schedule(kwargs['schedule'])
-                interval.save()
-                model.interval = interval
-            model.args = serialize(kwargs['args'])
-            model.kwargs = serialize(kwargs['kwargs'])
-            model.save()
+            model = self.get_or_create_model(name, args, kwargs)
+            self.model = model
         self.name = model.name
         self.task = model.task
         self.schedule = model.schedule
@@ -42,20 +32,45 @@ class ModelEntry(ScheduleEntry):
             model.last_run_at = datetime.now()
         self.last_run_at = model.last_run_at
 
+    def get_or_create_model(self, name, args, kwargs):
+        try:
+            return PeriodicTask.objects.get(name=name)
+        except ObjectDoesNotExist, e:
+            pass
+        model = PeriodicTask(name=name,*args,**dict([(a,b) for a,b in kwargs.items() if a not in [ 'relative', 'options']]))
+        try:
+            crontab = CrontabSchedule.from_schedule(kwargs['schedule'])
+            crontab.save()
+            model.crontab = crontab
+        except:
+            interval = IntervalSchedule.from_schedule(kwargs['schedule'])
+            interval.save()
+            model.interval = interval
+        model.args = serialize(kwargs['args'])
+        model.kwargs = serialize(kwargs['kwargs'])
+        model.save()
+        return model
+  
     def next(self):
-        self.model.last_run_at = datetime.now()
-        self.last_run_at = datetime.now()
-        self.model.total_run_count += 1
-        self.model.no_changes = True
-        return self.__class__(model=self.model)
-
+        try:
+                self.model.last_run_at = datetime.now()
+                self.last_run_at = datetime.now()
+                self.model.total_run_count += 1
+                self.model.no_changes = True
+                return self.__class__(model=self.model)
+        except ObjectDoesNotExist, e:
+            pass
+ 
     def save(self):
         # Object may not be synchronized, so only
         # change the fields we care about.
-        obj = self.model._default_manager.get(pk=self.model.pk)
-        for field in self._save_fields:
-            setattr(obj, field, getattr(self.model, field))
-        obj.save()
+        try:
+           obj = self.model._default_manager.get(pk=self.model.pk)
+           for field in self._save_fields:
+               setattr(obj, field, getattr(self.model, field))
+           obj.save()
+        except ObjectDoesNotExist, e:
+            pass
 
     def __repr__(self):
         return "<ScheduleEntry: %s %s(*%s, **%s) {%s}>" % (self.name,
@@ -133,5 +148,4 @@ class DatabaseScheduler(Scheduler):
             self.flush()
             self.logger.debug("DatabaseScheduler: Schedule changed.")
             self._schedule = self.all_as_schedule()
-            self._schedule.update(self.data)
         return self._schedule
