@@ -14,7 +14,8 @@ import celery.task.builtins
 
 def task_view(task):
     """Decorator turning any task into a view that applies the task
-    asynchronously.
+    asynchronously. Keyword arguments (via URLconf, etc.) will
+    supercede GET or POST parameters when there are conflicts.
 
     Returns a JSON dictionary containing the keys ``ok``, and
         ``task_id``.
@@ -26,7 +27,8 @@ def task_view(task):
             request.POST.copy() or request.GET.copy()
         kwargs = dict((key.encode("utf-8"), value)
                     for key, value in kwargs.items())
-
+        kwargs.update(options)
+        
         result = task.apply_async(kwargs=kwargs)
         response_data = {"ok": "true", "task_id": result.task_id}
         return HttpResponse(JSON_dump(response_data),
