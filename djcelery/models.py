@@ -174,7 +174,7 @@ class PeriodicTask(models.Model):
                                  verbose_name=_(u"interval"))
     crontab = models.ForeignKey(CrontabSchedule, null=True, blank=True,
                                 verbose_name=_(u"crontab"),
-                                help_text=_(u"Use one of interval/schedule"))
+                                help_text=_(u"Use one of interval/crontab"))
     args = models.TextField(_(u"Arguments"),
                             blank=True, default="[]",
                             help_text=_(u"JSON encoded positional arguments"))
