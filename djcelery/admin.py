@@ -16,6 +16,7 @@ from celery.messaging import establish_connection
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
+from djcelery import loaders
 from djcelery.models import TaskState, WorkerState
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 
@@ -237,6 +238,7 @@ admin.site.register(WorkerState, WorkerMonitor)
 # ### Periodic Tasks
 
 def periodic_task_form():
+    loaders.autodiscover()
     tasks = registry.tasks.regular().keys()
     choices = (("", ""), ) + tuple(zip(tasks, tasks))
 
