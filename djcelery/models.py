@@ -74,6 +74,8 @@ class TaskSetMeta(models.Model):
 
 
 PERIOD_CHOICES = (("days", _(u"Days")),
+                  ("hours", _(u"Hours")),
+                  ("minutes", _(u"Minutes")),
                   ("seconds", _(u"Seconds")),
                   ("microseconds", _(u"Microseconds")))
 
