@@ -12,7 +12,6 @@ from picklefield.fields import PickledObjectField
 from celery import conf
 from celery import schedules
 from celery import states
-from celery.registry import tasks
 from celery.utils.timeutils import timedelta_seconds
 
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
@@ -78,11 +77,6 @@ PERIOD_CHOICES = (("days", _(u"Days")),
                   ("minutes", _(u"Minutes")),
                   ("seconds", _(u"Seconds")),
                   ("microseconds", _(u"Microseconds")))
-
-
-def get_task_choices():
-    t = tasks.regular()
-    return zip(t.keys(), t.keys())
 
 
 class IntervalSchedule(models.Model):
@@ -167,9 +161,7 @@ class PeriodicTasks(models.Model):
 class PeriodicTask(models.Model):
     name = models.CharField(_(u"name"), max_length=200, unique=True,
                             help_text=_(u"Useful description"))
-    task = models.CharField(_(u"task name"),
-                            max_length=200,
-                            choices=get_task_choices())
+    task = models.CharField(_(u"task name"), max_length=200)
     interval = models.ForeignKey(IntervalSchedule, null=True, blank=True,
                                  verbose_name=_(u"interval"))
     crontab = models.ForeignKey(CrontabSchedule, null=True, blank=True,
