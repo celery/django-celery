@@ -239,7 +239,7 @@ admin.site.register(WorkerState, WorkerMonitor)
 
 def periodic_task_form():
     loaders.autodiscover()
-    tasks = registry.tasks.regular().keys()
+    tasks = list(sorted(registry.tasks.regular().keys()))
     choices = (("", ""), ) + tuple(zip(tasks, tasks))
 
     class PeriodicTaskForm(forms.ModelForm):
