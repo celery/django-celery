@@ -3,18 +3,17 @@
 Curses Celery Event Viewer.
 
 """
-from django.core.management.base import BaseCommand
-
 from celery.bin.celeryctl import celeryctl, Command as _Command
 
 from djcelery import __version__
+from djcelery.management.base import CeleryCommand
 
 # Django hijacks the version output and prints its version before our
 # version. So display the names of the products so the output is sensible.
 _Command.version = "celery %s\ndjango-celery %s" % (_Command.version,
                                                     __version__)
 
-class Command(BaseCommand):
+class Command(CeleryCommand):
     """Run the celery control utility."""
     help = "celery control utility"
 
