@@ -42,21 +42,11 @@ class DjangoLoader(BaseLoader):
         #            browse_thread/thread/78200863d0c07c6d/
         self.close_database()
 
-        # ## Reset cache connection only if using memcached/libmemcached
-        from django.core import cache
-        # XXX At Opera we use a custom memcached backend that uses
-        # libmemcached instead of libmemcache (cmemcache). Should find a
-        # better solution for this, but for now "memcached" should probably
-        # be unique enough of a string to not make problems.
-        cache_backend = cache.settings.CACHE_BACKEND
+        # ## Reset cache connection (if supported).
         try:
-            parse_backend = cache.parse_backend_uri
-        except AttributeError:
-            parse_backend = lambda backend: backend.split(":", 1)
-        cache_scheme = parse_backend(cache_backend)[0]
-
-        if "memcached" in cache_scheme:
             cache.cache.close()
+        except AttributeError:
+            pass
 
     def on_worker_init(self):
         """Called when the worker starts.
