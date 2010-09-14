@@ -20,12 +20,6 @@ class DjangoLoader(BaseLoader):
         self.configured = True
         return settings
 
-    def on_task_init(self, task_id, task):
-        # the parent process may have established these,
-        # so need to close them.
-        self.close_database()
-        self.close_cache()
-
     def close_database(self):
         from django.db import connection
         db_reuse_max = getattr(self.conf, "CELERY_DB_REUSE_MAX", None)
@@ -51,7 +45,6 @@ class DjangoLoader(BaseLoader):
         # See http://groups.google.com/group/django-users/
         #            browse_thread/thread/78200863d0c07c6d/
         self.close_database()
-
         self.close_cache()
 
     def on_worker_init(self):
@@ -61,6 +54,10 @@ class DjangoLoader(BaseLoader):
         listed in ``INSTALLED_APPS``.
 
         """
+        # the parent process may have established these,
+        # so need to close them.
+        self.close_database()
+        self.close_cache()
         self.import_default_modules()
         autodiscover()
 
