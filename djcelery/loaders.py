@@ -21,7 +21,10 @@ class DjangoLoader(BaseLoader):
         return settings
 
     def on_task_init(self, task_id, task):
+        # the parent process may have established these,
+        # so need to close them.
         self.close_database()
+        self.close_cache()
 
     def close_database(self):
         from django.db import connection
@@ -33,6 +36,13 @@ class DjangoLoader(BaseLoader):
             return connection.close()
         self._db_reuse += 1
 
+    def close_cache(self):
+        # reset cache connection (if supported).
+        try:
+            cache.cache.close()
+        except AttributeError:
+            pass
+
     def on_process_cleanup(self):
         """Does everything necessary for Django to work in a long-living,
         multiprocessing environment.
@@ -42,11 +52,7 @@ class DjangoLoader(BaseLoader):
         #            browse_thread/thread/78200863d0c07c6d/
         self.close_database()
 
-        # ## Reset cache connection (if supported).
-        try:
-            cache.cache.close()
-        except AttributeError:
-            pass
+        self.close_cache()
 
     def on_worker_init(self):
         """Called when the worker starts.
