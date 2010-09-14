@@ -31,6 +31,7 @@ class DjangoLoader(BaseLoader):
         self._db_reuse += 1
 
     def close_cache(self):
+        from django.core.cache import cache
         # reset cache connection (if supported).
         try:
             cache.cache.close()
