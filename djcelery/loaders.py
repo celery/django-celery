@@ -31,11 +31,11 @@ class DjangoLoader(BaseLoader):
         self._db_reuse += 1
 
     def close_cache(self):
-        from django.core.cache import cache
+        from django.core import cache
         # reset cache connection (if supported).
         try:
             cache.cache.close()
-        except AttributeError:
+        except (TypeError, AttributeError):
             pass
 
     def on_process_cleanup(self):
