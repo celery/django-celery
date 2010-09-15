@@ -40,6 +40,7 @@ class TestDjangoLoader(unittest.TestCase):
     def test_find_related_module_no_related(self):
         self.assertFalse(djloaders.find_related_module("someapp",
                                                        "frobulators"))
+
     def test_close_database(self):
 
         class Connection(object):
