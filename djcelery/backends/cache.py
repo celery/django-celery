@@ -5,13 +5,13 @@ from django.utils.encoding import smart_str
 from django.core.cache import cache, get_cache
 from django.core.cache.backends.base import InvalidCacheBackendError
 
-from celery import conf
+from celery.app import default_app
 from celery.utils.timeutils import timedelta_seconds
 from celery.backends.base import KeyValueStoreBackend
 
 # CELERY_CACHE_BACKEND overrides the django-global(tm) backend settings.
-if conf.CACHE_BACKEND:
-    cache = get_cache(conf.CACHE_BACKEND)
+if default_app.conf.CELERY_CACHE_BACKEND:
+    cache = get_cache(default_app.conf.CELERY_CACHE_BACKEND)
 
 
 class DjangoMemcacheWrapper(object):
@@ -50,7 +50,8 @@ class CacheBackend(KeyValueStoreBackend):
 
     def __init__(self, *args, **kwargs):
         super(CacheBackend, self).__init__(self, *args, **kwargs)
-        expires = kwargs.get("expires", conf.TASK_RESULT_EXPIRES)
+        expires = kwargs.get("expires",
+                             default_app.conf.CELERY_TASK_RESULT_EXPIRES)
         if isinstance(expires, timedelta):
             expires = int(timedelta_seconds(expires))
         self.expires = expires

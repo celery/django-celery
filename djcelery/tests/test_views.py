@@ -7,9 +7,8 @@ from django.template import TemplateDoesNotExist
 
 from anyjson import deserialize
 
-from celery import conf
 from celery import states
-from celery.backends import default_backend
+from celery.app import default_app
 from celery.exceptions import RetryTaskError
 from celery.datastructures import ExceptionInfo
 from celery.decorators import task
@@ -44,7 +43,7 @@ def catch_exception(exception):
     try:
         raise exception
     except exception.__class__, exc:
-        exc = default_backend.prepare_exception(exc)
+        exc = default_app.backend.prepare_exception(exc)
         return exc, ExceptionInfo(sys.exc_info()).traceback
 
 
@@ -61,23 +60,23 @@ class ViewTestCase(DjangoTestCase):
 class test_task_apply(ViewTestCase):
 
     def test_apply(self):
-        conf.ALWAYS_EAGER = True
+        default_app.conf.CELERY_ALWAYS_EAGER = True
         try:
             self.client.get(task_apply(kwargs={"task_name":
                 mytask.name}) + "?x=4&y=4")
             self.assertEqual(scratch["result"], 16)
         finally:
-            conf.ALWAYS_EAGER = False
+            default_app.conf.CELERY_ALWAYS_EAGER = False
 
     def test_apply_raises_404_on_unregistered_task(self):
-        conf.ALWAYS_EAGER = True
+        default_app.conf.CELERY_ALWAYS_EAGER = True
         try:
             name = "xxx.does.not.exist"
             action = curry(self.client.get, task_apply(kwargs={
                         "task_name": name}) + "?x=4&y=4")
             self.assertRaises(TemplateDoesNotExist, action)
         finally:
-            conf.ALWAYS_EAGER = False
+            default_app.conf.CELERY_ALWAYS_EAGER = False
 
 
 class test_registered_tasks(ViewTestCase):
@@ -122,12 +121,12 @@ class test_task_status(ViewTestCase):
 
     def assertStatusForIs(self, status, res, traceback=None):
         uuid = gen_unique_id()
-        default_backend.store_result(uuid, res, status,
+        default_app.backend.store_result(uuid, res, status,
                                      traceback=traceback)
         json = self.client.get(task_status(task_id=uuid))
         expect = dict(id=uuid, status=status, result=res)
-        if status in default_backend.EXCEPTION_STATES:
-            instore = default_backend.get_result(uuid)
+        if status in default_app.backend.EXCEPTION_STATES:
+            instore = default_app.backend.get_result(uuid)
             self.assertEqual(str(instore.args), str(res.args))
             expect["result"] = repr(res)
             expect["exc"] = get_full_cls_name(res.__class__)
@@ -153,7 +152,7 @@ class test_task_is_successful(ViewTestCase):
     def assertStatusForIs(self, status, outcome):
         uuid = gen_unique_id()
         result = gen_unique_id()
-        default_backend.store_result(uuid, result, status)
+        default_app.backend.store_result(uuid, result, status)
         json = self.client.get(task_is_successful(task_id=uuid))
         self.assertJSONEqual(json, {"task": {"id": uuid,
                                              "executed": outcome}})

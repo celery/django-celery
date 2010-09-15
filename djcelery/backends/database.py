@@ -1,4 +1,4 @@
-from celery import conf
+from celery.app import default_app
 from celery.backends.base import BaseDictBackend
 
 from djcelery.models import TaskMeta, TaskSetMeta
@@ -12,7 +12,7 @@ class DatabaseBackend(BaseDictBackend):
     """
     TaskModel = TaskMeta
     TaskSetModel = TaskSetMeta
-    expires = conf.TASK_RESULT_EXPIRES
+    expires = default_app.conf.CELERY_TASK_RESULT_EXPIRES
 
     def _store_result(self, task_id, result, status, traceback=None):
         """Store return value and status of an executed task."""

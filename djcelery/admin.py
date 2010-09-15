@@ -12,7 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from celery import states
 from celery import registry
-from celery.messaging import establish_connection
+from celery.app import default_app
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
@@ -160,7 +160,7 @@ class TaskMonitor(ModelMonitor):
 
     @action(_("Revoke selected tasks"))
     def revoke_tasks(self, request, queryset):
-        connection = establish_connection()
+        connection = default_app.broker_connection()
         try:
             for state in queryset:
                 revoke(state.task_id, connection=connection)
@@ -174,7 +174,7 @@ class TaskMonitor(ModelMonitor):
         app_label = opts.app_label
         if request.POST.get("post"):
             rate = request.POST["rate_limit"]
-            connection = establish_connection()
+            connection = default_app.broker_connection()
             try:
                 for task_name in tasks:
                     rate_limit(task_name, rate, connection=connection)

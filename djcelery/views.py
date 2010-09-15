@@ -1,12 +1,12 @@
 from django.http import HttpResponse, Http404
 
 from anyjson import serialize as JSON_dump
-from celery.utils.functional import wraps
 
+from celery.app import default_app
 from celery.utils import get_full_cls_name
 from celery.result import AsyncResult
 from celery.registry import tasks
-from celery.backends import default_backend
+from celery.utils.functional import wraps
 
 # Ensure built-in tasks are loaded for task_list view
 import celery.task.builtins
@@ -23,12 +23,13 @@ def task_view(task):
     """
 
     def _applier(request, **options):
+        print("APPLIER")
         kwargs = request.method == "POST" and \
             request.POST.copy() or request.GET.copy()
         kwargs = dict((key.encode("utf-8"), value)
                     for key, value in kwargs.items())
         kwargs.update(options)
-        
+
         result = task.apply_async(kwargs=kwargs)
         response_data = {"ok": "true", "task_id": result.task_id}
         return HttpResponse(JSON_dump(response_data),
@@ -60,11 +61,11 @@ def is_task_successful(request, task_id):
 
 def task_status(request, task_id):
     """Returns task status and result in JSON format."""
-    status = default_backend.get_status(task_id)
-    res = default_backend.get_result(task_id)
+    status = default_app.backend.get_status(task_id)
+    res = default_app.backend.get_result(task_id)
     response_data = dict(id=task_id, status=status, result=res)
-    if status in default_backend.EXCEPTION_STATES:
-        traceback = default_backend.get_traceback(task_id)
+    if status in default_app.backend.EXCEPTION_STATES:
+        traceback = default_app.backend.get_traceback(task_id)
         response_data.update({"result": repr(res),
                               "exc": get_full_cls_name(res.__class__),
                               "traceback": traceback})

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest2 as unittest
 
-from django.core import cache
-
 from celery.utils import gen_unique_id
 from celery.decorators import task as task_dec
 
@@ -40,9 +38,8 @@ class TestJail(unittest.TestCase):
             connection.close = old_connection_close
 
     def test_django_cache_connection_is_closed(self):
+        from django.core import cache
         old_cache_close = getattr(cache.cache, "close", None)
-        old_backend = cache.settings.CACHE_BACKEND
-        cache.settings.CACHE_BACKEND = "libmemcached"
         cache._was_closed = False
         old_cache_parse_backend = getattr(cache, "parse_backend_uri", None)
         if old_cache_parse_backend: # checks to make sure attr exists
@@ -51,19 +48,20 @@ class TestJail(unittest.TestCase):
         def monkeypatched_cache_close(*args, **kwargs):
             cache._was_closed = True
 
+
+        print("C: %s" % (cache.cache, ))
         cache.cache.close = monkeypatched_cache_close
+        print("X: %s" % (cache.cache.close, ))
 
         jail(gen_unique_id(), mytask.name, [4], {})
         self.assertTrue(cache._was_closed)
         cache.cache.close = old_cache_close
-        cache.settings.CACHE_BACKEND = old_backend
         if old_cache_parse_backend:
             cache.parse_backend_uri = old_cache_parse_backend
 
     def test_django_cache_connection_is_closed_django_1_1(self):
+        from django.core import cache
         old_cache_close = getattr(cache.cache, "close", None)
-        old_backend = cache.settings.CACHE_BACKEND
-        cache.settings.CACHE_BACKEND = "libmemcached"
         cache._was_closed = False
         old_cache_parse_backend = getattr(cache, "parse_backend_uri", None)
         cache.parse_backend_uri = lambda uri: ["libmemcached", "1", "2"]
@@ -76,7 +74,6 @@ class TestJail(unittest.TestCase):
         jail(gen_unique_id(), mytask.name, [4], {})
         self.assertTrue(cache._was_closed)
         cache.cache.close = old_cache_close
-        cache.settings.CACHE_BACKEND = old_backend
         if old_cache_parse_backend:
             cache.parse_backend_uri = old_cache_parse_backend
         else:

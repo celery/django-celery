@@ -6,6 +6,40 @@ from celery.loaders.base import BaseLoader
 _RACE_PROTECTION = False
 
 
+class DictAttribute(object):
+
+    def __init__(self, settings):
+        self.settings = settings
+
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
+    def setdefault(self, key, default):
+        try:
+            return self[key]
+        except KeyError:
+            self[key] = default
+            return default
+
+    def __getitem__(self, key):
+        try:
+            return getattr(self.settings, key)
+        except AttributeError:
+            raise KeyError(key)
+
+    def __setitem__(self, key, value):
+        setattr(self.settings, key, value)
+
+    def __contains__(self, key):
+        return hasattr(self.settings, key)
+
+    def iteritems(self):
+        return vars(self.settings).iteritems()
+
+
 class DjangoLoader(BaseLoader):
     """The Django loader."""
     _db_reuse = 0
@@ -18,7 +52,7 @@ class DjangoLoader(BaseLoader):
         """Load configuration from Django settings."""
         from django.conf import settings
         self.configured = True
-        return settings
+        return DictAttribute(settings)
 
     def close_database(self):
         from django.db import connection
@@ -31,11 +65,11 @@ class DjangoLoader(BaseLoader):
         self._db_reuse += 1
 
     def close_cache(self):
-        from django.core.cache import cache
         # reset cache connection (if supported).
         try:
+            from django.core import cache
             cache.cache.close()
-        except AttributeError:
+        except (TypeError, AttributeError):
             pass
 
     def on_process_cleanup(self):

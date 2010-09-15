@@ -9,9 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from picklefield.fields import PickledObjectField
 
-from celery import conf
 from celery import schedules
 from celery import states
+from celery.app import default_app
 from celery.utils.timeutils import timedelta_seconds
 
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
@@ -306,6 +306,6 @@ class TaskState(models.Model):
 if (django.VERSION[0], django.VERSION[1]) >= (1, 1):
     # keep models away from syncdb/reset if database backend is not
     # being used.
-    if conf.RESULT_BACKEND != 'database':
+    if default_app.conf.CELERY_RESULT_BACKEND != 'database':
         TaskMeta._meta.managed = False
         TaskSetMeta._meta.managed = False
