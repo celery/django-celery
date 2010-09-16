@@ -2,8 +2,30 @@
  Change history
 ================
 
+2.0.3
+=====
+:release-date: 2010-09-15 2:00 P.M CEST
+
+Fixes
+-----
+
+* Now closes the Django cache+database connections immediately at process
+  init as the connections could have been established by the parent process.
+
+    See http://github.com/ask/celery/issues#issue/149
+
+* Show warning if polling results with transaction isolation level
+  repeatable-read on MySQL.
+
+    See http://github.com/ask/django-celery/issues#issue/6
+
+* database backend: get result: No longer stores PENDING result.
+
+    Related to http://github.com/ask/django-celery/issues#issue/6
+
 2.0.2
 =====
+:release-date: 2010-07-21 21:00 P.M CEST
 
 Important notes
 ---------------
