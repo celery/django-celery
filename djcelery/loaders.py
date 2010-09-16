@@ -2,42 +2,9 @@ import imp
 import importlib
 
 from celery.loaders.base import BaseLoader
+from celery.datastructures import DictAttribute
 
 _RACE_PROTECTION = False
-
-
-class DictAttribute(object):
-
-    def __init__(self, settings):
-        self.settings = settings
-
-    def get(self, key, default=None):
-        try:
-            return self[key]
-        except KeyError:
-            return default
-
-    def setdefault(self, key, default):
-        try:
-            return self[key]
-        except KeyError:
-            self[key] = default
-            return default
-
-    def __getitem__(self, key):
-        try:
-            return getattr(self.settings, key)
-        except AttributeError:
-            raise KeyError(key)
-
-    def __setitem__(self, key, value):
-        setattr(self.settings, key, value)
-
-    def __contains__(self, key):
-        return hasattr(self.settings, key)
-
-    def iteritems(self):
-        return vars(self.settings).iteritems()
 
 
 class DjangoLoader(BaseLoader):
