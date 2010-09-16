@@ -57,6 +57,20 @@ class ViewTestCase(DjangoTestCase):
         except TypeError, exc:
             raise TypeError("%s: %s" % (exc, json))
 
+    def assertIn(self, expected, source, *args):
+        try:
+            DjangoTestCase.assertIn(self, expected, source, *args)
+        except AttributeError:
+            self.assertTrue(expected in source)
+
+    def assertDictContainsSubset(self, a, b, *args):
+        try:
+            DjangoTestCase.assertDictContainsSubset(self, a, b, *args)
+        except AttributeError:
+            for key, value in a.items():
+                self.assertTrue(key in b)
+                self.assertEqual(b[key], value)
+
 
 class test_task_apply(ViewTestCase):
 
