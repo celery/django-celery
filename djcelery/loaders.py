@@ -56,6 +56,12 @@ class DjangoLoader(BaseLoader):
         listed in ``INSTALLED_APPS``.
 
         """
+
+        from django.conf import settings
+        if settings.DEBUG:
+            warnings.warn("Using settings.DEBUG leads to a memory leak, never"
+                          "use this setting in production environments!")
+
         # the parent process may have established these,
         # so need to close them.
         self.close_database()
