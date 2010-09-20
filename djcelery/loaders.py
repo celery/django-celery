@@ -20,9 +20,6 @@ class DjangoLoader(BaseLoader):
         self.configured = True
         return settings
 
-    def on_task_init(self, task_id, task):
-        self.close_database()
-
     def close_database(self):
         from django.db import connection
         db_reuse_max = getattr(self.conf, "CELERY_DB_REUSE_MAX", None)
@@ -33,6 +30,14 @@ class DjangoLoader(BaseLoader):
             return connection.close()
         self._db_reuse += 1
 
+    def close_cache(self):
+        from django.core import cache
+        # reset cache connection (if supported).
+        try:
+            cache.cache.close()
+        except (TypeError, AttributeError):
+            pass
+
     def on_process_cleanup(self):
         """Does everything necessary for Django to work in a long-living,
         multiprocessing environment.
@@ -41,22 +46,7 @@ class DjangoLoader(BaseLoader):
         # See http://groups.google.com/group/django-users/
         #            browse_thread/thread/78200863d0c07c6d/
         self.close_database()
-
-        # ## Reset cache connection only if using memcached/libmemcached
-        from django.core import cache
-        # XXX At Opera we use a custom memcached backend that uses
-        # libmemcached instead of libmemcache (cmemcache). Should find a
-        # better solution for this, but for now "memcached" should probably
-        # be unique enough of a string to not make problems.
-        cache_backend = cache.settings.CACHE_BACKEND
-        try:
-            parse_backend = cache.parse_backend_uri
-        except AttributeError:
-            parse_backend = lambda backend: backend.split(":", 1)
-        cache_scheme = parse_backend(cache_backend)[0]
-
-        if "memcached" in cache_scheme:
-            cache.cache.close()
+        self.close_cache()
 
     def on_worker_init(self):
         """Called when the worker starts.
@@ -65,6 +55,10 @@ class DjangoLoader(BaseLoader):
         listed in ``INSTALLED_APPS``.
 
         """
+        # the parent process may have established these,
+        # so need to close them.
+        self.close_database()
+        self.close_cache()
         self.import_default_modules()
         autodiscover()
 

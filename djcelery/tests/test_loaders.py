@@ -63,7 +63,7 @@ class TestDjangoLoader(unittest.TestCase):
                 db.connection = prev_conn
 
         def test_max_3(conn):
-            for i in range(3):
+            for i in range(3 * 2):
                 self.loader.close_database()
                 self.assertFalse(conn.closed)
             self.loader.close_database()

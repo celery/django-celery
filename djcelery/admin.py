@@ -16,6 +16,7 @@ from celery.messaging import establish_connection
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
+from djcelery import loaders
 from djcelery.models import TaskState, WorkerState
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 
@@ -236,13 +237,21 @@ admin.site.register(WorkerState, WorkerMonitor)
 
 # ### Periodic Tasks
 
+
+class LaxChoiceField(forms.ChoiceField):
+
+    def valid_value(self, value):
+        return True
+
+
 def periodic_task_form():
-    tasks = registry.tasks.regular().keys()
+    loaders.autodiscover()
+    tasks = list(sorted(registry.tasks.regular().keys()))
     choices = (("", ""), ) + tuple(zip(tasks, tasks))
 
     class PeriodicTaskForm(forms.ModelForm):
-        regtask = forms.ChoiceField(label=_(u"Task (registered)"),
-                                    choices=choices, required=False)
+        regtask = LaxChoiceField(label=_(u"Task (registered)"),
+                                 choices=choices, required=False)
         task = forms.CharField(label=_("Task (custom)"), required=False,
                                max_length=200)
 
