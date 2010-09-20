@@ -38,6 +38,10 @@ class ModelEntry(ScheduleEntry):
         except ObjectDoesNotExist, e:
             pass
         model = PeriodicTask(name=name,*args,**dict([(a,b) for a,b in kwargs.items() if a not in [ 'relative', 'options']]))
+        self.populate_new_model(model,args,kwargs)
+        return model
+    
+    def populate_new_model(self, model, args,kwargs) :
         try:
             crontab = CrontabSchedule.from_schedule(kwargs['schedule'])
             crontab.save()
@@ -49,8 +53,8 @@ class ModelEntry(ScheduleEntry):
         model.args = serialize(kwargs['args'])
         model.kwargs = serialize(kwargs['kwargs'])
         model.save()
-        return model
-  
+ 
+
     def next(self):
         try:
                 self.model.last_run_at = datetime.now()
