@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from celery import conf
 from celery import states
+from celery.result import AsyncResult
 from celery.task import PeriodicTask
 from celery.utils import gen_unique_id
 
@@ -53,6 +54,15 @@ class TestDatabaseBackend(unittest.TestCase):
         b.mark_as_failure(tid3, exception)
         self.assertEqual(b.get_status(tid3), states.FAILURE)
         self.assertIsInstance(b.get_result(tid3), KeyError)
+
+    def test_forget(self):
+        b = DatabaseBackend()
+        tid = gen_unique_id()
+        b.mark_as_done(tid, {"foo": "bar"})
+        x = AsyncResult(tid)
+        self.assertEqual(x.result.get("foo"), "bar")
+        x.forget()
+        self.assertIsNone(x.result)
 
     def test_taskset_store(self):
         b = DatabaseBackend()

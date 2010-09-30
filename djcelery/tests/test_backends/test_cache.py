@@ -35,6 +35,16 @@ class test_CacheBackend(unittest.TestCase):
         self.assertEqual(cb.get_result(tid), 42)
         self.assertTrue(cb.get_result(tid), 42)
 
+    def test_forget(self):
+        b = CacheBackend()
+        tid = gen_unique_id()
+        x = result.AsyncResult(tid)
+        b.mark_as_done(tid, {"foo": "bar"})
+        self.assertEqual(b.get_result(tid).get("foo"), "bar")
+        x.forget()
+        self.assertNotIn(tid, b._cache)
+        self.assertIsNone(b.get_result(tid))
+
     def test_save_restore_taskset(self):
         backend = CacheBackend()
         taskset_id = gen_unique_id()

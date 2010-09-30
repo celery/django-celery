@@ -35,6 +35,12 @@ class DatabaseBackend(BaseDictBackend):
         if meta:
             return meta.to_dict()
 
+    def _forget(self, task_id):
+        try:
+            self.TaskModel._default_manager.get(task_id=task_id).delete()
+        except self.TaskModel.DoesNotExist:
+            pass
+
     def cleanup(self):
         """Delete expired metadata."""
         for model in self.TaskModel, self.TaskSetModel:
