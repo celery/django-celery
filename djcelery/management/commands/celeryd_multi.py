@@ -3,9 +3,6 @@
 Start detached worker node from the Django management utility.
 
 """
-import os
-import sys
-
 from celery.bin import celeryd_multi
 
 from djcelery.management.base import CeleryCommand
