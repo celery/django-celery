@@ -13,7 +13,6 @@ from djcelery.models import (PeriodicTask, PeriodicTasks,
                              CrontabSchedule, IntervalSchedule)
 
 
-
 class ModelEntry(ScheduleEntry):
     model_schedules = ((schedules.crontab, CrontabSchedule, "crontab"),
                        (schedules.schedule, IntervalSchedule, "interval"))

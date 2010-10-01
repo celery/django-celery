@@ -213,8 +213,7 @@ class WorkerMonitor(ModelMonitor):
 
     @action(_("Shutdown selected worker nodes"))
     def shutdown_nodes(self, request, queryset):
-        broadcast("shutdown", destination=
-                  [n.hostname for n in queryset])
+        broadcast("shutdown", destination=[n.hostname for n in queryset])
 
     @action(_("Enable event mode for selected nodes."))
     def enable_events(self, request, queryset):

@@ -83,7 +83,6 @@ class test_ModelEntry(unittest.TestCase):
                                        "exchange": "foo",
                                        "routing_key": "cpu"}, e.options)
 
-
         now = datetime.now()
         m2 = create_model_interval(schedule(timedelta(seconds=10)),
                                    last_run_at=now)

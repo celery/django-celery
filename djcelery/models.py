@@ -17,7 +17,7 @@ from celery.utils.timeutils import timedelta_seconds
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
 from djcelery.managers import TaskStateManager, PeriodicTaskManager
 
-HEARTBEAT_EXPIRE = 150 # 2 minutes, 30 seconds
+HEARTBEAT_EXPIRE = 150      # 2 minutes, 30 seconds
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
 
 

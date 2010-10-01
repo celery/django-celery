@@ -28,8 +28,9 @@ task_is_successful = curry(reversestar, "celery-is_task_successful")
 task_status = curry(reversestar, "celery-task_status")
 task_apply = curry(reverse, "celery-apply")
 registered_tasks = curry(reverse, "celery-tasks")
-
 scratch = {}
+
+
 @task()
 def mytask(x, y):
     ret = scratch["result"] = int(x) * int(y)

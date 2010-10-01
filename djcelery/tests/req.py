@@ -2,6 +2,7 @@ from django.test import Client
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.handlers.base import BaseHandler
 
+
 class RequestFactory(Client):
     """Class that lets you create mock Request objects for use in testing.
 

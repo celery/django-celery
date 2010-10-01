@@ -22,6 +22,7 @@ if root_dir != '':
     os.chdir(root_dir)
 src_dir = "djcelery"
 
+
 def osx_install_data(install_data):
 
     def finalize_options(self):
@@ -123,7 +124,7 @@ setup(
         "django-picklefield",
         "celery",
     ],
-    cmdclass = {"test": RunTests, "quicktest": QuickRunTests},
+    cmdclass={"test": RunTests, "quicktest": QuickRunTests},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Framework :: Django",

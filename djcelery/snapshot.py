@@ -12,6 +12,7 @@ SUCCESS_STATES = frozenset([states.SUCCESS])
 KEEP_FROM_RECEIVED = ("name", "args", "kwargs",
                       "retries", "eta", "expires")
 
+
 class Camera(Polaroid):
     WorkerState = WorkerState
     TaskState = TaskState

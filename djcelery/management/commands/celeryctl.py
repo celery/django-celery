@@ -13,6 +13,7 @@ from djcelery.management.base import CeleryCommand
 _Command.version = "celery %s\ndjango-celery %s" % (_Command.version,
                                                     __version__)
 
+
 class Command(CeleryCommand):
     """Run the celery control utility."""
     help = "celery control utility"
