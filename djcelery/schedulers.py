@@ -1,21 +1,25 @@
+import logging
+
 from datetime import datetime
 from time import time
 
 from anyjson import deserialize, serialize
 from django.db import transaction
 
+from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
 
-from djcelery.models import *
-from django.core.exceptions import ObjectDoesNotExist
+from djcelery.models import (PeriodicTask, PeriodicTasks,
+                             CrontabSchedule, IntervalSchedule)
+
+
 
 class ModelEntry(ScheduleEntry):
-    _save_fields = ["last_run_at", "total_run_count", "no_changes"]
+    model_schedules = ((schedules.crontab, CrontabSchedule, "crontab"),
+                       (schedules.schedule, IntervalSchedule, "interval"))
+    save_fields = ["last_run_at", "total_run_count", "no_changes"]
 
-    def __init__(self, name=None, model=None, *args, **kwargs):
-        if not model:
-            model = self.get_or_create_model(name, args, kwargs)
-            self.model = model
+    def __init__(self, model):
         self.name = model.name
         self.task = model.task
         self.schedule = model.schedule
@@ -32,56 +36,48 @@ class ModelEntry(ScheduleEntry):
             model.last_run_at = datetime.now()
         self.last_run_at = model.last_run_at
 
-    def get_or_create_model(self, name, args, kwargs):
-        try:
-            return PeriodicTask.objects.get(name=name)
-        except ObjectDoesNotExist, e:
-            pass
-        model = PeriodicTask(name=name,*args,**dict([(a,b) for a,b in kwargs.items() if a not in [ 'relative', 'options']]))
-        self.populate_new_model(model,args,kwargs)
-        return model
-    
-    def populate_new_model(self, model, args,kwargs) :
-        try:
-            crontab = CrontabSchedule.from_schedule(kwargs['schedule'])
-            crontab.save()
-            model.crontab = crontab
-        except:
-            interval = IntervalSchedule.from_schedule(kwargs['schedule'])
-            interval.save()
-            model.interval = interval
-        model.args = serialize(kwargs['args'])
-        model.kwargs = serialize(kwargs['kwargs'])
-        model.save()
- 
-
     def next(self):
-        try:
-                self.model.last_run_at = datetime.now()
-                self.last_run_at = datetime.now()
-                self.model.total_run_count += 1
-                self.model.no_changes = True
-                return self.__class__(model=self.model)
-        except ObjectDoesNotExist, e:
-            pass
- 
+        self.model.last_run_at = datetime.now()
+        self.model.total_run_count += 1
+        self.model.no_changes = True
+        return self.__class__(self.model)
+
     def save(self):
         # Object may not be synchronized, so only
         # change the fields we care about.
-        try:
-           obj = self.model._default_manager.get(pk=self.model.pk)
-           for field in self._save_fields:
-               setattr(obj, field, getattr(self.model, field))
-           obj.save()
-        except ObjectDoesNotExist, e:
-            pass
+        obj = self.model._default_manager.get(pk=self.model.pk)
+        for field in self.save_fields:
+            setattr(obj, field, getattr(self.model, field))
+        obj.save()
+
+    @classmethod
+    def to_model_schedule(cls, schedule):
+        for schedule_type, model_type, model_field in cls.model_schedules:
+            if isinstance(schedule, schedule_type):
+                model_schedule = model_type.from_schedule(schedule)
+                model_schedule.save()
+                return model_schedule, model_field
+        raise ValueError("Can't convert schedule type %r to model" % schedule)
+
+    @classmethod
+    def from_entry(cls, name, skip_fields=("relative", "options"), **entry):
+        fields = dict(entry)
+        for skip_field in skip_fields:
+            fields.pop(skip_field, None)
+        schedule = fields.pop("schedule")
+        model_schedule, model_field = cls.to_model_schedule(schedule)
+        fields[model_field] = model_schedule
+        fields["args"] = serialize(fields.get("args") or [])
+        fields["kwargs"] = serialize(fields.get("kwargs") or {})
+        return cls(PeriodicTask._default_manager.update_or_create(name=name,
+                                                            defaults=fields))
 
     def __repr__(self):
-        return "<ScheduleEntry: %s %s(*%s, **%s) {%s}>" % (self.name,
-                                                   self.task,
-                                                   self.args,
-                                                   self.kwargs,
-                                                   self.schedule)
+        return "<ModelEntry: %s %s(*%s, **%s) {%s}" % (self.name,
+                                                        self.task,
+                                                        self.args,
+                                                        self.kwargs,
+                                                        self.schedule)
 
 
 class DatabaseScheduler(Scheduler):
@@ -103,7 +99,7 @@ class DatabaseScheduler(Scheduler):
 
     def all_as_schedule(self):
         self.logger.debug("DatabaseScheduler: Fetching database schedule")
-        return dict((model.name, self.Entry(model=model))
+        return dict((model.name, self.Entry(model))
                         for model in self.Model.objects.enabled())
 
     def schedule_changed(self):
@@ -147,9 +143,18 @@ class DatabaseScheduler(Scheduler):
             transaction.commit()
             self._last_flush = time()
 
+    def update_from_dict(self, dict_):
+        self.update(dict((name, self.Entry.from_entry(name, **entry))
+                        for name, entry in dict_.items()))
+
     def get_schedule(self):
         if self.schedule_changed():
             self.flush()
             self.logger.debug("DatabaseScheduler: Schedule changed.")
             self._schedule = self.all_as_schedule()
+            if self.logger.isEnabledFor(logging.DEBUG):
+                self.logger.debug(
+                        "Current schedule:\n" +
+                        "\n".join(repr(entry)
+                                    for entry in self._schedule.values()))
         return self._schedule
