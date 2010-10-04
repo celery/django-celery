@@ -22,8 +22,16 @@ class ModelEntry(ScheduleEntry):
         self.name = model.name
         self.task = model.task
         self.schedule = model.schedule
-        self.args = deserialize(model.args)
-        self.kwargs = deserialize(model.kwargs)
+        try:
+            self.args = deserialize(model.args or u"[]")
+            self.kwargs = deserialize(model.kwargs or u"{}")
+        except ValueError:
+            # disable because of error deserializing args/kwargs
+            model.no_changes = True
+            model.enabled = False
+            model.save()
+            raise
+
         self.options = {"queue": model.queue,
                         "exchange": model.exchange,
                         "routing_key": model.routing_key,
@@ -98,8 +106,13 @@ class DatabaseScheduler(Scheduler):
 
     def all_as_schedule(self):
         self.logger.debug("DatabaseScheduler: Fetching database schedule")
-        return dict((model.name, self.Entry(model))
-                        for model in self.Model.objects.enabled())
+        s = {}
+        for model in self.Model.objects.enabled():
+            try:
+                s[model.name] = self.Entry(model)
+            except ValueError:
+                pass
+        return s
 
     def schedule_changed(self):
         if self._last_timestamp is not None:
@@ -143,8 +156,15 @@ class DatabaseScheduler(Scheduler):
             self._last_flush = time()
 
     def update_from_dict(self, dict_):
-        self.update(dict((name, self.Entry.from_entry(name, **entry))
-                        for name, entry in dict_.items()))
+        s = {}
+        for name, entry in dict_.items():
+            try:
+                s[name] = self.Entry.from_entry(name, **entry)
+            except Exception, exc:
+                self.logger.error(
+                    "Couldn't add entry %r to database schedule: %r. "
+                    "Contents: %r" % (name, exc, entry))
+        self.update(s)
 
     def get_schedule(self):
         if self.schedule_changed():
