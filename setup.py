@@ -118,7 +118,7 @@ setup(
     license="BSD",
     packages=packages,
     data_files=data_files,
-    scripts=[],
+    scripts=["bin/djcelerymon"],
     zip_safe=False,
     install_requires=[
         "django-picklefield",
@@ -137,6 +137,8 @@ setup(
         "Topic :: System :: Distributed Computing",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    entry_points={},
+    entry_points={
+        "console_scripts": ["djcelerymon = djcelery.mon:main"]
+    },
     long_description=long_description,
 )
