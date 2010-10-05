@@ -1,6 +1,7 @@
 import logging
 
 from datetime import datetime
+from multiprocessing.util import Finalize
 from time import time
 
 from anyjson import deserialize, serialize
@@ -100,6 +101,7 @@ class DatabaseScheduler(Scheduler):
         self._dirty = set()
         self._last_flush = None
         self._flush_every = 3 * 60
+        self._finalize = Finalize(self, self.flush, exitpriority=5)
 
     def setup_schedule(self):
         pass
