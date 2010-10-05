@@ -19,6 +19,7 @@ from celery.utils import abbrtask
 from djcelery import loaders
 from djcelery.models import TaskState, WorkerState
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
+from djcelery.utils import naturaldate
 
 
 TASK_STATE_COLORS = {states.SUCCESS: "green",
@@ -76,6 +77,10 @@ def eta(task):
     if not task.eta:
         return """<span style="color: gray;">none</span>"""
     return escape(task.eta)
+
+@display_field(_("when"), "tstamp")
+def tstamp(task):
+    return naturaldate(task.tstamp)
 
 
 @display_field(_("name"), "name")
@@ -135,7 +140,7 @@ class TaskMonitor(ModelMonitor):
     fieldsets = (
             (None, {
                 "fields": ("state", "task_id", "name", "args", "kwargs",
-                           "eta", "runtime", "worker"),
+                           "eta", "runtime", "worker", "tstamp"),
                 "classes": ("extrapretty", ),
             }),
             ("Details", {
@@ -149,10 +154,11 @@ class TaskMonitor(ModelMonitor):
                     fixedwidth("args", pretty=True),
                     fixedwidth("kwargs", pretty=True),
                     eta,
+                    tstamp,
                     "worker")
     readonly_fields = ("state", "task_id", "name", "args", "kwargs",
                        "eta", "runtime", "worker", "result", "traceback",
-                       "expires")
+                       "expires", "tstamp")
     list_filter = ("state", "name", "tstamp", "eta", "worker")
     search_fields = ("name", "task_id", "args", "kwargs", "worker__hostname")
     actions = ["revoke_tasks",

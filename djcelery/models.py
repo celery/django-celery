@@ -260,8 +260,7 @@ class TaskState(models.Model):
                 max_length=36, unique=True)
     name = models.CharField(_(u"name"),
                 max_length=200, null=True)
-    tstamp = models.DateTimeField(_(u"event received at"),
-                editable=False)
+    tstamp = models.DateTimeField(_(u"event received at"))
     args = models.CharField(_(u"Arguments"),
                 max_length=200, null=True)
     kwargs = models.CharField(_(u"Keyword arguments"),
