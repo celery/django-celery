@@ -225,7 +225,8 @@ signals.pre_save.connect(PeriodicTasks.changed, sender=PeriodicTask)
 
 class WorkerState(models.Model):
     hostname = models.CharField(_(u"hostname"), max_length=255, unique=True)
-    last_heartbeat = models.DateTimeField(_(u"last heartbeat"), null=True)
+    last_heartbeat = models.DateTimeField(_(u"last heartbeat"), null=True,
+                                          db_index=True)
 
     objects = ExtendedManager()
 
@@ -259,8 +260,8 @@ class TaskState(models.Model):
     task_id = models.CharField(_(u"UUID"),
                 max_length=36, unique=True)
     name = models.CharField(_(u"name"),
-                max_length=200, null=True)
-    tstamp = models.DateTimeField(_(u"event received at"))
+                max_length=200, null=True, db_index=True)
+    tstamp = models.DateTimeField(_(u"event received at"), db_index=True)
     args = models.CharField(_(u"Arguments"),
                 max_length=200, null=True)
     kwargs = models.CharField(_(u"Keyword arguments"),
