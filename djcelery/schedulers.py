@@ -139,6 +139,7 @@ class DatabaseScheduler(Scheduler):
 
     @transaction.commit_manually()
     def flush(self):
+        self.logger.debug("Writing dirty entries...")
         if not self._dirty:
             return
         try:
@@ -164,7 +165,7 @@ class DatabaseScheduler(Scheduler):
                 self.logger.error(
                     "Couldn't add entry %r to database schedule: %r. "
                     "Contents: %r" % (name, exc, entry))
-        self.update(s)
+        self.schedule.update(s)
 
     def get_schedule(self):
         if self.schedule_changed():
