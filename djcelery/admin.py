@@ -78,14 +78,18 @@ def eta(task):
         return """<span style="color: gray;">none</span>"""
     return escape(task.eta)
 
+
 @display_field(_("when"), "tstamp")
 def tstamp(task):
-    return naturaldate(task.tstamp)
+    return """<div title="%s">%s</div>""" % (escape(str(task.tstamp)),
+                                             escape(naturaldate(task.tstamp)))
 
 
 @display_field(_("name"), "name")
 def name(task):
-    return """<b>%s</b>""" % (escape(abbrtask(task.name, 16)), )
+    short_name = abbrtask(task.name, 16)
+    return """<div title="%s"><b>%s</b></div>""" % (escape(task.name),
+                                                    escape(short_name))
 
 
 def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
@@ -97,14 +101,14 @@ def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
             val = pformat(val, width=width)
         if val.startswith("u'") or val.startswith('u"'):
             val = val[2:-1]
-        val.replace(",", ",\n")
-        val.replace("\n", "<br />")
+        shortval = val.replace(",", ",\n")
+        shortval = shortval.replace("\n", "<br />")
 
-        if len(val) > maxlen:
-            val = val[:maxlen] + "..."
-        return """<span style="font-size: %spt;
+        if len(shortval) > maxlen:
+            shortval = shortval[:maxlen] + "..."
+        return """<span title="%s", style="font-size: %spt;
                                font-family: Menlo, Courier;
-                  ">%s</span>""" % (pt, escape(val), )
+                  ">%s</span>""" % (escape(val[:255]), pt, escape(shortval), )
     return f
 
 
