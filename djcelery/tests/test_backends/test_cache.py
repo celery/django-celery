@@ -41,7 +41,7 @@ class test_CacheBackend(unittest.TestCase):
         x = result.AsyncResult(tid)
         b.mark_as_done(tid, {"foo": "bar"})
         self.assertEqual(b.get_result(tid).get("foo"), "bar")
-        x.forget()
+        b.forget(tid)
         self.assertNotIn(tid, b._cache)
         self.assertIsNone(b.get_result(tid))
 
