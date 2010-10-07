@@ -9,7 +9,8 @@ Important Notes
 ---------------
 
 This release depends on Celery version 2.1.0.
-Be sure to read the Celery changelog before you upgrade.
+Be sure to read the Celery changelog before you upgrade:
+    http://ask.github.com/celery/changelog.html#version-2-1-0
 
 News
 ----
