@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; django-celery v2.1.0a2 documentation</title>
+    <title>Index &mdash; django-celery v2.1.0rc4 documentation</title>
     <link rel="stylesheet" href="static/celery.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.1.0a2',
+        VERSION:     '2.1.0rc4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.1.0a2 documentation" href="index.html" /> 
+    <link rel="top" title="django-celery v2.1.0rc4 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery v2.1.0rc4 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -75,6 +75,7 @@
     <dt><a href="reference/djcelery.snapshot.html#djcelery.snapshot.Camera.WorkerState.MultipleObjectsReturned">Camera.WorkerState.MultipleObjectsReturned</a></dt>
     <dt><a href="reference/djcelery.schedulers.html#djcelery.schedulers.DatabaseScheduler.Changes">Changes (djcelery.schedulers.DatabaseScheduler attribute)</a></dt>
     <dt><a href="reference/djcelery.backends.database.html#djcelery.backends.database.DatabaseBackend.cleanup">cleanup() (djcelery.backends.database.DatabaseBackend method)</a></dt>
+    <dt><a href="reference/djcelery.loaders.html#djcelery.loaders.DjangoLoader.close_cache">close_cache() (djcelery.loaders.DjangoLoader method)</a></dt>
     <dt><a href="reference/djcelery.loaders.html#djcelery.loaders.DjangoLoader.close_database">close_database() (djcelery.loaders.DjangoLoader method)</a></dt>
 </dl></td>
 </tr></table>
@@ -86,6 +87,7 @@
     <dt><a href="reference/djcelery.schedulers.html#djcelery.schedulers.DatabaseScheduler">DatabaseScheduler (class in djcelery.schedulers)</a></dt>
     <dt><a href="reference/djcelery.models.html#TaskMeta.date_done">date_done (TaskMeta attribute)</a></dt>
     <dt><a href="reference/djcelery.models.html#PeriodicTaskMeta.delay">delay() (PeriodicTaskMeta method)</a></dt>
+    <dt><a href="reference/djcelery.backends.cache.html#djcelery.backends.cache.CacheBackend.delete">delete() (djcelery.backends.cache.CacheBackend method)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.ResultManager.delete_expired">delete_expired() (djcelery.managers.ResultManager method)</a></dt>
     <dt><a href="reference/djcelery.loaders.html#djcelery.loaders.DjangoLoader">DjangoLoader (class in djcelery.loaders)</a></dt>
     <dt><a href="reference/djcelery.backends.cache.html#djcelery.backends.cache.DjangoMemcacheWrapper">DjangoMemcacheWrapper (class in djcelery.backends.cache)</a></dt>
@@ -121,9 +123,10 @@
 <table width="100%" class="indextable genindextable"><tr>
   <td width="33%" valign="top"><dl>
     <dt><a href="reference/djcelery.loaders.html#djcelery.loaders.find_related_module">find_related_module() (in module djcelery.loaders)</a></dt>
+    <dt><a href="reference/djcelery.schedulers.html#djcelery.schedulers.DatabaseScheduler.flush">flush() (djcelery.schedulers.DatabaseScheduler method)</a></dt>
 </dl></td>
   <td width="33%" valign="top"><dl>
-    <dt><a href="reference/djcelery.schedulers.html#djcelery.schedulers.DatabaseScheduler.flush">flush() (djcelery.schedulers.DatabaseScheduler method)</a></dt>
+    <dt><a href="reference/djcelery.schedulers.html#djcelery.schedulers.ModelEntry.from_entry">from_entry() (djcelery.schedulers.ModelEntry class method)</a></dt>
 </dl></td>
 </tr></table>
 
@@ -277,6 +280,7 @@
     <dt><a href="reference/djcelery.backends.database.html#djcelery.backends.database.DatabaseBackend.TaskSetModel">TaskSetModel (djcelery.backends.database.DatabaseBackend attribute)</a></dt>
     <dt><a href="reference/djcelery.snapshot.html#djcelery.snapshot.Camera.WorkerState.taskstate_set">taskstate_set (djcelery.snapshot.Camera.WorkerState attribute)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.TaskStateManager">TaskStateManager (class in djcelery.managers)</a></dt>
+    <dt><a href="reference/djcelery.schedulers.html#djcelery.schedulers.ModelEntry.to_model_schedule">to_model_schedule() (djcelery.schedulers.ModelEntry class method)</a></dt>
     <dt><a href="reference/djcelery.models.html#PeriodicTaskMeta.total_run_count">total_run_count (PeriodicTaskMeta attribute)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.transaction_retry">transaction_retry() (in module djcelery.managers)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.TxIsolationWarning">TxIsolationWarning</a></dt>
@@ -286,13 +290,14 @@
 <h2 id="U">U</h2>
 <table width="100%" class="indextable genindextable"><tr>
   <td width="33%" valign="top"><dl>
+    <dt><a href="reference/djcelery.schedulers.html#djcelery.schedulers.DatabaseScheduler.update_from_dict">update_from_dict() (djcelery.schedulers.DatabaseScheduler method)</a></dt>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.update_model_with_dict">update_model_with_dict() (in module djcelery.managers)</a></dt>
+</dl></td>
+  <td width="33%" valign="top"><dl>
     <dt><a href="reference/djcelery.managers.html#djcelery.managers.ExtendedManager.update_or_create">update_or_create() (djcelery.managers.ExtendedManager method)</a></dt>
     <dd><dl>
       <dt><a href="reference/djcelery.managers.html#djcelery.managers.ExtendedQuerySet.update_or_create">(djcelery.managers.ExtendedQuerySet method)</a></dt>
   </dl></dd>
-</dl></td>
-  <td width="33%" valign="top"><dl>
     <dt><a href="reference/djcelery.snapshot.html#djcelery.snapshot.Camera.update_task">update_task() (djcelery.snapshot.Camera method)</a></dt>
 </dl></td>
 </tr></table>
@@ -342,7 +347,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery v2.1.0rc4 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

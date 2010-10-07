@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Periodic Task Schedulers - djcelery.schedulers &mdash; django-celery v2.1.0a2 documentation</title>
+    <title>Periodic Task Schedulers - djcelery.schedulers &mdash; django-celery v2.1.0rc4 documentation</title>
     <link rel="stylesheet" href="../static/celery.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.1.0a2',
+        VERSION:     '2.1.0rc4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.1.0a2 documentation" href="../index.html" />
+    <link rel="top" title="django-celery v2.1.0rc4 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="Event Snapshots - djcelery.snapshot" href="djcelery.snapshot.html" />
     <link rel="prev" title="Celery Loaders - djcelery.loaders" href="djcelery.loaders.html" /> 
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="djcelery.loaders.html" title="Celery Loaders - djcelery.loaders"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery v2.1.0rc4 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -110,12 +110,22 @@
 <tt class="descname">should_flush</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.schedulers.DatabaseScheduler.should_flush" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="djcelery.schedulers.DatabaseScheduler.update_from_dict">
+<tt class="descname">update_from_dict</tt><big>(</big><em>dict_</em><big>)</big><a class="headerlink" href="#djcelery.schedulers.DatabaseScheduler.update_from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="djcelery.schedulers.ModelEntry">
 <em class="property">class </em><tt class="descclassname">djcelery.schedulers.</tt><tt class="descname">ModelEntry</tt><big>(</big><em>model</em><big>)</big><a class="headerlink" href="#djcelery.schedulers.ModelEntry" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><dl class="classmethod">
+<dt id="djcelery.schedulers.ModelEntry.from_entry">
+<em class="property">classmethod </em><tt class="descname">from_entry</tt><big>(</big><em>name</em>, <em>skip_fields=('relative'</em>, <em>'options')</em>, <em>**entry</em><big>)</big><a class="headerlink" href="#djcelery.schedulers.ModelEntry.from_entry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="djcelery.schedulers.ModelEntry.next">
 <tt class="descname">next</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.schedulers.ModelEntry.next" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -123,6 +133,11 @@
 <dl class="method">
 <dt id="djcelery.schedulers.ModelEntry.save">
 <tt class="descname">save</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.schedulers.ModelEntry.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="djcelery.schedulers.ModelEntry.to_model_schedule">
+<em class="property">classmethod </em><tt class="descname">to_model_schedule</tt><big>(</big><em>schedule</em><big>)</big><a class="headerlink" href="#djcelery.schedulers.ModelEntry.to_model_schedule" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -180,7 +195,7 @@
         <li class="right" >
           <a href="djcelery.loaders.html" title="Celery Loaders - djcelery.loaders"
              >previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.1.0a2 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery v2.1.0rc4 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
