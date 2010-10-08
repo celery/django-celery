@@ -7,7 +7,6 @@ from threading import Thread
 
 from celery.bin.celeryev import run_celeryev, OPTION_LIST
 
-from django.conf import settings
 from django.core.management.commands import runserver
 
 from djcelery.management.base import CeleryCommand

@@ -38,7 +38,6 @@ class test_CacheBackend(unittest.TestCase):
     def test_forget(self):
         b = CacheBackend()
         tid = gen_unique_id()
-        x = result.AsyncResult(tid)
         b.mark_as_done(tid, {"foo": "bar"})
         self.assertEqual(b.get_result(tid).get("foo"), "bar")
         b.forget(tid)
