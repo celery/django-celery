@@ -19,6 +19,7 @@ DEFAULTS = {"ROOT_URLCONF": "djcelery.monproj.urls",
             "INSTALLED_APPS": DEFAULT_APPS,
             "DEBUG": True}
 
+
 def configure():
     from celery.loaders import current_loader
     from django.conf import settings
@@ -29,6 +30,7 @@ def configure():
         settings.configure(SETTINGS_MODULE=settings_module,
                            **dict(DEFAULTS, **current_loader().conf))
         settings.DEBUG = True
+
 
 def run_monitor(argv):
     from djcelery.management.commands import djcelerymon
@@ -41,7 +43,6 @@ def main(argv=sys.argv):
     configure()
     management.call_command("syncdb")
     run_monitor(argv)
-
 
 if __name__ == "__main__":
     main()
