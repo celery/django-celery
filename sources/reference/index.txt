@@ -18,3 +18,4 @@
     djcelery.backends.database
     djcelery.backends.cache
     djcelery.contrib.test_runner
+    djcelery.utils
