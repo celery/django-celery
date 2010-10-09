@@ -1,4 +1,7 @@
-import unittest2 as unittest
+import unittest
+# skip and many other features were added to unittest in python 2.7
+if 'skip' not in dir(unittest):
+    import unittest2 as unittest
 
 from datetime import datetime
 from itertools import count
