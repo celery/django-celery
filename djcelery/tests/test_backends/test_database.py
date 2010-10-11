@@ -1,8 +1,3 @@
-import unittest
-# skip and many other features were added to unittest in python 2.7
-if 'skip' not in dir(unittest):
-    import unittest2 as unittest
-
 from datetime import datetime, timedelta
 
 from celery import conf
@@ -12,6 +7,7 @@ from celery.task import PeriodicTask
 from celery.utils import gen_unique_id
 
 from djcelery.backends.database import DatabaseBackend
+from djcelery.tests.utils import unittest
 
 
 class SomeClass(object):

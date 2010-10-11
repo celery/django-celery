@@ -1,11 +1,8 @@
-import unittest
-# skip and many other features were added to unittest in python 2.7
-if 'skip' not in dir(unittest):
-    import unittest2 as unittest
-
 from django.conf import settings
 
 from celery import conf
+
+from djcelery.tests.utils import unittest
 
 
 SETTING_VARS = (

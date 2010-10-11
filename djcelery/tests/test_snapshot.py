@@ -1,8 +1,3 @@
-import unittest
-# skip and many other features were added to unittest in python 2.7
-if 'skip' not in dir(unittest):
-    import unittest2 as unittest
-
 from datetime import datetime
 from itertools import count
 from time import time
@@ -13,6 +8,7 @@ from celery.utils import gen_unique_id
 
 from djcelery import snapshot
 from djcelery import models
+from djcelery.tests.utils import unittest
 
 _next_id = count(0).next
 

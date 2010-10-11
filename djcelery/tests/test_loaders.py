@@ -1,11 +1,7 @@
-import unittest
-# skip and many other features were added to unittest in python 2.7
-if 'skip' not in dir(unittest):
-    import unittest2 as unittest
-
 from celery import loaders
 
 from djcelery import loaders as djloaders
+from djcelery.tests.utils import unittest
 
 
 class TestDjangoLoader(unittest.TestCase):

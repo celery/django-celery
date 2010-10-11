@@ -1,13 +1,9 @@
-import unittest
-# skip and many other features were added to unittest in python 2.7
-if 'skip' not in dir(unittest):
-    import unittest2 as unittest
-
 from django.conf import settings
 
 from celery.task import tasks
 
 from djcelery.loaders import autodiscover
+from djcelery.tests.utils import unittest
 
 
 class TestDiscovery(unittest.TestCase):

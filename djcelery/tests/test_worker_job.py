@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-import unittest
-# skip and many other features were added to unittest in python 2.7
-if 'skip' not in dir(unittest):
-    import unittest2 as unittest
-
 from django.core import cache
 
 from celery.utils import gen_unique_id
 from celery.decorators import task as task_dec
 
 from celery.tests.test_worker_job import jail
+
+from djcelery.tests.utils import unittest
 
 
 @task_dec()
