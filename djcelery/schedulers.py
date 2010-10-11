@@ -139,7 +139,7 @@ class DatabaseScheduler(Scheduler):
             self.flush()
         return new_entry
 
-    @transaction.commit_manually()
+    @transaction.commit_manually
     def flush(self):
         self.logger.debug("Writing dirty entries...")
         if not self._dirty:
