@@ -262,10 +262,8 @@ class TaskState(models.Model):
     name = models.CharField(_(u"name"),
                 max_length=200, null=True, db_index=True)
     tstamp = models.DateTimeField(_(u"event received at"), db_index=True)
-    args = models.CharField(_(u"Arguments"),
-                max_length=200, null=True)
-    kwargs = models.CharField(_(u"Keyword arguments"),
-                max_length=200, null=True)
+    args = models.TextField(_(u"Arguments"), null=True)
+    kwargs = models.TextField(_(u"Keyword arguments"), null=True)
     eta = models.DateTimeField(_(u"ETA"), null=True,
                 help_text=u"date to execute")
     expires = models.DateTimeField(_(u"expires"), null=True)
