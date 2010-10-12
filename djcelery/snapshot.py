@@ -33,7 +33,6 @@ class Camera(Polaroid):
 
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
-        self.prev_count = 0
         self._last_worker_write = defaultdict(lambda: (None, None))
 
     def get_heartbeat(self, worker):
@@ -91,11 +90,8 @@ class Camera(Polaroid):
         return obj
 
     def on_shutter(self, state):
-        event_count = state.event_count
-        if event_count != self.prev_count:
-            map(self.handle_worker, state.workers.items())
-            map(self.handle_task, state.tasks.items())
-        self.prev_count = event_count
+        map(self.handle_worker, state.workers.items())
+        map(self.handle_task, state.tasks.items())
 
     def on_cleanup(self):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)
