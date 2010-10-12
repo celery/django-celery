@@ -48,6 +48,7 @@ class test_Camera(unittest.TestCase):
     def test_handle_worker(self):
         worker = Worker(hostname="fuzzie")
         worker.on_online(timestamp=time())
+        self.cam._last_worker_write.clear()
         m = self.cam.handle_worker((worker.hostname, worker))
         self.assertTrue(m)
         self.assertTrue(m.hostname)
@@ -155,6 +156,7 @@ class test_Camera(unittest.TestCase):
                                       hostname=ws[1]),
                  Event("worker-offline", hostname=ws[0])]
         map(state.event, events)
+        cam._last_worker_write.clear()
         cam.on_shutter(state)
 
         w1 = models.WorkerState.objects.get(hostname=ws[0])
