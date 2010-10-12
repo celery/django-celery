@@ -1,16 +1,25 @@
 from datetime import datetime, timedelta
+from time import time
 
 from django.core.exceptions import ObjectDoesNotExist
 
 from celery import states
 from celery.events.snapshot import Polaroid
 from celery.utils import maybe_iso8601
+from celery.utils.compat import defaultdict
 
 from djcelery.models import WorkerState, TaskState
 
 SUCCESS_STATES = frozenset([states.SUCCESS])
+
+# List of fields to keep from the RECEIVED state.
+# (to reduce message size, these fields are only sent with message-received).
 KEEP_FROM_RECEIVED = ("name", "args", "kwargs",
                       "retries", "eta", "expires")
+
+
+# Limit how often we write worker timestamps.
+WORKER_UPDATE_FREQ = 60
 
 
 class Camera(Polaroid):
@@ -20,10 +29,12 @@ class Camera(Polaroid):
     expire_states = {SUCCESS_STATES: timedelta(days=1),
                      states.EXCEPTION_STATES: timedelta(days=3),
                      states.UNREADY_STATES: timedelta(days=5)}
+    worker_update_freq = WORKER_UPDATE_FREQ
 
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
         self.prev_count = 0
+        self._last_worker_write = defaultdict(lambda: (None, None))
 
     def get_heartbeat(self, worker):
         try:
@@ -33,10 +44,14 @@ class Camera(Polaroid):
         return datetime.fromtimestamp(heartbeat)
 
     def handle_worker(self, (hostname, worker)):
-        return self.WorkerState.objects.update_or_create(
-                    hostname=hostname,
-                    defaults={"last_heartbeat":
-                        self.get_heartbeat(worker)})
+        last_write, obj = self._last_worker_write[hostname]
+        if not last_write or time() - last_write > self.worker_update_freq:
+            obj = self.WorkerState.objects.update_or_create(
+                        hostname=hostname,
+                        defaults={"last_heartbeat":
+                            self.get_heartbeat(worker)})
+            self._last_worker_write[hostname] = (time(), obj)
+        return obj
 
     def handle_task(self, (uuid, task), worker=None):
         if task.worker.hostname:
