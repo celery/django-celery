@@ -5,6 +5,28 @@
 .. contents::
     :local:
 
+.. _version-2.1.1:
+
+2.1.1
+=====
+
+* Snapshots: Fixed bug with losing events.
+
+* Snapshots: Limited the number of worker timestamp updates to once every second.
+
+* Snapshots: ``TaskState.args`` and ``TaskState.kwargs`` are now
+  represented as ``TextField``s instead of ``CharField``s.
+
+    If you need to represent arguments larger than 200 chars you have
+    to migrate the table.
+
+* ``transaction.commit_manually`` doesn't accept arguments on older
+  Django version.
+
+    Should now work with Django versions previous to v1.2.
+
+* The tests doesn't need :mod:`unittest2` anymore if running on Python 2.7.
+
 .. _version-2.1.0:
 
 2.1.0
