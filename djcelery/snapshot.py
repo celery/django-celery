@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from time import time
 
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from celery import states
@@ -22,13 +23,21 @@ KEEP_FROM_RECEIVED = ("name", "args", "kwargs",
 WORKER_UPDATE_FREQ = 60
 
 
+EXPIRE_SUCCESS = getattr(settings, "CELERYCAM_EXPIRE_SUCCESS",
+                         timedelta(days=1))
+EXPIRE_ERROR = getattr(settings, "CELERYCAM_EXPIRE_ERROR",
+                       timedelta(days=3))
+EXPIRE_PENDING = getattr(settings, "CELERYCAM_EXPIRE_PENDING",
+                         timedelta(days=5))
+
+
 class Camera(Polaroid):
     WorkerState = WorkerState
     TaskState = TaskState
 
-    expire_states = {SUCCESS_STATES: timedelta(days=1),
-                     states.EXCEPTION_STATES: timedelta(days=3),
-                     states.UNREADY_STATES: timedelta(days=5)}
+    expire_states = {SUCCESS_STATES: EXPIRE_SUCCESS,
+                     states.EXCEPTION_STATES: EXPIRE_ERROR,
+                     states.UNREADY_STATES: EXPIRE_PENDING}
     worker_update_freq = WORKER_UPDATE_FREQ
 
     def __init__(self, *args, **kwargs):
