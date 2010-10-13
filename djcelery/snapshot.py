@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from time import time
 
+from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -39,6 +40,7 @@ class Camera(Polaroid):
                      states.EXCEPTION_STATES: EXPIRE_ERROR,
                      states.UNREADY_STATES: EXPIRE_PENDING}
     worker_update_freq = WORKER_UPDATE_FREQ
+    clear_after = True
 
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
@@ -98,9 +100,33 @@ class Camera(Polaroid):
 
         return obj
 
-    def on_shutter(self, state):
-        map(self.handle_worker, state.workers.items())
-        map(self.handle_task, state.tasks.items())
+    def _autocommit(self, fun):
+        try:
+            fun()
+        except (KeyboardInterrupt, SystemExit):
+            transaction.commit()
+            raise
+        except Exception:
+            transaction.rollback()
+            raise
+        else:
+            transaction.commit()
+
+    @transaction.commit_manually
+    def on_shutter(self, state, commit_every=100):
+        if not state.event_count:
+            transaction.commit()
+            return
+
+        def _handle_tasks():
+            for i, task in enumerate(state.tasks.items()):
+                self.handle_task(task)
+                if not i % commit_every:
+                    transaction.commit()
+
+        self._autocommit(lambda: map(self.handle_worker,
+                                     state.workers.items()))
+        self._autocommit(_handle_tasks)
 
     def on_cleanup(self):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)
