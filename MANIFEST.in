@@ -1,18 +1,22 @@
 include AUTHORS
 include Changelog
+include FAQ
+include INSTALL
+include LICENSE
+include MANIFEST.in
 include README
 include README.rst
-include MANIFEST.in
-include LICENSE
-include TODO
 include THANKS
+include TODO
 include pavement.py
 include setup.cfg
+recursive-include bin *
+recursive-include contrib *
 recursive-include djcelery *.py
 recursive-include docs *
-recursive-include tests *
-recursive-include contrib *
 recursive-include examples *
+recursive-include tests *
+prune bin/*.pyc
 prune tests/*.pyc
 prune docs/*.pyc
 prune contrib/*.pyc
