@@ -11,6 +11,8 @@
 =====
 :release-date: 2010-10-14 02:00 PM CEST
 
+* Now depends on Celery v2.1.1.
+
 * Snapshots: Fixed bug with losing events.
 
 * Snapshots: Limited the number of worker timestamp updates to once every second.
