@@ -50,23 +50,23 @@
 <h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference external" href="#version-2-1-1" id="id11">2.1.1</a></li>
-<li><a class="reference external" href="#version-2-1-0" id="id12">2.1.0</a><ul>
-<li><a class="reference external" href="#important-notes" id="id13">Important Notes</a></li>
-<li><a class="reference external" href="#news" id="id14">News</a></li>
-<li><a class="reference external" href="#fixes" id="id15">Fixes</a></li>
+<li><a class="reference external" href="#version-2-1-1" id="id7">2.1.1</a></li>
+<li><a class="reference external" href="#version-2-1-0" id="id8">2.1.0</a><ul>
+<li><a class="reference external" href="#important-notes" id="id9">Important Notes</a></li>
+<li><a class="reference external" href="#news" id="id10">News</a></li>
+<li><a class="reference external" href="#fixes" id="id11">Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference external" href="#id7" id="id16">2.0.2</a><ul>
-<li><a class="reference external" href="#id8" id="id17">Important notes</a></li>
-<li><a class="reference external" href="#id9" id="id18">News</a></li>
+<li><a class="reference external" href="#id3" id="id12">2.0.2</a><ul>
+<li><a class="reference external" href="#id4" id="id13">Important notes</a></li>
+<li><a class="reference external" href="#id5" id="id14">News</a></li>
 </ul>
 </li>
-<li><a class="reference external" href="#id10" id="id19">2.0.0</a></li>
+<li><a class="reference external" href="#id6" id="id15">2.0.0</a></li>
 </ul>
 </div>
 <div class="section" id="version-2-1-1">
-<span id="id1"></span><h2><a class="toc-backref" href="#id11">2.1.1</a><a class="headerlink" href="#version-2-1-1" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#id7">2.1.1</a><a class="headerlink" href="#version-2-1-1" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -84,13 +84,18 @@
 </li>
 <li><p class="first">Snapshot: Handle transaction manually and commit every 100 task updates.</p>
 </li>
-<li><p class="first">snapshots: Can now configure when to expire task events using
-<tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_SUCCESS</span></tt> (default 1 day),
-<tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_ERROR</span></tt> (default 3 days), and
-<tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_PENDING</span></tt> (default 5 days).</p>
+<li><p class="first">snapshots: Can now configure when to expire task events.</p>
+<blockquote>
+<p>New settings:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_SUCCESS</span></tt> (default 1 day),</li>
+<li><tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_ERROR</span></tt> (default 3 days), and</li>
+<li><tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_PENDING</span></tt> (default 5 days).</li>
+</ul>
+</blockquote>
 </li>
 <li><p class="first">Snapshots: <tt class="docutils literal"><span class="pre">TaskState.args</span></tt> and <tt class="docutils literal"><span class="pre">TaskState.kwargs</span></tt> are now
-represented as <a href="#id2"><span class="problematic" id="id3">``</span></a>TextField``s instead of <a href="#id4"><span class="problematic" id="id5">``</span></a>CharField``s.</p>
+represented as <tt class="docutils literal"><span class="pre">TextField</span></tt> instead of <tt class="docutils literal"><span class="pre">CharField</span></tt>.</p>
 <blockquote>
 <p>If you need to represent arguments larger than 200 chars you have
 to migrate the table.</p>
@@ -107,7 +112,7 @@ Django version.</p>
 </ul>
 </div>
 <div class="section" id="version-2-1-0">
-<span id="id6"></span><h2><a class="toc-backref" href="#id12">2.1.0</a><a class="headerlink" href="#version-2-1-0" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id8">2.1.0</a><a class="headerlink" href="#version-2-1-0" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -117,13 +122,13 @@ Django version.</p>
 </tbody>
 </table>
 <div class="section" id="important-notes">
-<h3><a class="toc-backref" href="#id13">Important Notes</a><a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Important Notes</a><a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h3>
 <p>This release depends on Celery version 2.1.0.
 Be sure to read the Celery changelog before you upgrade:
 <a class="reference external" href="http://ask.github.com/celery/changelog.html#version-2-1-0">http://ask.github.com/celery/changelog.html#version-2-1-0</a></p>
 </div>
 <div class="section" id="news">
-<h3><a class="toc-backref" href="#id14">News</a><a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">News</a><a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">The periodic task schedule can now be stored in the database and edited via
 the Django Admin interface.</p>
@@ -161,7 +166,7 @@ the database.</p>
 </ul>
 </div>
 <div class="section" id="fixes">
-<h3><a class="toc-backref" href="#id15">Fixes</a><a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Fixes</a><a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">database backend: Now shows warning if polling results with transaction isolation level
 repeatable-read on MySQL.</p>
@@ -178,10 +183,10 @@ database.</p>
 </ul>
 </div>
 </div>
-<div class="section" id="id7">
-<h2><a class="toc-backref" href="#id16">2.0.2</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id8">
-<h3><a class="toc-backref" href="#id17">Important notes</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id12">2.0.2</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="#id13">Important notes</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">Due to some applications loading the Django models lazily, it is recommended
 that you add the following lines to your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
@@ -194,16 +199,16 @@ model modules haven't been imported yet.</pre>
 </li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id18">News</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id14">News</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">djcelery.views.registered_tasks</span></tt>: Added a view to list currently known
 tasks.</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id10">
-<h2><a class="toc-backref" href="#id19">2.0.0</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2><a class="toc-backref" href="#id15">2.0.0</a><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -236,12 +241,12 @@ tasks.</li>
 <li><a class="reference internal" href="#fixes">Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id7">2.0.2</a><ul>
-<li><a class="reference internal" href="#id8">Important notes</a></li>
-<li><a class="reference internal" href="#id9">News</a></li>
+<li><a class="reference internal" href="#id3">2.0.2</a><ul>
+<li><a class="reference internal" href="#id4">Important notes</a></li>
+<li><a class="reference internal" href="#id5">News</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id10">2.0.0</a></li>
+<li><a class="reference internal" href="#id6">2.0.0</a></li>
 </ul>
 </li>
 </ul>
