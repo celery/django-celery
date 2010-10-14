@@ -19,13 +19,16 @@
 
 * Snapshot: Handle transaction manually and commit every 100 task updates.
 
-* snapshots: Can now configure when to expire task events using
-  ``CELERYCAM_EXPIRE_SUCCESS`` (default 1 day),
-  ``CELERYCAM_EXPIRE_ERROR`` (default 3 days), and
-  ``CELERYCAM_EXPIRE_PENDING`` (default 5 days).
+* snapshots: Can now configure when to expire task events.
+
+    New settings:
+
+    * ``CELERYCAM_EXPIRE_SUCCESS`` (default 1 day),
+    * ``CELERYCAM_EXPIRE_ERROR`` (default 3 days), and
+    * ``CELERYCAM_EXPIRE_PENDING`` (default 5 days).
 
 * Snapshots: ``TaskState.args`` and ``TaskState.kwargs`` are now
-  represented as ``TextField``s instead of ``CharField``s.
+  represented as ``TextField`` instead of ``CharField``.
 
     If you need to represent arguments larger than 200 chars you have
     to migrate the table.
