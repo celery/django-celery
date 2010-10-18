@@ -1,5 +1,6 @@
 import imp
 import importlib
+import warnings
 
 from celery.loaders.base import BaseLoader
 from celery.datastructures import DictAttribute
