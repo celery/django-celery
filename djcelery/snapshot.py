@@ -6,24 +6,16 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from celery import states
+from celery.events.state import Task
 from celery.events.snapshot import Polaroid
 from celery.utils import maybe_iso8601
 from celery.utils.compat import defaultdict
 
 from djcelery.models import WorkerState, TaskState
 
+
+WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
 SUCCESS_STATES = frozenset([states.SUCCESS])
-
-# List of fields to keep from the RECEIVED state.
-# (to reduce message size, these fields are only sent with message-received).
-KEEP_FROM_RECEIVED = ("name", "args", "kwargs",
-                      "retries", "eta", "expires")
-
-
-# Limit how often we write worker timestamps.
-WORKER_UPDATE_FREQ = 60
-
-
 EXPIRE_SUCCESS = getattr(settings, "CELERYCAM_EXPIRE_SUCCESS",
                          timedelta(days=1))
 EXPIRE_ERROR = getattr(settings, "CELERYCAM_EXPIRE_ERROR",
@@ -33,14 +25,16 @@ EXPIRE_PENDING = getattr(settings, "CELERYCAM_EXPIRE_PENDING",
 
 
 class Camera(Polaroid):
-    WorkerState = WorkerState
     TaskState = TaskState
+    WorkerState = WorkerState
 
-    expire_states = {SUCCESS_STATES: EXPIRE_SUCCESS,
-                     states.EXCEPTION_STATES: EXPIRE_ERROR,
-                     states.UNREADY_STATES: EXPIRE_PENDING}
-    worker_update_freq = WORKER_UPDATE_FREQ
     clear_after = True
+    worker_update_freq = WORKER_UPDATE_FREQ
+    expire_states = {
+            SUCCESS_STATES: EXPIRE_SUCCESS,
+            states.EXCEPTION_STATES: EXPIRE_ERROR,
+            states.UNREADY_STATES: EXPIRE_PENDING
+    }
 
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
@@ -64,7 +58,7 @@ class Camera(Polaroid):
         return obj
 
     def handle_task(self, (uuid, task), worker=None):
-        if task.worker.hostname:
+        if task.worker and task.worker.hostname:
             worker = self.handle_worker((task.worker.hostname, task.worker))
         return self.update_task(task.state, task_id=uuid,
                 defaults={"name": task.name,
@@ -87,12 +81,13 @@ class Camera(Polaroid):
         except ObjectDoesNotExist:
             if not defaults.get("name"):
                 return
-            return objects.create(**dict(kwargs, **defaults))
+            return objects.get_or_create(defaults=defaults, **kwargs)
         else:
-            if state != "RECEIVED":
+            if states.state(state) < states.state(obj.state):
+                keep = Task.merge_rules[states.RECEIVED]
                 defaults = dict((k, v)
-                            for k, v in defaults.items()
-                                if k not in KEEP_FROM_RECEIVED)
+                                    for k, v in defaults.items()
+                                        if k not in keep)
 
         for k, v in defaults.items():
             setattr(obj, k, v)
