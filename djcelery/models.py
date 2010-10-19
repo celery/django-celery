@@ -17,7 +17,7 @@ from celery.utils.timeutils import timedelta_seconds
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
 from djcelery.managers import TaskStateManager, PeriodicTaskManager
 
-HEARTBEAT_EXPIRE = 150 # 2 minutes, 30 seconds
+HEARTBEAT_EXPIRE = 150      # 2 minutes, 30 seconds
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
 
 
@@ -225,7 +225,8 @@ signals.pre_save.connect(PeriodicTasks.changed, sender=PeriodicTask)
 
 class WorkerState(models.Model):
     hostname = models.CharField(_(u"hostname"), max_length=255, unique=True)
-    last_heartbeat = models.DateTimeField(_(u"last heartbeat"), null=True)
+    last_heartbeat = models.DateTimeField(_(u"last heartbeat"), null=True,
+                                          db_index=True)
 
     objects = ExtendedManager()
 
@@ -259,13 +260,10 @@ class TaskState(models.Model):
     task_id = models.CharField(_(u"UUID"),
                 max_length=36, unique=True)
     name = models.CharField(_(u"name"),
-                max_length=200, null=True)
-    tstamp = models.DateTimeField(_(u"event received at"),
-                editable=False)
-    args = models.CharField(_(u"Arguments"),
-                max_length=200, null=True)
-    kwargs = models.CharField(_(u"Keyword arguments"),
-                max_length=200, null=True)
+                max_length=200, null=True, db_index=True)
+    tstamp = models.DateTimeField(_(u"event received at"), db_index=True)
+    args = models.TextField(_(u"Arguments"), null=True)
+    kwargs = models.TextField(_(u"Keyword arguments"), null=True)
     eta = models.DateTimeField(_(u"ETA"), null=True,
                 help_text=u"date to execute")
     expires = models.DateTimeField(_(u"expires"), null=True)

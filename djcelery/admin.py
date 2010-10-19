@@ -19,6 +19,7 @@ from celery.utils import abbrtask
 from djcelery import loaders
 from djcelery.models import TaskState, WorkerState
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
+from djcelery.utils import naturaldate
 
 
 TASK_STATE_COLORS = {states.SUCCESS: "green",
@@ -78,9 +79,17 @@ def eta(task):
     return escape(task.eta)
 
 
+@display_field(_("when"), "tstamp")
+def tstamp(task):
+    return """<div title="%s">%s</div>""" % (escape(str(task.tstamp)),
+                                             escape(naturaldate(task.tstamp)))
+
+
 @display_field(_("name"), "name")
 def name(task):
-    return """<b>%s</b>""" % (escape(abbrtask(task.name, 16)), )
+    short_name = abbrtask(task.name, 16)
+    return """<div title="%s"><b>%s</b></div>""" % (escape(task.name),
+                                                    escape(short_name))
 
 
 def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
@@ -92,14 +101,14 @@ def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
             val = pformat(val, width=width)
         if val.startswith("u'") or val.startswith('u"'):
             val = val[2:-1]
-        val.replace(",", ",\n")
-        val.replace("\n", "<br />")
+        shortval = val.replace(",", ",\n")
+        shortval = shortval.replace("\n", "<br />")
 
-        if len(val) > maxlen:
-            val = val[:maxlen] + "..."
-        return """<span style="font-size: %spt;
+        if len(shortval) > maxlen:
+            shortval = shortval[:maxlen] + "..."
+        return """<span title="%s", style="font-size: %spt;
                                font-family: Menlo, Courier;
-                  ">%s</span>""" % (pt, escape(val), )
+                  ">%s</span>""" % (escape(val[:255]), pt, escape(shortval), )
     return f
 
 
@@ -135,7 +144,7 @@ class TaskMonitor(ModelMonitor):
     fieldsets = (
             (None, {
                 "fields": ("state", "task_id", "name", "args", "kwargs",
-                           "eta", "runtime", "worker"),
+                           "eta", "runtime", "worker", "tstamp"),
                 "classes": ("extrapretty", ),
             }),
             ("Details", {
@@ -149,10 +158,11 @@ class TaskMonitor(ModelMonitor):
                     fixedwidth("args", pretty=True),
                     fixedwidth("kwargs", pretty=True),
                     eta,
+                    tstamp,
                     "worker")
     readonly_fields = ("state", "task_id", "name", "args", "kwargs",
                        "eta", "runtime", "worker", "result", "traceback",
-                       "expires")
+                       "expires", "tstamp")
     list_filter = ("state", "name", "tstamp", "eta", "worker")
     search_fields = ("name", "task_id", "args", "kwargs", "worker__hostname")
     actions = ["revoke_tasks",
@@ -213,8 +223,7 @@ class WorkerMonitor(ModelMonitor):
 
     @action(_("Shutdown selected worker nodes"))
     def shutdown_nodes(self, request, queryset):
-        broadcast("shutdown", destination=
-                  [n.hostname for n in queryset])
+        broadcast("shutdown", destination=[n.hostname for n in queryset])
 
     @action(_("Enable event mode for selected nodes."))
     def enable_events(self, request, queryset):

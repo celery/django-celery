@@ -7,6 +7,9 @@ SKIP_FILES="djcelery.management.rst
             djcelery.management.commands.celeryd.rst
             djcelery.management.commands.celerybeat.rst
             djcelery.management.commands.celeryev.rst
+            djcelery.mon.rst
+            djcelery.monproj.rst
+            djcelery.monproj.urls.rst
             djcelery.admin.rst
             djcelery.contrib.rst
             djcelery.backends.rst"

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-import unittest2 as unittest
+from django.core import cache
 
 from celery.utils import gen_unique_id
 from celery.decorators import task as task_dec
 
 from celery.tests.test_worker_job import jail
+
+from djcelery.tests.utils import unittest
 
 
 @task_dec()
@@ -42,16 +44,13 @@ class TestJail(unittest.TestCase):
         old_cache_close = getattr(cache.cache, "close", None)
         cache._was_closed = False
         old_cache_parse_backend = getattr(cache, "parse_backend_uri", None)
-        if old_cache_parse_backend: # checks to make sure attr exists
+        if old_cache_parse_backend:     # checks to make sure attr exists
             delattr(cache, 'parse_backend_uri')
 
         def monkeypatched_cache_close(*args, **kwargs):
             cache._was_closed = True
 
-
-        print("C: %s" % (cache.cache, ))
         cache.cache.close = monkeypatched_cache_close
-        print("X: %s" % (cache.cache.close, ))
 
         jail(gen_unique_id(), mytask.name, [4], {})
         self.assertTrue(cache._was_closed)

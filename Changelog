@@ -2,14 +2,56 @@
  Change history
 ================
 
+.. contents::
+    :local:
+
+.. _version-2.1.1:
+
+2.1.1
+=====
+:release-date: 2010-10-14 02:00 PM CEST
+
+* Now depends on Celery v2.1.1.
+
+* Snapshots: Fixed bug with losing events.
+
+* Snapshots: Limited the number of worker timestamp updates to once every second.
+
+* Snapshot: Handle transaction manually and commit every 100 task updates.
+
+* snapshots: Can now configure when to expire task events.
+
+    New settings:
+
+    * ``CELERYCAM_EXPIRE_SUCCESS`` (default 1 day),
+    * ``CELERYCAM_EXPIRE_ERROR`` (default 3 days), and
+    * ``CELERYCAM_EXPIRE_PENDING`` (default 5 days).
+
+* Snapshots: ``TaskState.args`` and ``TaskState.kwargs`` are now
+  represented as ``TextField`` instead of ``CharField``.
+
+    If you need to represent arguments larger than 200 chars you have
+    to migrate the table.
+
+* ``transaction.commit_manually`` doesn't accept arguments on older
+  Django version.
+
+    Should now work with Django versions previous to v1.2.
+
+* The tests doesn't need :mod:`unittest2` anymore if running on Python 2.7.
+
+.. _version-2.1.0:
+
 2.1.0
 =====
+:release-date: 2010-10-08 12:00 PM CEST
 
 Important Notes
 ---------------
 
 This release depends on Celery version 2.1.0.
-Be sure to read the Celery changelog before you upgrade.
+Be sure to read the Celery changelog before you upgrade:
+http://ask.github.com/celery/changelog.html#version-2-1-0
 
 News
 ----

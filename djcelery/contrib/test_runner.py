@@ -5,6 +5,7 @@ USAGE = """\
 Custom test runner to allow testing of celery delayed tasks.
 """
 
+
 def run_tests(test_labels, *args, **kwargs):
     """Django test runner allowing testing of celery delayed tasks.
 

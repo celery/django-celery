@@ -31,7 +31,7 @@ def transaction_retry(max_retries=1):
             for retries in count(0):
                 try:
                     return fun(*args, **kwargs)
-                except Exception: # pragma: no cover
+                except Exception:   # pragma: no cover
                     # Depending on the database backend used we can experience
                     # various exceptions. E.g. psycopg2 raises an exception
                     # if some operation breaks the transaction, so saving

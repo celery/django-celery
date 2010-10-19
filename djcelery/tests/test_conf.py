@@ -1,8 +1,8 @@
-import unittest2 as unittest
-
 from django.conf import settings
 
 from celery import conf
+
+from djcelery.tests.utils import unittest
 
 
 SETTING_VARS = (

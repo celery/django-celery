@@ -1,8 +1,7 @@
-import unittest2 as unittest
-
 from celery import loaders
 
 from djcelery import loaders as djloaders
+from djcelery.tests.utils import unittest
 
 
 class TestDjangoLoader(unittest.TestCase):

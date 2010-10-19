@@ -22,6 +22,7 @@ if root_dir != '':
     os.chdir(root_dir)
 src_dir = "djcelery"
 
+
 def osx_install_data(install_data):
 
     def finalize_options(self):
@@ -117,13 +118,13 @@ setup(
     license="BSD",
     packages=packages,
     data_files=data_files,
-    scripts=[],
+    scripts=["bin/djcelerymon"],
     zip_safe=False,
     install_requires=[
         "django-picklefield",
-        "celery",
+        "celery>=2.1.1",
     ],
-    cmdclass = {"test": RunTests, "quicktest": QuickRunTests},
+    cmdclass={"test": RunTests, "quicktest": QuickRunTests},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Framework :: Django",
@@ -136,6 +137,8 @@ setup(
         "Topic :: System :: Distributed Computing",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    entry_points={},
+    entry_points={
+        "console_scripts": ["djcelerymon = djcelery.mon:main"]
+    },
     long_description=long_description,
 )

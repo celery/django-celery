@@ -1,5 +1,4 @@
 import sys
-import unittest2 as unittest
 
 from datetime import timedelta
 
@@ -12,6 +11,7 @@ from celery.utils import gen_unique_id
 from celery.datastructures import ExceptionInfo
 
 from djcelery.backends.cache import CacheBackend
+from djcelery.tests.utils import unittest
 
 
 class SomeClass(object):
@@ -34,6 +34,15 @@ class test_CacheBackend(unittest.TestCase):
         self.assertEqual(cb.get_status(tid), states.SUCCESS)
         self.assertEqual(cb.get_result(tid), 42)
         self.assertTrue(cb.get_result(tid), 42)
+
+    def test_forget(self):
+        b = CacheBackend()
+        tid = gen_unique_id()
+        b.mark_as_done(tid, {"foo": "bar"})
+        self.assertEqual(b.get_result(tid).get("foo"), "bar")
+        b.forget(tid)
+        self.assertNotIn(tid, b._cache)
+        self.assertIsNone(b.get_result(tid))
 
     def test_save_restore_taskset(self):
         backend = CacheBackend()

@@ -61,3 +61,6 @@ class CacheBackend(KeyValueStoreBackend):
 
     def set(self, key, value):
         cache.set(key, value, self.expires)
+
+    def delete(self, key):
+        cache.delete(key)

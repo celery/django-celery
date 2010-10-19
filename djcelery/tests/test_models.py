@@ -1,4 +1,3 @@
-import unittest2 as unittest
 from datetime import datetime, timedelta
 
 from celery import states
@@ -6,6 +5,7 @@ from celery.app import default_app
 from celery.utils import gen_unique_id
 
 from djcelery.models import TaskMeta, TaskSetMeta
+from djcelery.tests.utils import unittest
 
 
 class TestModels(unittest.TestCase):

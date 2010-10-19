@@ -1,28 +1,44 @@
 from datetime import datetime, timedelta
+from time import time
 
+from django.db import transaction
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from celery import states
+from celery.events.state import Task
 from celery.events.snapshot import Polaroid
 from celery.utils import maybe_iso8601
+from celery.utils.compat import defaultdict
 
 from djcelery.models import WorkerState, TaskState
 
+
+WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
 SUCCESS_STATES = frozenset([states.SUCCESS])
-KEEP_FROM_RECEIVED = ("name", "args", "kwargs",
-                      "retries", "eta", "expires")
+EXPIRE_SUCCESS = getattr(settings, "CELERYCAM_EXPIRE_SUCCESS",
+                         timedelta(days=1))
+EXPIRE_ERROR = getattr(settings, "CELERYCAM_EXPIRE_ERROR",
+                       timedelta(days=3))
+EXPIRE_PENDING = getattr(settings, "CELERYCAM_EXPIRE_PENDING",
+                         timedelta(days=5))
+
 
 class Camera(Polaroid):
-    WorkerState = WorkerState
     TaskState = TaskState
+    WorkerState = WorkerState
 
-    expire_states = {SUCCESS_STATES: timedelta(days=1),
-                     states.EXCEPTION_STATES: timedelta(days=3),
-                     states.UNREADY_STATES: timedelta(days=5)}
+    clear_after = True
+    worker_update_freq = WORKER_UPDATE_FREQ
+    expire_states = {
+            SUCCESS_STATES: EXPIRE_SUCCESS,
+            states.EXCEPTION_STATES: EXPIRE_ERROR,
+            states.UNREADY_STATES: EXPIRE_PENDING
+    }
 
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
-        self.prev_count = 0
+        self._last_worker_write = defaultdict(lambda: (None, None))
 
     def get_heartbeat(self, worker):
         try:
@@ -32,13 +48,17 @@ class Camera(Polaroid):
         return datetime.fromtimestamp(heartbeat)
 
     def handle_worker(self, (hostname, worker)):
-        return self.WorkerState.objects.update_or_create(
-                    hostname=hostname,
-                    defaults={"last_heartbeat":
-                        self.get_heartbeat(worker)})
+        last_write, obj = self._last_worker_write[hostname]
+        if not last_write or time() - last_write > self.worker_update_freq:
+            obj = self.WorkerState.objects.update_or_create(
+                        hostname=hostname,
+                        defaults={"last_heartbeat":
+                            self.get_heartbeat(worker)})
+            self._last_worker_write[hostname] = (time(), obj)
+        return obj
 
     def handle_task(self, (uuid, task), worker=None):
-        if task.worker.hostname:
+        if task.worker and task.worker.hostname:
             worker = self.handle_worker((task.worker.hostname, task.worker))
         return self.update_task(task.state, task_id=uuid,
                 defaults={"name": task.name,
@@ -61,12 +81,13 @@ class Camera(Polaroid):
         except ObjectDoesNotExist:
             if not defaults.get("name"):
                 return
-            return objects.create(**dict(kwargs, **defaults))
+            return objects.get_or_create(defaults=defaults, **kwargs)
         else:
-            if state != "RECEIVED":
+            if states.state(state) < states.state(obj.state):
+                keep = Task.merge_rules[states.RECEIVED]
                 defaults = dict((k, v)
-                            for k, v in defaults.items()
-                                if k not in KEEP_FROM_RECEIVED)
+                                    for k, v in defaults.items()
+                                        if k not in keep)
 
         for k, v in defaults.items():
             setattr(obj, k, v)
@@ -74,12 +95,33 @@ class Camera(Polaroid):
 
         return obj
 
-    def on_shutter(self, state):
-        event_count = state.event_count
-        if event_count != self.prev_count:
-            map(self.handle_worker, state.workers.items())
-            map(self.handle_task, state.tasks.items())
-        self.prev_count = event_count
+    def _autocommit(self, fun):
+        try:
+            fun()
+        except (KeyboardInterrupt, SystemExit):
+            transaction.commit()
+            raise
+        except Exception:
+            transaction.rollback()
+            raise
+        else:
+            transaction.commit()
+
+    @transaction.commit_manually
+    def on_shutter(self, state, commit_every=100):
+        if not state.event_count:
+            transaction.commit()
+            return
+
+        def _handle_tasks():
+            for i, task in enumerate(state.tasks.items()):
+                self.handle_task(task)
+                if not i % commit_every:
+                    transaction.commit()
+
+        self._autocommit(lambda: map(self.handle_worker,
+                                     state.workers.items()))
+        self._autocommit(_handle_tasks)
 
     def on_cleanup(self):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)

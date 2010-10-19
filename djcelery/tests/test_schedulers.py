@@ -1,5 +1,3 @@
-import unittest2 as unittest
-
 from datetime import datetime, timedelta
 from itertools import count
 from time import time
@@ -10,6 +8,7 @@ from celery.utils.timeutils import timedelta_seconds
 from djcelery import schedulers
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
+from djcelery.tests.utils import unittest
 
 
 def create_model_interval(schedule, **kwargs):
@@ -82,7 +81,6 @@ class test_ModelEntry(unittest.TestCase):
         self.assertDictContainsSubset({"queue": "xaz",
                                        "exchange": "foo",
                                        "routing_key": "cpu"}, e.options)
-
 
         now = datetime.now()
         m2 = create_model_interval(schedule(timedelta(seconds=10)),
