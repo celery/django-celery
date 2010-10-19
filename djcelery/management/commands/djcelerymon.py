@@ -21,7 +21,8 @@ class WebserverThread(Thread):
         self.options = options
 
     def run(self):
-        runserver.Command().handle(self.addrport, *self.args, **self.options)
+        options = dict(self.options, use_reloader=False)
+        runserver.Command().handle(self.addrport, *self.args, **options)
 
 
 class Command(CeleryCommand):
