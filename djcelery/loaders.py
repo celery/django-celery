@@ -3,6 +3,8 @@ import importlib
 
 from celery.loaders.base import BaseLoader
 
+from django.core.mail import mail_admins
+
 _RACE_PROTECTION = False
 
 
@@ -61,6 +63,9 @@ class DjangoLoader(BaseLoader):
         self.close_cache()
         self.import_default_modules()
         autodiscover()
+    
+    def mail_admins(self, subject, body, fail_silently=False):
+        return mail_admins(subject, body, fail_silently=fail_silently)
 
 
 def autodiscover():
