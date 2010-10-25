@@ -1,4 +1,5 @@
-from celery.task import tasks, Task
+from celery.task import Task
+from celery.registry import tasks
 
 
 class SomeAppTask(Task):

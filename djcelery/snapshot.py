@@ -8,8 +8,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from celery import states
 from celery.events.state import Task
 from celery.events.snapshot import Polaroid
-from celery.utils import maybe_iso8601
 from celery.utils.compat import defaultdict
+from celery.utils.timeutils import maybe_iso8601
 
 from djcelery.models import WorkerState, TaskState
 
@@ -81,7 +81,8 @@ class Camera(Polaroid):
         except ObjectDoesNotExist:
             if not defaults.get("name"):
                 return
-            return objects.get_or_create(defaults=defaults, **kwargs)
+            obj, created = objects.get_or_create(defaults=defaults, **kwargs)
+            return obj
         else:
             if states.state(state) < states.state(obj.state):
                 keep = Task.merge_rules[states.RECEIVED]

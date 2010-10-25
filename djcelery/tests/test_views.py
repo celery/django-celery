@@ -13,7 +13,7 @@ from celery.exceptions import RetryTaskError
 from celery.datastructures import ExceptionInfo
 from celery.decorators import task
 from celery.utils import gen_unique_id, get_full_cls_name
-from celery.utils.functional import curry
+from celery.utils.functional import partial
 
 from djcelery.views import task_webhook
 from djcelery.tests.req import MockRequest
@@ -23,10 +23,10 @@ def reversestar(name, **kwargs):
     return reverse(name, kwargs=kwargs)
 
 
-task_is_successful = curry(reversestar, "celery-is_task_successful")
-task_status = curry(reversestar, "celery-task_status")
-task_apply = curry(reverse, "celery-apply")
-registered_tasks = curry(reverse, "celery-tasks")
+task_is_successful = partial(reversestar, "celery-is_task_successful")
+task_status = partial(reversestar, "celery-task_status")
+task_apply = partial(reverse, "celery-apply")
+registered_tasks = partial(reverse, "celery-tasks")
 scratch = {}
 
 
@@ -87,7 +87,7 @@ class test_task_apply(ViewTestCase):
         default_app.conf.CELERY_ALWAYS_EAGER = True
         try:
             name = "xxx.does.not.exist"
-            action = curry(self.client.get, task_apply(kwargs={
+            action = partial(self.client.get, task_apply(kwargs={
                         "task_name": name}) + "?x=4&y=4")
             self.assertRaises(TemplateDoesNotExist, action)
         finally:
