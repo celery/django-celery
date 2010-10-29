@@ -25,13 +25,13 @@ class DjangoLoader(BaseLoader):
         return DictAttribute(settings)
 
     def close_database(self):
-        from django.db import connection
+        import django.db
         db_reuse_max = getattr(self.conf, "CELERY_DB_REUSE_MAX", None)
         if not db_reuse_max:
-            return connection.close()
+            return django.db.close_connection()
         if self._db_reuse >= db_reuse_max * 2:
             self._db_reuse = 0
-            return connection.close()
+            return django.db.close_connection()
         self._db_reuse += 1
 
     def close_cache(self):
