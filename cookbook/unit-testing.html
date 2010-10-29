@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Unit Testing &mdash; django-celery v2.1.1 documentation</title>
+    <title>Unit Testing &mdash; django-celery v2.1.2 documentation</title>
     <link rel="stylesheet" href="../static/celery.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.1.1',
+        VERSION:     '2.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.1.1 documentation" href="../index.html" />
+    <link rel="top" title="django-celery v2.1.2 documentation" href="../index.html" />
     <link rel="up" title="Cookbook" href="index.html" />
     <link rel="next" title="API Reference" href="../reference/index.html" />
     <link rel="prev" title="Cookbook" href="index.html" /> 
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="index.html" title="Cookbook"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery v2.1.2 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Cookbook</a> &raquo;</li> 
       </ul>
     </div>  
@@ -72,11 +72,11 @@ just never testing some parts of your app, a custom Django test runner does the
 trick. Celery provides a simple test runner, but it&#8217;s easy enough to roll your
 own if you have other things that need to be done.
 <a class="reference external" href="http://docs.djangoproject.com/en/dev/topics/testing/#defining-a-test-runner">http://docs.djangoproject.com/en/dev/topics/testing/#defining-a-test-runner</a></p>
-<p>For this example, we&#8217;ll use the <tt class="docutils literal"><span class="pre">celery.contrib.test_runner</span></tt> to test the
+<p>For this example, we&#8217;ll use the <tt class="docutils literal"><span class="pre">djcelery.contrib.test_runner</span></tt> to test the
 <tt class="docutils literal"><span class="pre">add</span></tt> task from the <a class="reference external" href="http://celeryq.org/docs/userguide/tasks.html">User Guide: Tasks</a> examples in the Celery
 documentation.</p>
 <p>To enable the test runner, set the following settings:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s">&#39;celery.contrib.test_runner.run_tests&#39;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s">&#39;djcelery.contrib.test_runner.run_tests&#39;</span>
 </pre></div>
 </div>
 <p>Then we can put the tests in a <tt class="docutils literal"><span class="pre">tests.py</span></tt> somewhere:</p>
@@ -159,13 +159,13 @@ so adjust the import for wherever you put the class.</p>
         <li class="right" >
           <a href="index.html" title="Cookbook"
              >previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.1.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery v2.1.2 documentation</a> &raquo;</li>
           <li><a href="index.html" >Cookbook</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

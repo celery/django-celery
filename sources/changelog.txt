@@ -5,6 +5,26 @@
 .. contents::
     :local:
 
+.. _version-2.1.2:
+
+2.1.2
+=====
+:release-date: 2010-10-29 03:00 PM CEST
+
+* Documentation: Fixed typo `celery.contrib.test_runner`
+    -> `djcelery.contrib.test_runner`
+
+* Now using Django's `mail_admins` to send task error e-mails.
+
+    Which means custom Django e-mail backends can be used.
+
+    See http://github.com/ask/django-celery/issues#issue/15
+
+* djcelerymon command: Disable the django reloader feature of runserver,
+  as this caused it to spawn two djcelerymon processes at the same time.
+
+* Fixed compatibility issue with Django 1.2 multi db.
+
 .. _version-2.1.1:
 
 2.1.1
