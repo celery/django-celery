@@ -45,21 +45,23 @@ class TestDjangoLoader(unittest.TestCase):
         class Connection(object):
             closed = False
 
-            def close(self):
+            def close_connection(self):
+                print("CLOSING")
                 self.closed = True
 
         def with_db_reuse_max(reuse_max, fun):
             prev = getattr(self.loader.conf, "CELERY_DB_REUSE_MAX", None)
             from django import db
-            prev_conn = db.connection
+            prev_conn = db.close_connection
             self.loader.conf.CELERY_DB_REUSE_MAX = reuse_max
-            conn = db.connection = Connection()
+            conn = Connection()
+            db.close_connection = conn.close_connection
             try:
                 fun(conn)
                 return conn
             finally:
                 self.loader.conf.CELERY_DB_REUSE_MAX = prev
-                db.connection = prev_conn
+                db.close_connection = prev_conn
 
         def test_max_3(conn):
             for i in range(3 * 2):

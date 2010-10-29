@@ -81,7 +81,8 @@ class Camera(Polaroid):
         except ObjectDoesNotExist:
             if not defaults.get("name"):
                 return
-            return objects.get_or_create(defaults=defaults, **kwargs)
+            obj, created = objects.get_or_create(defaults=defaults, **kwargs)
+            return obj
         else:
             if states.state(state) < states.state(obj.state):
                 keep = Task.merge_rules[states.RECEIVED]
