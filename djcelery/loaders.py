@@ -63,7 +63,7 @@ class DjangoLoader(BaseLoader):
         self.close_cache()
         self.import_default_modules()
         autodiscover()
-    
+
     def mail_admins(self, subject, body, fail_silently=False):
         return mail_admins(subject, body, fail_silently=fail_silently)
 
