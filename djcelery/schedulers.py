@@ -6,6 +6,7 @@ from time import time
 
 from anyjson import deserialize, serialize
 from django.db import transaction
+from dango.core.exceptions import ObjectDoesNotExist
 
 from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
@@ -149,7 +150,7 @@ class DatabaseScheduler(Scheduler):
                 try:
                     name = self._dirty.pop()
                     self.schedule[name].save()
-                except KeyError:
+                except (KeyError, ObjectDoesNotExist):
                     continue
         except:
             transaction.rollback()
