@@ -5,11 +5,13 @@ Curses Celery Event Viewer.
 """
 from threading import Thread
 
-from celery.bin.celeryev import run_celeryev, OPTION_LIST
+from celery.bin import celeryev
 
 from django.core.management.commands import runserver
 
 from djcelery.management.base import CeleryCommand
+
+ev = celeryev.EvCommand()
 
 
 class WebserverThread(Thread):
@@ -28,7 +30,7 @@ class WebserverThread(Thread):
 class Command(CeleryCommand):
     """Run the celery curses event viewer."""
     args = '[optional port number, or ipaddr:port]'
-    option_list = runserver.Command.option_list + OPTION_LIST
+    option_list = runserver.Command.option_list + ev.get_options()
     help = 'Starts Django Admin instance and celerycam in the same process.'
 
     def handle(self, addrport="", *args, **options):
@@ -37,4 +39,4 @@ class Command(CeleryCommand):
         server.start()
         options["camera"] = "djcelery.snapshot.Camera"
         options["prog_name"] = "djcelerymon"
-        run_celeryev(*args, **options)
+        ev.run(*args, **options)
