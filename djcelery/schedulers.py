@@ -6,7 +6,7 @@ from time import time
 
 from anyjson import deserialize, serialize
 from django.db import transaction
-from dango.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 
 from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
