@@ -7,7 +7,7 @@ ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
-#CELERY_RESULT_BACKEND = "data"
+CELERY_RESULT_BACKEND = "database"
 BROKER_HOST = "localhost"
 BROKER_PORT = 5672
 BROKER_USER = "guest"
