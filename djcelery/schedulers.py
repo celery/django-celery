@@ -6,7 +6,7 @@ from time import time
 
 from anyjson import deserialize, serialize
 from django.db import transaction
-from dango.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 
 from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
@@ -42,8 +42,11 @@ class ModelEntry(ScheduleEntry):
         self.model = model
 
         if not model.last_run_at:
-            model.last_run_at = datetime.now()
+            model.last_run_at = self._default_now()
         self.last_run_at = model.last_run_at
+
+    def _default_now(self):
+        return datetime.now()
 
     def next(self):
         self.model.last_run_at = datetime.now()
