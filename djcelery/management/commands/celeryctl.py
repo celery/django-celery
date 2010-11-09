@@ -6,6 +6,7 @@ Curses Celery Event Viewer.
 from celery.bin.celeryctl import celeryctl, Command as _Command
 
 from djcelery import __version__
+from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
 # Django hijacks the version output and prints its version before our
@@ -19,5 +20,5 @@ class Command(CeleryCommand):
     help = "celery control utility"
 
     def run_from_argv(self, argv):
-        util = celeryctl()
+        util = celeryctl(app=app)
         util.execute_from_commandline(argv[1:])

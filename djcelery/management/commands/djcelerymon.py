@@ -9,9 +9,10 @@ from celery.bin import celeryev
 
 from django.core.management.commands import runserver
 
+from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-ev = celeryev.EvCommand()
+ev = celeryev.EvCommand(app=app)
 
 
 class WebserverThread(Thread):

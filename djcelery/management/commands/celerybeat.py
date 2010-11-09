@@ -5,9 +5,10 @@ Start the celery clock service from the Django management command.
 """
 from celery.bin import celerybeat
 
+from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-beat = celerybeat.BeatCommand()
+beat = celerybeat.BeatCommand(app=app)
 
 
 class Command(CeleryCommand):

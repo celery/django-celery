@@ -5,10 +5,11 @@ Celery AMQP Administration Tool using the AMQP API.
 """
 from celery.bin import camqadm
 
+from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
 
-command = camqadm.AMQPAdminCommand()
+command = camqadm.AMQPAdminCommand(app=app)
 
 class Command(CeleryCommand):
     """Run the celery daemon."""

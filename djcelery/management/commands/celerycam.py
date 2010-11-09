@@ -5,9 +5,10 @@ Curses Celery Event Viewer.
 """
 from celery.bin import celeryev
 
+from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-ev = celeryev.EvCommand()
+ev = celeryev.EvCommand(app=app)
 
 
 class Command(CeleryCommand):
