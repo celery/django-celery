@@ -1,0 +1,23 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="../../">
+      {% trans "Home" %}
+    </a>
+    &rsaquo;
+    <a href="../">
+      {{ app_label|capfirst }}
+    </a>
+    &rsaquo;
+    {{ cl.opts.verbose_name_plural|capfirst }}
+  </div>
+  {% if wrong_scheduler %}
+    <ul class="messagelist">
+      <li class="warning">
+        Those tasks won't be executed until you set CELERYBEAT_SCHEDULER to 'djcelery.schedulers.DatabaseScheduler'!
+      </li>
+    </ul>
+  {% endif %}
+{% endblock %}
