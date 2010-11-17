@@ -211,6 +211,10 @@ class TaskMonitor(ModelMonitor):
         actions.pop("delete_selected", None)
         return actions
 
+    def queryset(self, request):
+        qs = super(TaskMonitor, self).queryset(request)
+        return qs.select_related('worker')
+
 
 class WorkerMonitor(ModelMonitor):
     can_add = True
@@ -315,6 +319,10 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
             extra_context['wrong_scheduler'] = True
         return super(PeriodicTaskAdmin, self).changelist_view(request,
                                                               extra_context)
+
+    def queryset(self, request):
+        qs = super(PeriodicTaskAdmin, self).queryset(request)
+        return qs.select_related('interval', 'crontab')
 
 
 admin.site.register(IntervalSchedule)
