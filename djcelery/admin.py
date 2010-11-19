@@ -1,6 +1,7 @@
 from pprint import pformat
 
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import helpers
 from django.contrib.admin.views import main as main_views
@@ -210,6 +211,10 @@ class TaskMonitor(ModelMonitor):
         actions.pop("delete_selected", None)
         return actions
 
+    def queryset(self, request):
+        qs = super(TaskMonitor, self).queryset(request)
+        return qs.select_related('worker')
+
 
 class WorkerMonitor(ModelMonitor):
     can_add = True
@@ -306,6 +311,18 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
     def __init__(self, *args, **kwargs):
         super(PeriodicTaskAdmin, self).__init__(*args, **kwargs)
         self.form = periodic_task_form()
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        if not hasattr(settings, 'CELERYBEAT_SCHEDULER') \
+           or settings.CELERYBEAT_SCHEDULER != 'djcelery.schedulers.DatabaseScheduler':
+            extra_context['wrong_scheduler'] = True
+        return super(PeriodicTaskAdmin, self).changelist_view(request,
+                                                              extra_context)
+
+    def queryset(self, request):
+        qs = super(PeriodicTaskAdmin, self).queryset(request)
+        return qs.select_related('interval', 'crontab')
 
 
 admin.site.register(IntervalSchedule)
