@@ -16,7 +16,10 @@
   {% if wrong_scheduler %}
     <ul class="messagelist">
       <li class="warning">
-        Those tasks won't be executed until you set CELERYBEAT_SCHEDULER to 'djcelery.schedulers.DatabaseScheduler'!
+      Periodic tasks won't be dispatched unless you set the
+      <code>CELERYBEAT_SCHEDULER</code> setting to
+      <code>djcelery.schedulers.DatabaseScheduler</code>,
+      or specify it using the <code>-S</code> option to celerybeat
       </li>
     </ul>
   {% endif %}
