@@ -22,6 +22,12 @@ class DjangoLoader(BaseLoader):
         """Load configuration from Django settings."""
         from django.conf import settings
         self.configured = True
+        # Default backend needs to be the database backend for backward
+        # compatibility.
+        backend = getattr(settings, "CELERY_RESULT_BACKEND", None) or \
+                    getattr(settings, "CELERY_BACKEND", None)
+        if not backend:
+            settings.CELERY_RESULT_BACKEND = "database"
         return DictAttribute(settings)
 
     def close_database(self):
