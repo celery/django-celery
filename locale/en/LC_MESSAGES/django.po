@@ -1,0 +1,368 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-11-25 11:55+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: djcelery/admin.py:62 djcelery/admin.py:69 djcelery/models.py:258
+msgid "state"
+msgstr ""
+
+#: djcelery/admin.py:76 djcelery/models.py:268
+msgid "ETA"
+msgstr ""
+
+#: djcelery/admin.py:83
+msgid "when"
+msgstr ""
+
+#: djcelery/admin.py:89 djcelery/models.py:163 djcelery/models.py:263
+msgid "name"
+msgstr ""
+
+#: djcelery/admin.py:141
+msgid "Task detail"
+msgstr ""
+
+#: djcelery/admin.py:142
+msgid "Tasks"
+msgstr ""
+
+#: djcelery/admin.py:156 djcelery/models.py:261
+msgid "UUID"
+msgstr ""
+
+#: djcelery/admin.py:172
+msgid "Revoke selected tasks"
+msgstr ""
+
+#: djcelery/admin.py:181 djcelery/templates/djcelery/confirm_rate_limit.html:9
+msgid "Rate limit selected tasks"
+msgstr ""
+
+#: djcelery/admin.py:197
+msgid "Rate limit selection"
+msgstr ""
+
+#: djcelery/admin.py:221
+msgid "Node detail"
+msgstr ""
+
+#: djcelery/admin.py:222
+msgid "Worker Nodes"
+msgstr ""
+
+#: djcelery/admin.py:229
+msgid "Shutdown selected worker nodes"
+msgstr ""
+
+#: djcelery/admin.py:233
+msgid "Enable event mode for selected nodes."
+msgstr ""
+
+#: djcelery/admin.py:238
+msgid "Disable event mode for selected nodes."
+msgstr ""
+
+#: djcelery/admin.py:267
+msgid "Task (registered)"
+msgstr ""
+
+#: djcelery/admin.py:269
+msgid "Task (custom)"
+msgstr ""
+
+#: djcelery/admin.py:281
+msgid "Need name of task"
+msgstr ""
+
+#: djcelery/models.py:26 djcelery/models.py:54
+msgid "task id"
+msgstr ""
+
+#: djcelery/models.py:27
+msgid "task status"
+msgstr ""
+
+#: djcelery/models.py:30 djcelery/models.py:56
+msgid "done at"
+msgstr ""
+
+#: djcelery/models.py:31 djcelery/models.py:272
+msgid "traceback"
+msgstr ""
+
+#: djcelery/models.py:37 djcelery/models.py:38
+msgid "task meta"
+msgstr ""
+
+#: djcelery/models.py:62 djcelery/models.py:63
+msgid "taskset meta"
+msgstr ""
+
+#: djcelery/models.py:75
+msgid "Days"
+msgstr ""
+
+#: djcelery/models.py:76
+msgid "Hours"
+msgstr ""
+
+#: djcelery/models.py:77
+msgid "Minutes"
+msgstr ""
+
+#: djcelery/models.py:78
+msgid "Seconds"
+msgstr ""
+
+#: djcelery/models.py:79
+msgid "Microseconds"
+msgstr ""
+
+#: djcelery/models.py:83
+msgid "every"
+msgstr ""
+
+#: djcelery/models.py:84
+msgid "period"
+msgstr ""
+
+#: djcelery/models.py:88 djcelery/models.py:167
+msgid "interval"
+msgstr ""
+
+#: djcelery/models.py:89
+msgid "intervals"
+msgstr ""
+
+#: djcelery/models.py:102
+#, python-format
+msgid "every %(period)s"
+msgstr ""
+
+#: djcelery/models.py:103
+#, python-format
+msgid "every $(every)s %(period)s"
+msgstr ""
+
+#: djcelery/models.py:108
+msgid "minute"
+msgstr ""
+
+#: djcelery/models.py:111
+msgid "hour"
+msgstr ""
+
+#: djcelery/models.py:114
+msgid "day of week"
+msgstr ""
+
+#: djcelery/models.py:119 djcelery/models.py:169
+msgid "crontab"
+msgstr ""
+
+#: djcelery/models.py:120
+msgid "crontabs"
+msgstr ""
+
+#: djcelery/models.py:164
+msgid "Useful description"
+msgstr ""
+
+#: djcelery/models.py:165
+msgid "task name"
+msgstr ""
+
+#: djcelery/models.py:170
+msgid "Use one of interval/crontab"
+msgstr ""
+
+#: djcelery/models.py:171 djcelery/models.py:266
+msgid "Arguments"
+msgstr ""
+
+#: djcelery/models.py:173
+msgid "JSON encoded positional arguments"
+msgstr ""
+
+#: djcelery/models.py:174 djcelery/models.py:267
+msgid "Keyword arguments"
+msgstr ""
+
+#: djcelery/models.py:176
+msgid "JSON encoded keyword arguments"
+msgstr ""
+
+#: djcelery/models.py:177
+msgid "queue"
+msgstr ""
+
+#: djcelery/models.py:180
+msgid "Queue defined in CELERY_QUEUES"
+msgstr ""
+
+#: djcelery/models.py:181
+msgid "exchange"
+msgstr ""
+
+#: djcelery/models.py:184
+msgid "routing key"
+msgstr ""
+
+#: djcelery/models.py:187 djcelery/models.py:270
+msgid "expires"
+msgstr ""
+
+#: djcelery/models.py:189
+msgid "enabled"
+msgstr ""
+
+#: djcelery/models.py:200
+msgid "periodic task"
+msgstr ""
+
+#: djcelery/models.py:201
+msgid "periodic tasks"
+msgstr ""
+
+#: djcelery/models.py:228
+msgid "hostname"
+msgstr ""
+
+#: djcelery/models.py:229
+msgid "last heartbeat"
+msgstr ""
+
+#: djcelery/models.py:236 djcelery/models.py:277
+msgid "worker"
+msgstr ""
+
+#: djcelery/models.py:237
+msgid "workers"
+msgstr ""
+
+#: djcelery/models.py:265
+msgid "event received at"
+msgstr ""
+
+#: djcelery/models.py:271
+msgid "result"
+msgstr ""
+
+#: djcelery/models.py:273
+msgid "execution time"
+msgstr ""
+
+#: djcelery/models.py:274
+msgid "in seconds if task successful"
+msgstr ""
+
+#: djcelery/models.py:275
+msgid "number of retries"
+msgstr ""
+
+#: djcelery/models.py:284
+msgid "task"
+msgstr ""
+
+#: djcelery/models.py:285
+msgid "tasks"
+msgstr ""
+
+#: djcelery/utils.py:5
+msgid "just now"
+msgstr ""
+
+#: djcelery/utils.py:6
+#, python-format
+msgid "%(seconds)d second ago"
+msgstr ""
+
+#: djcelery/utils.py:6
+#, python-format
+msgid "%(seconds)d seconds ago"
+msgstr ""
+
+#: djcelery/utils.py:7
+#, python-format
+msgid "%(minutes)d minute ago"
+msgstr ""
+
+#: djcelery/utils.py:7
+#, python-format
+msgid "%(minutes)d minutes ago"
+msgstr ""
+
+#: djcelery/utils.py:8
+#, python-format
+msgid "%(hours)d hour ago"
+msgstr ""
+
+#: djcelery/utils.py:8
+#, python-format
+msgid "%(hours)d hours ago"
+msgstr ""
+
+#: djcelery/utils.py:9
+#, python-format
+msgid "yesterday at %(time)s"
+msgstr ""
+
+#: djcelery/utils.py:10
+msgid "year"
+msgstr ""
+
+#: djcelery/utils.py:10
+msgid "years"
+msgstr ""
+
+#: djcelery/utils.py:11
+msgid "month"
+msgstr ""
+
+#: djcelery/utils.py:11
+msgid "months"
+msgstr ""
+
+#: djcelery/utils.py:12
+msgid "week"
+msgstr ""
+
+#: djcelery/utils.py:12
+msgid "weeks"
+msgstr ""
+
+#: djcelery/utils.py:13
+msgid "day"
+msgstr ""
+
+#: djcelery/utils.py:13
+msgid "days"
+msgstr ""
+
+#: djcelery/utils.py:20
+#, python-format
+msgid "%(number)d %(type)s ago"
+msgstr ""
+
+#: djcelery/templates/admin/djcelery/change_list.html:7
+#: djcelery/templates/djcelery/confirm_rate_limit.html:6
+msgid "Home"
+msgstr ""
+
+#: djcelery/templates/djcelery/confirm_rate_limit.html:22
+msgid "Rate limit"
+msgstr ""
