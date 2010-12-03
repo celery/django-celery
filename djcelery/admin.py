@@ -315,7 +315,8 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         if not hasattr(settings, 'CELERYBEAT_SCHEDULER') \
-           or settings.CELERYBEAT_SCHEDULER != 'djcelery.schedulers.DatabaseScheduler':
+           or settings.CELERYBEAT_SCHEDULER != \
+                'djcelery.schedulers.DatabaseScheduler':
             extra_context['wrong_scheduler'] = True
         return super(PeriodicTaskAdmin, self).changelist_view(request,
                                                               extra_context)

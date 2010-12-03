@@ -5,6 +5,33 @@
 .. contents::
     :local:
 
+.. _version-2.1.4:
+
+2.1.4
+=====
+:release-date: 2010-12-03 12:00 PM CEST
+
+.. _v214-fixes:
+
+Fixes
+-----
+
+* `djcelerymon`: Optimized the SQL queries used when displaying the task list.
+
+* `Admin`: Add a warning to the Edit Periodic Task page if the database
+  scheduler is not used (Note: To remove this warning you can't just use
+  the `-S` argument to `celerybeat`, but have to set the
+  `CELERYBEAT_SCHEDULER` setting).
+
+* demoproject: Use database backend by default, and call
+  `djcelery.setup_loader` in settings.
+
+* `DatabaseScheduler`: Properly handle periodic tasks being removed from
+   the database.
+
+* `DatabaseScheduler`: Added `ModelEntry._default_now` to provide the default
+   value for when `last_run_at` is not set.
+
 .. _version-2.1.2:
 
 2.1.2
