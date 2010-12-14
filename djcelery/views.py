@@ -23,7 +23,6 @@ def task_view(task):
     """
 
     def _applier(request, **options):
-        print("APPLIER")
         kwargs = request.method == "POST" and \
             request.POST.copy() or request.GET.copy()
         kwargs = dict((key.encode("utf-8"), value)
