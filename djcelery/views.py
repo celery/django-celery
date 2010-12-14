@@ -9,7 +9,7 @@ from celery.registry import tasks
 from celery.utils.functional import wraps
 
 # Ensure built-in tasks are loaded for task_list view
-import celery.task.builtins
+import celery.task
 
 
 def task_view(task):
