@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.test.simple import run_tests as run_tests_orig
 
 USAGE = """\
@@ -16,5 +15,8 @@ def run_tests(test_labels, *args, **kwargs):
         TEST_RUNNER = "celery.contrib.test_runner.run_tests"
 
     """
+    from celery import conf
+    from django.conf import settings
+    conf.ALWAYS_EAGER = True
     settings.CELERY_ALWAYS_EAGER = True
     return run_tests_orig(test_labels, *args, **kwargs)
