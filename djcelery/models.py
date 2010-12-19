@@ -100,7 +100,7 @@ class IntervalSchedule(models.Model):
     def __unicode__(self):
         if self.every == 1:
             return _(u"every %(period)s") % {"period": self.period[:-1]}
-        return _(u"every $(every)s %(period)s") % {"every": self.every,
+        return _(u"every %(every)s %(period)s") % {"every": self.every,
                                                    "period": self.period}
 
 
