@@ -22,7 +22,7 @@ class WebserverThread(Thread):
 
     def run(self):
         options = dict(self.options, use_reloader=False)
-        runserver.Command().handle(self.addrport, *self.args, **options)
+        runserver.Command().execute(addrport=self.addrport, *self.args, **options)
 
 
 class Command(CeleryCommand):
