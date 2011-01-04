@@ -72,6 +72,7 @@ class RunTests(Command):
     description = "Run the django test suite from the tests dir."
     user_options = []
     extra_env = {}
+    extra_args = {}
 
     def run(self):
         for env_name, env_value in self.extra_env.items():
@@ -87,7 +88,7 @@ class RunTests(Command):
         settings_file = os.environ["DJANGO_SETTINGS_MODULE"]
         settings_mod = __import__(settings_file, {}, {}, [''])
         execute_manager(settings_mod, argv=[
-            __file__, "test"])
+            __file__, "test"] + self.extra_args)
         os.chdir(this_dir)
 
     def initialize_options(self):
@@ -99,6 +100,12 @@ class RunTests(Command):
 
 class QuickRunTests(RunTests):
     extra_env = dict(SKIP_RLIMITS=1, QUICKTEST=1)
+
+
+class CIRunTests(RunTests):
+    extra_args = ["--with-coverage3", "--with-xunit",
+                  "--cover3-xml", "--xunit-file=nosetests.xml",
+                  "--cover3-xml-file=coverage.xml"]
 
 
 if os.path.exists("README.rst"):
@@ -124,7 +131,9 @@ setup(
         "django-picklefield",
         "celery>=2.1.1",
     ],
-    cmdclass={"test": RunTests, "quicktest": QuickRunTests},
+    cmdclass={"test": RunTests,
+              "quicktest": QuickRunTests,
+              "citest": CIRunTests},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Framework :: Django",
