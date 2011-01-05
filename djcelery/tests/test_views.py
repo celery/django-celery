@@ -173,7 +173,7 @@ class test_task_status(ViewTestCase):
 
     def test_retry(self):
         oexc, _ = catch_exception(MyError("Resource not available"))
-        exc, tb = catch_exception(RetryTaskError(str(oexc), oexc))
+        exc, tb = catch_exception(MyRetryTaskError(str(oexc), oexc))
         self.assertStatusForIs(states.RETRY, exc, tb)
 
 
