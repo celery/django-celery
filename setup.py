@@ -72,7 +72,7 @@ class RunTests(Command):
     description = "Run the django test suite from the tests dir."
     user_options = []
     extra_env = {}
-    extra_args = {}
+    extra_args = []
 
     def run(self):
         for env_name, env_value in self.extra_env.items():
