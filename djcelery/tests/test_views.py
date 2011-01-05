@@ -32,6 +32,12 @@ class MyError(Exception):
         return "<%s: %r>" % (self.__class__.__name__, self.args)
 
 
+class MyRetryTaskError(Exception):
+
+    def __repr__(self):
+        return "<%s: %r>" % (self.__class__.__name__, self.args)
+
+
 task_is_successful = partial(reversestar, "celery-is_task_successful")
 task_status = partial(reversestar, "celery-task_status")
 task_apply = partial(reverse, "celery-apply")
