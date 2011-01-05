@@ -23,6 +23,15 @@ def reversestar(name, **kwargs):
     return reverse(name, kwargs=kwargs)
 
 
+
+class MyError(Exception):
+    # On Py2.4 repr(exc) includes the object id, so comparing
+    # texts is pointless when the id the "same" KeyError does not match.
+
+    def __repr__(self):
+        return "<%s: %r>" % (self.__class__.__name__, self.args)
+
+
 task_is_successful = partial(reversestar, "celery-is_task_successful")
 task_status = partial(reversestar, "celery-task_status")
 task_apply = partial(reverse, "celery-apply")
@@ -123,7 +132,7 @@ class test_webhook_task(ViewTestCase):
         def error_webhook(request):
             x = int(request.GET["x"])
             y = int(request.GET["y"])
-            raise KeyError(x + y)
+            raise MyError(x + y)
 
         request = MockRequest().get("/tasks/error", dict(x=10, y=10))
         response = error_webhook(request)
@@ -142,7 +151,7 @@ class test_task_status(ViewTestCase):
         expect = dict(id=uuid, status=status, result=res)
         if status in default_app.backend.EXCEPTION_STATES:
             instore = default_app.backend.get_result(uuid)
-            self.assertEqual(str(instore.args), str(res.args))
+            self.assertEqual(str(instore.args[0]), str(res.args[0]))
             expect["result"] = repr(res)
             expect["exc"] = get_full_cls_name(res.__class__)
             expect["traceback"] = traceback
@@ -153,11 +162,11 @@ class test_task_status(ViewTestCase):
         self.assertStatusForIs(states.SUCCESS, "The quick brown fox")
 
     def test_failure(self):
-        exc, tb = catch_exception(KeyError("foo"))
+        exc, tb = catch_exception(MyError("foo"))
         self.assertStatusForIs(states.FAILURE, exc, tb)
 
     def test_retry(self):
-        oexc, _ = catch_exception(KeyError("Resource not available"))
+        oexc, _ = catch_exception(MyError("Resource not available"))
         exc, tb = catch_exception(RetryTaskError(str(oexc), oexc))
         self.assertStatusForIs(states.RETRY, exc, tb)
 
