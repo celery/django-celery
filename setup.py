@@ -87,9 +87,12 @@ class RunTests(Command):
                         "DJANGO_SETTINGS_MODULE", "settings")
         settings_file = os.environ["DJANGO_SETTINGS_MODULE"]
         settings_mod = __import__(settings_file, {}, {}, [''])
-        execute_manager(settings_mod, argv=[
-            __file__, "test"] + self.extra_args)
-        os.chdir(this_dir)
+        prev_argv = list(sys.argv)
+        try:
+            sys.argv = [__file__, "test"] + self.extra_args
+            execute_manager(settings_mod, argv=sys.argv)
+        finally:
+            sys.argv = prev_argv
 
     def initialize_options(self):
         pass
