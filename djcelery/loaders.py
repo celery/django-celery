@@ -2,6 +2,7 @@ import imp
 import importlib
 import warnings
 
+from celery import signals
 from celery.loaders.base import BaseLoader
 from celery.datastructures import DictAttribute
 
@@ -17,6 +18,15 @@ class DjangoLoader(BaseLoader):
     override_backends = {
             "database": "djcelery.backends.database.DatabaseBackend",
             "cache": "djcelery.backends.cache.CacheBackend"}
+
+    def __init__(self, *args, **kwargs):
+        super(DjangoLoader, self).__init__(*args, **kwargs)
+        self._install_signal_handlers()
+
+    def _install_signal_handlers(self):
+        # Need to close any open database connection after
+        # any embedded celerybeat process forks.
+        signals.beat_embedded_init.connect(self.close_database)
 
     def read_configuration(self):
         """Load configuration from Django settings."""
