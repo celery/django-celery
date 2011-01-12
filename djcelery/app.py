@@ -1,3 +1,3 @@
-from celery import Celery
+from celery.app import default_app
 
-app = Celery(loader="djcelery.loaders.DjangoLoader")
+app = default_app
