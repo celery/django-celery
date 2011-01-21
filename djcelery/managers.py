@@ -5,7 +5,7 @@ from datetime import datetime
 
 from celery.utils.functional import wraps
 
-from django.db import connection
+from django.db import connections, router, transaction
 from django.db import models
 from django.db import transaction
 from django.db.models.query import QuerySet
@@ -142,7 +142,7 @@ class TaskManager(ResultManager):
 
     def warn_if_repeatable_read(self):
         if settings.DATABASE_ENGINE.lower() == "mysql":
-            cursor = connection.cursor()
+            cursor = connections[self.db].cursor()
             if cursor.execute("SELECT @@tx_isolation"):
                 isolation = cursor.fetchone()[0]
                 if isolation == 'REPEATABLE-READ':
@@ -189,4 +189,7 @@ class TaskStateManager(ExtendedManager):
         return self.expired(states, expires).update(hidden=True)
 
     def purge(self):
-        self.filter(hidden=True).delete()
+        cursor = connections[router.db_for_write(self.model)].cursor()
+        cursor.execute("DELETE FROM %s WHERE hidden=1" % (
+                        self.model._meta.db_table ))
+        transaction.commit_unless_managed()

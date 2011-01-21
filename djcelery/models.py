@@ -257,7 +257,7 @@ class WorkerState(models.Model):
 class TaskState(models.Model):
     state = models.CharField(_(u"state"),
                 max_length=64,
-                choices=TASK_STATE_CHOICES)
+                choices=TASK_STATE_CHOICES, db_index=True)
     task_id = models.CharField(_(u"UUID"),
                 max_length=36, unique=True)
     name = models.CharField(_(u"name"),
@@ -275,7 +275,7 @@ class TaskState(models.Model):
     retries = models.IntegerField(_(u"number of retries"), default=0),
     worker = models.ForeignKey(WorkerState, null=True,
                                verbose_name=_("worker"))
-    hidden = models.BooleanField(editable=False, default=False)
+    hidden = models.BooleanField(editable=False, default=False, db_index=True)
 
     objects = TaskStateManager()
 
