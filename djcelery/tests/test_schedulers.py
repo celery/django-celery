@@ -117,7 +117,8 @@ class test_DatabaseScheduler(unittest.TestCase):
     def test_all_as_schedule(self):
         sched = self.s.schedule
         self.assertTrue(sched)
-        self.assertEqual(len(sched), 3)
+        self.assertEqual(len(sched), 4)
+        self.assertIn("celery.backend_cleanup", sched)
         for n, e in sched.items():
             self.assertIsInstance(e, self.s.Entry)
 
@@ -150,11 +151,11 @@ class test_DatabaseScheduler(unittest.TestCase):
     def test_reserve(self):
         e1 = self.s.schedule[self.m1.name]
         self.s[self.m1.name] = self.s.reserve(e1)
-        self.assertEqual(self.s.flushed, 2)
+        self.assertEqual(self.s.flushed, 3)
 
         e2 = self.s.schedule[self.m2.name]
         self.s[self.m2.name] = self.s.reserve(e2)
-        self.assertEqual(self.s.flushed, 2)
+        self.assertEqual(self.s.flushed, 3)
         self.assertIn(self.m2.name, self.s._dirty)
 
     def test_flush_saves_last_run_at(self):
@@ -176,7 +177,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         # Increment the entry (but make sure it doesn't flush)
         self.s._last_flush = time()
         e2 = self.s.schedule[e1.name] = self.s.reserve(e1)
-        self.assertEqual(self.s.flushed, 1)
+        self.assertEqual(self.s.flushed, 2)
 
         # Fetch the raw object from db, change the args
         # and save the changes.
@@ -187,7 +188,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         # get_schedule should now see the schedule has changed.
         # and also flush the dirty objects.
         e3 = self.s.schedule[self.m2.name]
-        self.assertEqual(self.s.flushed, 2)
+        self.assertEqual(self.s.flushed, 3)
         self.assertEqual(e3.last_run_at, e2.last_run_at)
         self.assertListEqual(e3.args, [16, 16])
 

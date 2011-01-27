@@ -97,15 +97,15 @@ class DatabaseScheduler(Scheduler):
     _last_timestamp = None
 
     def __init__(self, *args, **kwargs):
-        Scheduler.__init__(self, *args, **kwargs)
-        self.max_interval = 5
         self._dirty = set()
         self._last_flush = None
         self._flush_every = 3 * 60
         self._finalize = Finalize(self, self.flush, exitpriority=5)
+        Scheduler.__init__(self, *args, **kwargs)
+        self.max_interval = 5
 
     def setup_schedule(self):
-        pass
+        self.install_default_entries(self.schedule)
 
     def all_as_schedule(self):
         self.logger.debug("DatabaseScheduler: Fetching database schedule")
