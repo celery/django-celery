@@ -167,6 +167,8 @@ class TaskMonitor(ModelMonitor):
     list_filter = ("state", "name", "tstamp", "eta", "worker")
     search_fields = ("name", "task_id", "args", "kwargs", "worker__hostname")
     actions = ["revoke_tasks",
+               "terminate_tasks",
+               "kill_tasks",
                "rate_limit_tasks"]
 
     @action(_("Revoke selected tasks"))
@@ -177,6 +179,26 @@ class TaskMonitor(ModelMonitor):
                 revoke(state.task_id, connection=connection)
         finally:
             connection.close()
+
+    @action(_("Terminate selected tasks"))
+    def terminate_tasks(self, request, queryset):
+        connection = default_app.broker_connection()
+        try:
+            for state in queryset:
+                revoke(state.task_id, connection=connection, terminate=True)
+        finally:
+            connection.close()
+
+    @action(_("Kill selected tasks"))
+    def kill_tasks(self, request, queryset):
+        connection = default_app.broker_connection()
+        try:
+            for state in queryset:
+                revoke(state.task_id, connection=connection,
+                       terminate=True, signal="KILL")
+        finally:
+            connection.close()
+
 
     @action(_("Rate limit selected tasks"))
     def rate_limit_tasks(self, request, queryset):
