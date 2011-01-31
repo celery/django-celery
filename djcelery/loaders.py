@@ -40,7 +40,7 @@ class DjangoLoader(BaseLoader):
             settings.CELERY_RESULT_BACKEND = "database"
         return DictAttribute(settings)
 
-    def close_database(self):
+    def close_database(self, **kwargs):
         import django.db
         db_reuse_max = getattr(self.conf, "CELERY_DB_REUSE_MAX", None)
         if not db_reuse_max:
