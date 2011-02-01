@@ -1,2 +1,2 @@
 django-picklefield
--e git+http://github.com/ask/celery.git/#egg=celery
+celery>=2.2.0
