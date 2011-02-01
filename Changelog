@@ -5,6 +5,28 @@
 .. contents::
     :local:
 
+.. _version-2.2.0:
+
+2.2.0
+=====
+:release-date: 2011-02-01 10:00 AM CEST
+
+* Now depends on Celery v2.2.0
+
+* djceleryadm: Adds task actions Kill and Terminate task
+
+* celerycam: Django's queryset.delete() fetches everything in
+  memory THEN deletes, so we need to use raw SQL to expire objects.
+
+* djcelerymon: Added Command.stdout + Command.stderr  (Issue #23).
+
+* Need to close any open database connection after any embedded
+  celerybeat process forks.
+
+* Added contrib/requirements/py25.txt
+
+* Demoproject now does ``djcelery.setup_loader`` in settings.py.
+
 .. _version-2.1.1:
 
 2.1.1
