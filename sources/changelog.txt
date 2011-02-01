@@ -5,25 +5,27 @@
 .. contents::
     :local:
 
-.. _version-2.1.2:
+.. _version-2.2.0:
 
-2.1.2
+2.2.0
 =====
-:release-date: 2010-10-29 03:00 PM CEST
+:release-date: 2011-02-01 10:00 AM CEST
 
-* Documentation: Fixed typo `celery.contrib.test_runner`
-    -> `djcelery.contrib.test_runner`
+* Now depends on Celery v2.2.0
 
-* Now using Django's `mail_admins` to send task error e-mails.
+* djceleryadm: Adds task actions Kill and Terminate task
 
-    Which means custom Django e-mail backends can be used.
+* celerycam: Django's queryset.delete() fetches everything in
+  memory THEN deletes, so we need to use raw SQL to expire objects.
 
-    See http://github.com/ask/django-celery/issues#issue/15
+* djcelerymon: Added Command.stdout + Command.stderr  (Issue #23).
 
-* djcelerymon command: Disable the django reloader feature of runserver,
-  as this caused it to spawn two djcelerymon processes at the same time.
+* Need to close any open database connection after any embedded
+  celerybeat process forks.
 
-* Fixed compatibility issue with Django 1.2 multi db.
+* Added contrib/requirements/py25.txt
+
+* Demoproject now does ``djcelery.setup_loader`` in settings.py.
 
 .. _version-2.1.1:
 
