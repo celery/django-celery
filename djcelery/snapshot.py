@@ -128,7 +128,8 @@ class Camera(Polaroid):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)
                         for states, expires in self.expire_states.items())
         if dirty:
-            self.logger.debug("Cleanup: Marked %s objects as dirty." % (dirty, ))
+            self.logger.debug(
+                    "Cleanup: Marked %s objects as dirty." % (dirty, ))
             self.TaskState.objects.purge()
             self.logger.debug("Cleanup: %s objects purged." % (dirty, ))
             return dirty

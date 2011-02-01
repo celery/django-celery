@@ -23,7 +23,6 @@ def reversestar(name, **kwargs):
     return reverse(name, kwargs=kwargs)
 
 
-
 class MyError(Exception):
     # On Py2.4 repr(exc) includes the object id, so comparing
     # texts is pointless when the id the "same" KeyError does not match.

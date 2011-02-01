@@ -191,5 +191,5 @@ class TaskStateManager(ExtendedManager):
     def purge(self):
         cursor = connections[router.db_for_write(self.model)].cursor()
         cursor.execute("DELETE FROM %s WHERE hidden=1" % (
-                        self.model._meta.db_table ))
+                        self.model._meta.db_table, ))
         transaction.commit_unless_managed()

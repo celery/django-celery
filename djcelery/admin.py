@@ -199,7 +199,6 @@ class TaskMonitor(ModelMonitor):
         finally:
             connection.close()
 
-
     @action(_("Rate limit selected tasks"))
     def rate_limit_tasks(self, request, queryset):
         tasks = set([task.name for task in queryset])
@@ -336,8 +335,9 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
+        scheduler = settings.CELERYBEAT_SCHEDULER
         if not hasattr(settings, 'CELERYBEAT_SCHEDULER') \
-           or settings.CELERYBEAT_SCHEDULER != 'djcelery.schedulers.DatabaseScheduler':
+           or scheduler != 'djcelery.schedulers.DatabaseScheduler':
             extra_context['wrong_scheduler'] = True
         return super(PeriodicTaskAdmin, self).changelist_view(request,
                                                               extra_context)
