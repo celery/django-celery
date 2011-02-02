@@ -5,9 +5,13 @@ from datetime import datetime
 
 from celery.utils.functional import wraps
 
-from django.db import connections, router, transaction
+from django.db import transaction, connection
+try:
+    from django.db import connections, router 
+except ImportError:  # pre-Django 1.2
+    connections = router = None
+
 from django.db import models
-from django.db import transaction
 from django.db.models.query import QuerySet
 from django.conf import settings
 
@@ -73,6 +77,16 @@ class ExtendedManager(models.Manager):
 
     def update_or_create(self, **kwargs):
         return self.get_query_set().update_or_create(**kwargs)
+
+    def connection_for_write(self):
+        if connections:
+            return connections[router.db_for_write(self.model)]
+        return connection
+
+    def connection_for_read(self):
+        if connections:
+            return connections[self.db]
+        return connection
 
 
 class ResultManager(ExtendedManager):
@@ -142,7 +156,7 @@ class TaskManager(ResultManager):
 
     def warn_if_repeatable_read(self):
         if settings.DATABASE_ENGINE.lower() == "mysql":
-            cursor = connections[self.db].cursor()
+            cursor = self.connection_for_read().cursor()
             if cursor.execute("SELECT @@tx_isolation"):
                 isolation = cursor.fetchone()[0]
                 if isolation == 'REPEATABLE-READ':
@@ -189,7 +203,7 @@ class TaskStateManager(ExtendedManager):
         return self.expired(states, expires).update(hidden=True)
 
     def purge(self):
-        cursor = connections[router.db_for_write(self.model)].cursor()
+        cursor = self.connection_for_write().cursor()
         cursor.execute("DELETE FROM %s WHERE hidden=1" % (
                         self.model._meta.db_table, ))
         transaction.commit_unless_managed()
