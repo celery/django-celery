@@ -5,12 +5,26 @@
 .. contents::
     :local:
 
+.. _version-2.2.2:
+
+2.2.2
+=====
+:release-date: 2011-02-03 16:00 PM CET
+
+* Now requires Celery 2.2.2
+
+* Periodic Task Admin broke if the CELERYBEAT_SCHEDULE setting was not set.
+
+* DatabaseScheduler No longer creates duplicate interval models.
+
+* The djcelery admin templates were not included in the distribution.
+
 .. _version-2.2.1:
 
 2.2.1
 =====
 
-:release-date: 2011-02-02 16:00 PM CEST
+:release-date: 2011-02-02 16:00 PM CET
 
 * Should now work with Django versions previous to 1.2.
 
@@ -18,7 +32,7 @@
 
 2.2.0
 =====
-:release-date: 2011-02-01 10:00 AM CEST
+:release-date: 2011-02-01 10:00 AM CET
 
 * Now depends on Celery v2.2.0
 
