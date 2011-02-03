@@ -3,6 +3,7 @@ from time import time, mktime
 
 import django
 
+from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django.db.models import signals
 from django.utils.translation import ugettext_lazy as _
@@ -98,6 +99,9 @@ class IntervalSchedule(models.Model):
         try:
             return cls.objects.get(every=every, period=period)
         except cls.DoesNotExist:
+            return cls(every=every, period=period)
+        except MultipleObjectsReturned:
+            cls.objects.filter(every=every, period=period).delete()
             return cls(every=every, period=period)
 
     def __unicode__(self):
