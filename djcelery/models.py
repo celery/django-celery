@@ -93,9 +93,12 @@ class IntervalSchedule(models.Model):
         return schedules.schedule(timedelta(**{self.period: self.every}))
 
     @classmethod
-    def from_schedule(cls, schedule):
-        return cls(every=timedelta_seconds(schedule.run_every),
-                   period="seconds")
+    def from_schedule(cls, schedule, period="seconds"):
+        every = timedelta_seconds(schedule.run_every)
+        try:
+            return cls.objects.get(every=every, period=period)
+        except cls.DoesNotExist:
+            return cls(every=every, period=period)
 
     def __unicode__(self):
         if self.every == 1:
