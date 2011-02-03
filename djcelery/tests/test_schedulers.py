@@ -6,6 +6,7 @@ from celery.schedules import schedule, crontab
 from celery.utils.timeutils import timedelta_seconds
 
 from djcelery import schedulers
+from djcelery.app import app
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
 from djcelery.tests.utils import unittest
@@ -99,6 +100,8 @@ class test_DatabaseScheduler(unittest.TestCase):
 
     def setUp(self):
         PeriodicTask.objects.all().delete()
+        self.prev_schedule = app.conf.CELERYBEAT_SCHEDULE
+        app.conf.CELERYBEAT_SCHEDULE = {}
         m1 = create_model_interval(schedule(timedelta(seconds=10)))
         m2 = create_model_interval(schedule(timedelta(minutes=20)))
         m3 = create_model_crontab(crontab(minute="2,4,5"))
@@ -108,6 +111,9 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.m1 = PeriodicTask.objects.get(name=m1.name)
         self.m2 = PeriodicTask.objects.get(name=m2.name)
         self.m3 = PeriodicTask.objects.get(name=m3.name)
+
+    def tearDown(self):
+        app.conf.CELERYBEAT_SCHEDULE = self.prev_schedule
 
     def test_constructor(self):
         self.assertIsInstance(self.s._dirty, set)

@@ -7,7 +7,7 @@ from celery.utils.functional import wraps
 
 from django.db import transaction, connection
 try:
-    from django.db import connections, router 
+    from django.db import connections, router
 except ImportError:  # pre-Django 1.2
     connections = router = None
 

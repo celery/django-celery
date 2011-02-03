@@ -106,6 +106,7 @@ class DatabaseScheduler(Scheduler):
 
     def setup_schedule(self):
         self.install_default_entries(self.schedule)
+        self.update_from_dict(self.app.conf.CELERYBEAT_SCHEDULE)
 
     def all_as_schedule(self):
         self.logger.debug("DatabaseScheduler: Fetching database schedule")
