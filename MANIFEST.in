@@ -13,6 +13,7 @@ include setup.cfg
 recursive-include bin *
 recursive-include contrib *
 recursive-include djcelery *.py
+recursive-include djcelery/templates *
 recursive-include docs *
 recursive-include examples *
 recursive-include tests *
