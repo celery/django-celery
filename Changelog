@@ -11,6 +11,8 @@
 =====
 :release-date: 2011-02-12 16:00 PM CET
 
+* celerybeat: DatabaseScheduler did not respect the disabled setting after restart.
+
 * celeryevcam: Expiring objects now works on PostgreSQL.
 
 * Now requires Celery 2.2.3
