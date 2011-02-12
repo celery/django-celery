@@ -156,11 +156,11 @@ class test_DatabaseScheduler(unittest.TestCase):
 
     def test_reserve(self):
         e1 = self.s.schedule[self.m1.name]
-        self.s[self.m1.name] = self.s.reserve(e1)
+        self.s.schedule[self.m1.name] = self.s.reserve(e1)
         self.assertEqual(self.s.flushed, 3)
 
         e2 = self.s.schedule[self.m2.name]
-        self.s[self.m2.name] = self.s.reserve(e2)
+        self.s.schedule[self.m2.name] = self.s.reserve(e2)
         self.assertEqual(self.s.flushed, 3)
         self.assertIn(self.m2.name, self.s._dirty)
 
