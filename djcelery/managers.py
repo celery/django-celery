@@ -204,6 +204,6 @@ class TaskStateManager(ExtendedManager):
 
     def purge(self):
         cursor = self.connection_for_write().cursor()
-        cursor.execute("DELETE FROM %s WHERE hidden = true" % (
-                        self.model._meta.db_table, ))
+        cursor.execute("DELETE FROM %s WHERE hidden=%%s" % (
+                        self.model._meta.db_table, ), (True, ))
         transaction.commit_unless_managed()
