@@ -45,6 +45,11 @@ class ModelEntry(ScheduleEntry):
             model.last_run_at = datetime.now()
         self.last_run_at = model.last_run_at
 
+    def is_due(self):
+        if not self.model.enabled:
+            return False, 5.0   # 5 second delay for re-enable.
+        return self.schedule.is_due(self.last_run_at)
+
     def next(self):
         self.model.last_run_at = datetime.now()
         self.model.total_run_count += 1
