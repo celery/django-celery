@@ -125,6 +125,15 @@ class DatabaseScheduler(Scheduler):
 
     def schedule_changed(self):
         if self._last_timestamp is not None:
+            # If MySQL is running with transaction isolation level
+            # REPEATABLE-READ (default), then we won't see changes done by
+            # other transactions until the current transaction is
+            # committed (Issue #41).
+            try:
+                transaction.commit()
+            except transaction.TransactionManagementError:
+                pass  # not in transaction management.
+
             ts = self.Changes.last_change()
             if not ts or ts < self._last_timestamp:
                 return False
