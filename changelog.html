@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Change history &mdash; django-celery v2.2.3 documentation</title>
+    <title>Change history &mdash; django-celery v2.2.4 documentation</title>
     <link rel="stylesheet" href="static/celery.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.2.3',
+        VERSION:     '2.2.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.2.3 documentation" href="index.html" />
+    <link rel="top" title="django-celery v2.2.4 documentation" href="index.html" />
     <link rel="prev" title="Utilities - djcelery.utils" href="reference/djcelery.utils.html" /> 
   </head>
   <body>
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="reference/djcelery.utils.html" title="Utilities - djcelery.utils"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">django-celery v2.2.3 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery v2.2.4 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -50,27 +50,40 @@
 <h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#version-2-2-3" id="id11">2.2.3</a></li>
-<li><a class="reference internal" href="#version-2-2-2" id="id12">2.2.2</a></li>
-<li><a class="reference internal" href="#version-2-2-1" id="id13">2.2.1</a></li>
-<li><a class="reference internal" href="#version-2-2-0" id="id14">2.2.0</a></li>
-<li><a class="reference internal" href="#version-2-1-1" id="id15">2.1.1</a></li>
-<li><a class="reference internal" href="#version-2-1-0" id="id16">2.1.0</a><ul>
-<li><a class="reference internal" href="#important-notes" id="id17">Important Notes</a></li>
-<li><a class="reference internal" href="#news" id="id18">News</a></li>
-<li><a class="reference internal" href="#fixes" id="id19">Fixes</a></li>
+<li><a class="reference internal" href="#version-2-2-4" id="id12">2.2.4</a></li>
+<li><a class="reference internal" href="#version-2-2-3" id="id13">2.2.3</a></li>
+<li><a class="reference internal" href="#version-2-2-2" id="id14">2.2.2</a></li>
+<li><a class="reference internal" href="#version-2-2-1" id="id15">2.2.1</a></li>
+<li><a class="reference internal" href="#version-2-2-0" id="id16">2.2.0</a></li>
+<li><a class="reference internal" href="#version-2-1-1" id="id17">2.1.1</a></li>
+<li><a class="reference internal" href="#version-2-1-0" id="id18">2.1.0</a><ul>
+<li><a class="reference internal" href="#important-notes" id="id19">Important Notes</a></li>
+<li><a class="reference internal" href="#news" id="id20">News</a></li>
+<li><a class="reference internal" href="#fixes" id="id21">Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id7" id="id20">2.0.2</a><ul>
-<li><a class="reference internal" href="#id8" id="id21">Important notes</a></li>
-<li><a class="reference internal" href="#id9" id="id22">News</a></li>
+<li><a class="reference internal" href="#id8" id="id22">2.0.2</a><ul>
+<li><a class="reference internal" href="#id9" id="id23">Important notes</a></li>
+<li><a class="reference internal" href="#id10" id="id24">News</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id10" id="id23">2.0.0</a></li>
+<li><a class="reference internal" href="#id11" id="id25">2.0.0</a></li>
+</ul>
+</div>
+<div class="section" id="version-2-2-4">
+<span id="id1"></span><h2><a class="toc-backref" href="#id12">2.2.4</a><a class="headerlink" href="#version-2-2-4" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">celerybeat: DatabaseScheduler would not react to changes when using MySQL and
+the default transaction isolation level <tt class="docutils literal"><span class="pre">REPEATABLE-READ</span></tt> (Issue #41).</p>
+<blockquote>
+<p>It is still recommended that you use isolation level <tt class="docutils literal"><span class="pre">READ-COMMITTED</span></tt>
+(see the Celery FAQ).</p>
+</blockquote>
+</li>
 </ul>
 </div>
 <div class="section" id="version-2-2-3">
-<span id="id1"></span><h2><a class="toc-backref" href="#id11">2.2.3</a><a class="headerlink" href="#version-2-2-3" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id13">2.2.3</a><a class="headerlink" href="#version-2-2-3" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -86,7 +99,7 @@
 </ul>
 </div>
 <div class="section" id="version-2-2-2">
-<span id="id2"></span><h2><a class="toc-backref" href="#id12">2.2.2</a><a class="headerlink" href="#version-2-2-2" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2><a class="toc-backref" href="#id14">2.2.2</a><a class="headerlink" href="#version-2-2-2" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -103,7 +116,7 @@
 </ul>
 </div>
 <div class="section" id="version-2-2-1">
-<span id="id3"></span><h2><a class="toc-backref" href="#id13">2.2.1</a><a class="headerlink" href="#version-2-2-1" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id15">2.2.1</a><a class="headerlink" href="#version-2-2-1" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -117,7 +130,7 @@
 </ul>
 </div>
 <div class="section" id="version-2-2-0">
-<span id="id4"></span><h2><a class="toc-backref" href="#id14">2.2.0</a><a class="headerlink" href="#version-2-2-0" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#id16">2.2.0</a><a class="headerlink" href="#version-2-2-0" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -139,7 +152,7 @@ celerybeat process forks.</li>
 </ul>
 </div>
 <div class="section" id="version-2-1-1">
-<span id="id5"></span><h2><a class="toc-backref" href="#id15">2.1.1</a><a class="headerlink" href="#version-2-1-1" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2><a class="toc-backref" href="#id17">2.1.1</a><a class="headerlink" href="#version-2-1-1" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -185,7 +198,7 @@ Django version.</p>
 </ul>
 </div>
 <div class="section" id="version-2-1-0">
-<span id="id6"></span><h2><a class="toc-backref" href="#id16">2.1.0</a><a class="headerlink" href="#version-2-1-0" title="Permalink to this headline">¶</a></h2>
+<span id="id7"></span><h2><a class="toc-backref" href="#id18">2.1.0</a><a class="headerlink" href="#version-2-1-0" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -195,13 +208,13 @@ Django version.</p>
 </tbody>
 </table>
 <div class="section" id="important-notes">
-<h3><a class="toc-backref" href="#id17">Important Notes</a><a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">Important Notes</a><a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h3>
 <p>This release depends on Celery version 2.1.0.
 Be sure to read the Celery changelog before you upgrade:
 <a class="reference external" href="http://ask.github.com/celery/changelog.html#version-2-1-0">http://ask.github.com/celery/changelog.html#version-2-1-0</a></p>
 </div>
 <div class="section" id="news">
-<h3><a class="toc-backref" href="#id18">News</a><a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id20">News</a><a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">The periodic task schedule can now be stored in the database and edited via
 the Django Admin interface.</p>
@@ -239,7 +252,7 @@ the database.</p>
 </ul>
 </div>
 <div class="section" id="fixes">
-<h3><a class="toc-backref" href="#id19">Fixes</a><a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">Fixes</a><a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">database backend: Now shows warning if polling results with transaction isolation level
 repeatable-read on MySQL.</p>
@@ -256,10 +269,10 @@ database.</p>
 </ul>
 </div>
 </div>
-<div class="section" id="id7">
-<h2><a class="toc-backref" href="#id20">2.0.2</a><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id8">
-<h3><a class="toc-backref" href="#id21">Important notes</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h2><a class="toc-backref" href="#id22">2.0.2</a><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id23">Important notes</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">Due to some applications loading the Django models lazily, it is recommended
 that you add the following lines to your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
@@ -272,16 +285,16 @@ model modules haven't been imported yet.</pre>
 </li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id22">News</a><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3><a class="toc-backref" href="#id24">News</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">djcelery.views.registered_tasks</span></tt>: Added a view to list currently known
 tasks.</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id10">
-<h2><a class="toc-backref" href="#id23">2.0.0</a><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h2><a class="toc-backref" href="#id25">2.0.0</a><a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -307,6 +320,7 @@ tasks.</li>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Change history</a><ul>
+<li><a class="reference internal" href="#version-2-2-4">2.2.4</a></li>
 <li><a class="reference internal" href="#version-2-2-3">2.2.3</a></li>
 <li><a class="reference internal" href="#version-2-2-2">2.2.2</a></li>
 <li><a class="reference internal" href="#version-2-2-1">2.2.1</a></li>
@@ -318,12 +332,12 @@ tasks.</li>
 <li><a class="reference internal" href="#fixes">Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id7">2.0.2</a><ul>
-<li><a class="reference internal" href="#id8">Important notes</a></li>
-<li><a class="reference internal" href="#id9">News</a></li>
+<li><a class="reference internal" href="#id8">2.0.2</a><ul>
+<li><a class="reference internal" href="#id9">Important notes</a></li>
+<li><a class="reference internal" href="#id10">News</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id10">2.0.0</a></li>
+<li><a class="reference internal" href="#id11">2.0.0</a></li>
 </ul>
 </li>
 </ul>
@@ -365,7 +379,7 @@ tasks.</li>
         <li class="right" >
           <a href="reference/djcelery.utils.html" title="Utilities - djcelery.utils"
              >previous</a> |</li>
-        <li><a href="index.html">django-celery v2.2.3 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery v2.2.4 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
