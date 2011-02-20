@@ -5,6 +5,17 @@
 .. contents::
     :local:
 
+.. _version-2.2.4:
+
+2.2.4
+=====
+
+* celerybeat: DatabaseScheduler would not react to changes when using MySQL and
+  the default transaction isolation level ``REPEATABLE-READ`` (Issue #41).
+
+    It is still recommended that you use isolation level ``READ-COMMITTED``
+    (see the Celery FAQ).
+
 .. _version-2.2.3:
 
 2.2.3
