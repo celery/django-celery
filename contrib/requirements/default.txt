@@ -1,2 +1,2 @@
 django-picklefield
-celery>=2.2.3
+celery>=2.2.4
