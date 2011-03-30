@@ -158,21 +158,19 @@ class DatabaseScheduler(Scheduler):
     @transaction.commit_manually
     def flush(self):
         self.logger.debug("Writing dirty entries...")
-        if not self._dirty:
-            return
         try:
             while self._dirty:
                 try:
                     name = self._dirty.pop()
                     self.schedule[name].save()
+                    self._last_flush = time()
                 except (KeyError, ObjectDoesNotExist):
-                    continue
+                    pass
         except:
             transaction.rollback()
             raise
         else:
             transaction.commit()
-            self._last_flush = time()
 
     def update_from_dict(self, dict_):
         s = {}
