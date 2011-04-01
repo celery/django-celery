@@ -5,6 +5,20 @@
 .. contents::
     :local:
 
+.. _version-2.3.0:
+
+2.3.0
+=====
+:release-date: TBA
+:status: in development
+:branch: master
+
+* Now depends on Celery 2.3.0 (git master branch)
+
+    To install this dependency execute the following command::
+
+        $ pip install -U http://github.com/ask/celery/tarball/master#egg=celery
+
 .. _version-2.2.4:
 
 2.2.4
