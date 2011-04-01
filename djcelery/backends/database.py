@@ -35,6 +35,9 @@ class DatabaseBackend(BaseDictBackend):
         if meta:
             return meta.to_dict()
 
+    def _delete_taskset(self, taskset_id):
+        self.TaskSetModel._default_manager.delete_taskset(taskset_id)
+
     def _forget(self, task_id):
         try:
             self.TaskModel._default_manager.get(task_id=task_id).delete()

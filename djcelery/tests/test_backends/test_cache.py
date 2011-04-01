@@ -44,7 +44,7 @@ class test_CacheBackend(unittest.TestCase):
         self.assertNotIn(tid, b._cache)
         self.assertIsNone(b.get_result(tid))
 
-    def test_save_restore_taskset(self):
+    def test_save_restore_delete_taskset(self):
         backend = CacheBackend()
         taskset_id = gen_unique_id()
         subtask_ids = [gen_unique_id() for i in range(10)]
@@ -54,6 +54,9 @@ class test_CacheBackend(unittest.TestCase):
         saved = result.TaskSetResult.restore(taskset_id, backend=backend)
         self.assertListEqual(saved.subtasks, subtasks)
         self.assertEqual(saved.taskset_id, taskset_id)
+        saved.delete(backend=backend)
+        self.assertIsNone(result.TaskSetResult.restore(taskset_id,
+                                                       backend=backend))
 
     def test_is_pickled(self):
         cb = CacheBackend()

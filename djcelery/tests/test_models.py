@@ -78,3 +78,11 @@ class TestModels(unittest.TestCase):
         TaskSetMeta.objects.delete_expired(
                 default_app.conf.CELERY_TASK_RESULT_EXPIRES)
         self.assertNotIn(m1, TaskSetMeta.objects.all())
+
+        m4 = self.createTaskSetMeta()
+        self.assertEqual(
+                TaskSetMeta.objects.restore_taskset(m4.taskset_id).taskset_id,
+                m4.taskset_id)
+
+        TaskSetMeta.objects.delete_taskset(m4.taskset_id)
+        self.assertIsNone(TaskSetMeta.objects.restore_taskset(m4.taskset_id))

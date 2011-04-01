@@ -75,6 +75,8 @@ class TestDatabaseBackend(unittest.TestCase):
         self.assertIsNotNone(rindb)
         self.assertEqual(rindb.get("foo"), "baz")
         self.assertEqual(rindb.get("bar").data, 12345)
+        b.delete_taskset(tid)
+        self.assertIsNone(b.restore_taskset(tid))
 
     def test_cleanup(self):
         b = DatabaseBackend()

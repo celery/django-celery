@@ -171,15 +171,21 @@ class TaskSetManager(ResultManager):
     """Manager for :class:`celery.models.TaskSet` models."""
 
     def restore_taskset(self, taskset_id):
-        """Get taskset meta for task by ``taskset_id``."""
+        """Get the async result instance by taskset id."""
         try:
             return self.get(taskset_id=taskset_id)
         except self.model.DoesNotExist:
             pass
 
+    def delete_taskset(self, taskset_id):
+        """Delete a saved taskset result."""
+        s = self.restore_taskset(taskset_id)
+        if s:
+            s.delete()
+
     @transaction_retry(max_retries=2)
     def store_result(self, taskset_id, result):
-        """Store the result of a taskset.
+        """Store the async result instance of a taskset.
 
         :param taskset_id: task set id
 
