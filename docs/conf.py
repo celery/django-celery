@@ -15,7 +15,8 @@ import djcelery
 # General configuration
 # ---------------------
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage',
+             'sphinxcontrib.issuetracker']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']
@@ -72,3 +73,10 @@ html_sidebars = {
     '**': ['sidebarlogo.html', 'localtoc.html', 'relations.html',
            'sourcelink.html', 'searchbox.html'],
 }
+
+### Issuetracker
+
+issuetracker = "github"
+issuetracker_user = "ask"
+issuetracker_project = "celery"
+issuetracker_issue_pattern = r'[Ii]ssue #(\d+)'
