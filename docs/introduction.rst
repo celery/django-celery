@@ -91,11 +91,10 @@ The `Celery User Manual`_ contains user guides, tutorials and an API
 reference. Also the `django-celery documentation`_, contains information
 about the Django integration.
 
-.. _`django-celery documentation`:
-    http://celeryproject.org/docs/django-celery/
-.. _`Celery User Manual`: http://celeryproject.org/docs/
+.. _`django-celery documentation`: http://django-celery.readthedocs.org/
+.. _`Celery User Manual`: http://docs.celeryproject.org/
 .. _`Getting started with django-celery`:
-    http://celeryq.org/docs/django-celery/getting-started/first-steps-with-django.html
+    http://django-celery.readthedocs.org/en/latest/getting-started/first-steps-with-django.html
 
 Installation
 =============
