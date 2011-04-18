@@ -279,7 +279,7 @@ class TaskState(models.Model):
     traceback = models.TextField(_(u"traceback"), null=True)
     runtime = models.FloatField(_(u"execution time"), null=True,
                 help_text=_(u"in seconds if task successful"))
-    retries = models.IntegerField(_(u"number of retries"), default=0),
+    retries = models.IntegerField(_(u"number of retries"), default=0)
     worker = models.ForeignKey(WorkerState, null=True,
                                verbose_name=_("worker"))
     hidden = models.BooleanField(editable=False, default=False, db_index=True)
