@@ -1,6 +1,7 @@
 """celery.backends.cache"""
 from datetime import timedelta
 
+import django
 from django.utils.encoding import smart_str
 from django.core.cache import cache, get_cache
 from django.core.cache.backends.base import InvalidCacheBackendError
@@ -33,15 +34,15 @@ class DjangoMemcacheWrapper(object):
         self.cache.set(key, value, timeout)
 
 # Check if django is using memcache as the cache backend. If so, wrap the
-# cache object in a DjangoMemcacheWrapper that fixes a bug with retrieving
-# pickled data
+# cache object in a DjangoMemcacheWrapper for Django < 1.2 that fixes a bug
+# with retrieving pickled data.
 from django.core.cache.backends.base import InvalidCacheBackendError
 try:
     from django.core.cache.backends.memcached import CacheClass
 except InvalidCacheBackendError:
     pass
 else:
-    if isinstance(cache, CacheClass):
+    if django.VERSION[0:2] < (1, 2) and isinstance(cache, CacheClass):
         cache = DjangoMemcacheWrapper(cache)
 
 
