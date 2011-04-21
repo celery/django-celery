@@ -58,6 +58,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": "djcelery-test-db",
+    },
+}
 
 INSTALLED_APPS = (
     'django.contrib.auth',

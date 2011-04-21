@@ -114,6 +114,7 @@ class test_DatabaseScheduler(unittest.TestCase):
 
     def tearDown(self):
         app.conf.CELERYBEAT_SCHEDULE = self.prev_schedule
+        PeriodicTask.objects.all().delete()
 
     def test_constructor(self):
         self.assertIsInstance(self.s._dirty, set)
@@ -143,9 +144,6 @@ class test_DatabaseScheduler(unittest.TestCase):
 
         self.m3.delete()
         self.assertRaises(KeyError, self.s.schedule.__getitem__, self.m3.name)
-
-    def tearDown(self):
-        PeriodicTask.objects.all().delete()
 
     def test_should_flush(self):
         self.assertTrue(self.s.should_flush())

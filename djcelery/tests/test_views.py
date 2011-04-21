@@ -9,7 +9,6 @@ from anyjson import deserialize
 
 from celery import states
 from celery.app import default_app
-from celery.exceptions import RetryTaskError
 from celery.datastructures import ExceptionInfo
 from celery.task import task
 from celery.utils import gen_unique_id, get_full_cls_name

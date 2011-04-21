@@ -9,7 +9,7 @@ from django.db import transaction, connection
 try:
     from django.db import connections, router
 except ImportError:  # pre-Django 1.2
-    connections = router = None
+    connections = router = None  # noqa
 
 from django.db import models
 from django.db.models.query import QuerySet

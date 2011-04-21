@@ -3,15 +3,13 @@
 import os
 import sys
 import codecs
-import platform
 
 try:
-    from setuptools import setup, find_packages, Command
+    from setuptools import setup, Command
 except ImportError:
     from ez_setup import use_setuptools
     use_setuptools()
-    from setuptools import setup, find_packages, Command
-from distutils.command.install_data import install_data
+    from setuptools import setup, Command  # noqa
 from distutils.command.install import INSTALL_SCHEMES
 
 import djcelery as distmeta
@@ -21,13 +19,6 @@ root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
 src_dir = "djcelery"
-
-
-def osx_install_data(install_data):
-
-    def finalize_options(self):
-        self.set_undefined_options("install", ("install_lib", "install_dir"))
-        install_data.finalize_options(self)
 
 
 def fullsplit(path, result=None):
@@ -150,7 +141,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     entry_points={
-        "console_scripts": ["djcelerymon = djcelery.mon:main"]
+        "console_scripts": ["djcelerymon = djcelery.mon:main"],
     },
     long_description=long_description,
 )

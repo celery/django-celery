@@ -1,9 +1,6 @@
-from celery.task import Task
-from celery.registry import tasks
+from celery.task import task
 
 
-class SomeAppTask(Task):
-    name = "c.unittest.SomeAppTask"
-
-    def run(self, **kwargs):
-        return 42
+@task(name="c.unittest.SomeAppTask")
+def SomeAppTask(**kwargs):
+    return 42

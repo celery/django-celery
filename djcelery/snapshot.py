@@ -33,7 +33,7 @@ class Camera(Polaroid):
     expire_states = {
             SUCCESS_STATES: EXPIRE_SUCCESS,
             states.EXCEPTION_STATES: EXPIRE_ERROR,
-            states.UNREADY_STATES: EXPIRE_PENDING
+            states.UNREADY_STATES: EXPIRE_PENDING,
     }
 
     def __init__(self, *args, **kwargs):
