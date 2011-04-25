@@ -120,9 +120,4 @@ def find_related_module(app, related_name):
     except ImportError:
         return
 
-    module = importlib.import_module("%s.%s" % (app, related_name))
-
-    try:
-        return getattr(module, related_name)
-    except AttributeError:
-        return
+    return importlib.import_module("%s.%s" % (app, related_name))

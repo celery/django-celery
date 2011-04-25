@@ -1,5 +1,7 @@
 import sys
 
+from functools import partial
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.test.testcases import TestCase as DjangoTestCase
@@ -12,7 +14,6 @@ from celery.app import default_app
 from celery.datastructures import ExceptionInfo
 from celery.task import task
 from celery.utils import gen_unique_id, get_full_cls_name
-from celery.utils.functional import partial
 
 from djcelery.views import task_webhook
 from djcelery.tests.req import MockRequest

@@ -1,3 +1,5 @@
+from __future__ import absolute_import, with_statement
+
 from pprint import pformat
 
 from django import forms
@@ -11,9 +13,9 @@ from django.utils.encoding import force_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
+from celery import current_app
 from celery import states
 from celery import registry
-from celery.app import default_app
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
@@ -173,31 +175,22 @@ class TaskMonitor(ModelMonitor):
 
     @action(_("Revoke selected tasks"))
     def revoke_tasks(self, request, queryset):
-        connection = default_app.broker_connection()
-        try:
+        with current_app.default_connection() as connection:
             for state in queryset:
                 revoke(state.task_id, connection=connection)
-        finally:
-            connection.close()
 
     @action(_("Terminate selected tasks"))
     def terminate_tasks(self, request, queryset):
-        connection = default_app.broker_connection()
-        try:
+        with current_app.default_connection() as connection:
             for state in queryset:
                 revoke(state.task_id, connection=connection, terminate=True)
-        finally:
-            connection.close()
 
     @action(_("Kill selected tasks"))
     def kill_tasks(self, request, queryset):
-        connection = default_app.broker_connection()
-        try:
+        with current_app.default_connection() as connection:
             for state in queryset:
                 revoke(state.task_id, connection=connection,
                        terminate=True, signal="KILL")
-        finally:
-            connection.close()
 
     @action(_("Rate limit selected tasks"))
     def rate_limit_tasks(self, request, queryset):
@@ -206,12 +199,9 @@ class TaskMonitor(ModelMonitor):
         app_label = opts.app_label
         if request.POST.get("post"):
             rate = request.POST["rate_limit"]
-            connection = default_app.broker_connection()
-            try:
+            with current_app.default_connection() as connection:
                 for task_name in tasks:
                     rate_limit(task_name, rate, connection=connection)
-            finally:
-                connection.close()
             return None
 
         context = {

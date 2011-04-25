@@ -1,3 +1,5 @@
+from functools import wraps
+
 from django.http import HttpResponse, Http404
 
 from anyjson import serialize as JSON_dump
@@ -6,7 +8,6 @@ from celery.app import default_app
 from celery.utils import get_full_cls_name
 from celery.result import AsyncResult
 from celery.registry import tasks
-from celery.utils.functional import wraps
 
 # Ensure built-in tasks are loaded for task_list view
 import celery.task  # noqa

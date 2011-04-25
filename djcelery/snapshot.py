@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
 from time import time
 
@@ -8,7 +9,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from celery import states
 from celery.events.state import Task
 from celery.events.snapshot import Polaroid
-from celery.utils.compat import defaultdict
 from celery.utils.timeutils import maybe_iso8601
 
 from djcelery.models import WorkerState, TaskState
