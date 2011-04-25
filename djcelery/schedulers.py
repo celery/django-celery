@@ -2,7 +2,6 @@ import logging
 
 from datetime import datetime
 from multiprocessing.util import Finalize
-from time import time
 
 from anyjson import deserialize, serialize
 from django.db import transaction
@@ -106,9 +105,7 @@ class DatabaseScheduler(Scheduler):
 
     def __init__(self, *args, **kwargs):
         self._dirty = set()
-        self._last_flush = None
-        self._flush_every = 3 * 60
-        self._finalize = Finalize(self, self.flush, exitpriority=5)
+        self._finalize = Finalize(self, self.sync, exitpriority=5)
         Scheduler.__init__(self, *args, **kwargs)
         self.max_interval = 5
 
@@ -144,29 +141,21 @@ class DatabaseScheduler(Scheduler):
         self._last_timestamp = datetime.now()
         return True
 
-    def should_flush(self):
-        return not self._last_flush or \
-                    (time() - self._last_flush) > self._flush_every
-
     def reserve(self, entry):
         new_entry = Scheduler.reserve(self, entry)
-        # Need to story entry by name, because the entry may change
+        # Need to store entry by name, because the entry may change
         # in the mean time.
         self._dirty.add(new_entry.name)
-        if self.should_flush():
-            self.logger.debug("Celerybeat: Writing schedule changes...")
-            self.flush()
         return new_entry
 
     @transaction.commit_manually
-    def flush(self):
+    def sync(self):
         self.logger.debug("Writing dirty entries...")
         try:
             while self._dirty:
                 try:
                     name = self._dirty.pop()
                     self.schedule[name].save()
-                    self._last_flush = time()
                 except (KeyError, ObjectDoesNotExist):
                     pass
         except:
@@ -188,7 +177,7 @@ class DatabaseScheduler(Scheduler):
 
     def get_schedule(self):
         if self.schedule_changed():
-            self.flush()
+            self.sync()
             self.logger.debug("DatabaseScheduler: Schedule changed.")
             self._schedule = self.all_as_schedule()
             if self.logger.isEnabledFor(logging.DEBUG):
