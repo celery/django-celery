@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
+from celery.utils.encoding import safe_str, safe_repr
 
 from djcelery.models import (PeriodicTask, PeriodicTasks,
                              CrontabSchedule, IntervalSchedule)
@@ -89,11 +90,11 @@ class ModelEntry(ScheduleEntry):
                                                             defaults=fields))
 
     def __repr__(self):
-        return "<ModelEntry: %s %s(*%s, **%s) {%s}" % (self.name,
-                                                        self.task,
-                                                        self.args,
-                                                        self.kwargs,
-                                                        self.schedule)
+        return "<ModelEntry: %s %s(*%s, **%s) {%s}" % (safe_str(self.name),
+                                                       self.task,
+                                                       safe_repr(self.args),
+                                                       safe_repr(self.kwargs),
+                                                       self.schedule)
 
 
 class DatabaseScheduler(Scheduler):
