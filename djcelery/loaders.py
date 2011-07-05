@@ -77,7 +77,7 @@ class DjangoLoader(BaseLoader):
 
         from django.conf import settings
         if settings.DEBUG:
-            warnings.warn("Using settings.DEBUG leads to a memory leak, never"
+            warnings.warn("Using settings.DEBUG leads to a memory leak, never "
                           "use this setting in production environments!")
 
         # the parent process may have established these,
