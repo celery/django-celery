@@ -1,7 +1,5 @@
 from __future__ import absolute_import, with_statement
 
-from pprint import pformat
-
 from django import forms
 from django.conf import settings
 from django.contrib import admin
@@ -20,6 +18,7 @@ from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
 from djcelery import loaders
+from djcelery.admin_utils import action, display_field, fixedwidth
 from djcelery.models import TaskState, WorkerState
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.utils import naturaldate
@@ -40,25 +39,6 @@ class MonitorList(main_views.ChangeList):
     def __init__(self, *args, **kwargs):
         super(MonitorList, self).__init__(*args, **kwargs)
         self.title = self.model_admin.list_page_title
-
-
-def attrs(**kwargs):
-    def _inner(fun):
-        for attr_name, attr_value in kwargs.items():
-            setattr(fun, attr_name, attr_value)
-        return fun
-    return _inner
-
-
-def display_field(short_description, admin_order_field, allow_tags=True,
-        **kwargs):
-    return attrs(short_description=short_description,
-                 admin_order_field=admin_order_field,
-                 allow_tags=allow_tags, **kwargs)
-
-
-def action(short_description, **kwargs):
-    return attrs(short_description=short_description, **kwargs)
 
 
 @display_field(_("state"), "state")
@@ -93,26 +73,6 @@ def name(task):
     short_name = abbrtask(task.name, 16)
     return """<div title="%s"><b>%s</b></div>""" % (escape(task.name),
                                                     escape(short_name))
-
-
-def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
-
-    @display_field(name or field, field)
-    def f(task):
-        val = getattr(task, field)
-        if pretty:
-            val = pformat(val, width=width)
-        if val.startswith("u'") or val.startswith('u"'):
-            val = val[2:-1]
-        shortval = val.replace(",", ",\n")
-        shortval = shortval.replace("\n", "<br />")
-
-        if len(shortval) > maxlen:
-            shortval = shortval[:maxlen] + "..."
-        return """<span title="%s", style="font-size: %spt;
-                               font-family: Menlo, Courier;
-                  ">%s</span>""" % (escape(val[:255]), pt, escape(shortval), )
-    return f
 
 
 class ModelMonitor(admin.ModelAdmin):
