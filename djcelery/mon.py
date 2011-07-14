@@ -16,6 +16,7 @@ DEFAULTS = {"ROOT_URLCONF": "djcelery.monproj.urls",
             "BROKER_USER": "guest",
             "BROKER_PASSWORD": "guest",
             "BROKER_VHOST": "/",
+            "SITE_ID": 1,
             "INSTALLED_APPS": DEFAULT_APPS,
             "DEBUG": True}
 
