@@ -129,9 +129,7 @@ class test_MemcacheWrapper(unittest.TestCase):
         memcached.CacheClass = locmem.CacheClass
         prev_backend_module = sys.modules.pop("djcelery.backends.cache")
         try:
-            from djcelery.backends.cache import cache, DjangoMemcacheWrapper
-            self.assertIsInstance(cache, DjangoMemcacheWrapper)
-
+            from djcelery.backends.cache import cache
             key = "cu.test_memcache_wrapper"
             val = "The quick brown fox."
             default = "The lazy dog."
