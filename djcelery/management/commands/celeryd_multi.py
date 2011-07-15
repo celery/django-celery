@@ -16,6 +16,7 @@ class Command(CeleryCommand):
     option_list = ()
 
     def run_from_argv(self, argv):
+        argv = self.handle_default_options(argv)
         argv.append("--cmd=%s celeryd_detach" % (argv[0], ))
         celeryd_multi.MultiTool().execute_from_commandline(
                 ["%s %s" % (argv[0], argv[1])] + argv[2:])

@@ -3,6 +3,7 @@
 Curses Celery Event Viewer.
 
 """
+
 from celery.bin.celeryctl import celeryctl, Command as _Command
 
 from djcelery import __version__
