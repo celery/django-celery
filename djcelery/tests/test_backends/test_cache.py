@@ -136,7 +136,8 @@ class test_MemcacheWrapper(unittest.TestCase):
 
             self.assertEqual(cache.get(key, default=default), default)
             cache.set(key, val)
-            self.assertEqual(pickle.loads(cache.get(key, default=default)),
+            print("VAL: %r" % (cache.get(key, default=default), ))
+            self.assertEqual(cache.get(key, default=default),
                               val)
         finally:
             memcached.CacheClass = prev_cache_cls
