@@ -9,7 +9,7 @@
 
 2.3.0
 =====
-:release-date: TBA
+:release-date: 2011-08-05 12:00 PM BST
 
 * Now depends on Celery 2.3.0
 
