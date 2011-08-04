@@ -20,7 +20,6 @@ Please use one of: %s
 """
 
 
-
 class Command(CeleryCommand):
     """Run the celery curses event viewer."""
     option_list = CeleryCommand.option_list + ev.get_options()

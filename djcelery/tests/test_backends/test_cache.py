@@ -2,7 +2,6 @@ import sys
 
 from datetime import timedelta
 
-from celery.utils.serialization import pickle
 from django.core.cache.backends.base import InvalidCacheBackendError
 
 from celery import result

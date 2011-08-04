@@ -7,7 +7,6 @@ import celery
 import djcelery
 
 
-
 class CeleryCommand(BaseCommand):
 
     def get_version(self):

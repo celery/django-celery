@@ -11,6 +11,7 @@ SKIP_FILES="djcelery.management.rst
             djcelery.monproj.rst
             djcelery.monproj.urls.rst
             djcelery.admin.rst
+            djcelery.admin_utils.rst
             djcelery.contrib.rst
             djcelery.backends.rst"
 

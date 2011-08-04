@@ -24,5 +24,3 @@ class Command(CeleryCommand):
         util = celeryctl(app=app)
 
         util.execute_from_commandline(self.handle_default_options(argv)[1:])
-
-
