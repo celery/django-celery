@@ -26,3 +26,8 @@ class CeleryCommand(BaseCommand):
             else:
                 acc.append(arg)
         return acc
+
+    def die(self, msg):
+        sys.stderr.write(msg)
+        sys.stderr.write("\n")
+        sys.exit()
