@@ -5,6 +5,13 @@
 .. contents::
     :local:
 
+.. _version-2.2.7:
+
+2.2.7
+=====
+
+* Exact version dependency on Celery 2.2.7, so 2.3 is not installed.
+
 .. _version-2.2.4:
 
 2.2.4
