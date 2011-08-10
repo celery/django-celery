@@ -12,7 +12,9 @@ class DatabaseBackend(BaseDictBackend):
     """
     TaskModel = TaskMeta
     TaskSetModel = TaskSetMeta
+
     expires = default_app.conf.CELERY_TASK_RESULT_EXPIRES
+    create_django_tables = True
 
     def _store_result(self, task_id, result, status, traceback=None):
         """Store return value and status of an executed task."""
