@@ -5,6 +5,13 @@
 .. contents::
     :local:
 
+.. _version-2.3.1:
+
+* Django database result backend tables were not created.
+
+  If you are having troubles because of this, be sure you do a ``syncdb``
+  after upgrading, that should resolve the issue.
+
 .. _version-2.3.0:
 
 2.3.0

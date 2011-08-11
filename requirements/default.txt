@@ -1,2 +1,2 @@
 django-picklefield
-http://github.com/ask/celery/tarball/master#egg=celery
+celery>=2.3.1
