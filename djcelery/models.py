@@ -312,7 +312,6 @@ class TaskState(models.Model):
 if (django.VERSION[0], django.VERSION[1]) >= (1, 1):
     # Keep models away from syncdb/reset if Django database
     # backend is not being used.
-    from djcelery.app import app as celery
     if not getattr(celery.backend, "create_django_tables", False):
         TaskMeta._meta.managed = False
         TaskSetMeta._meta.managed = False
