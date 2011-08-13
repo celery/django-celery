@@ -3,6 +3,7 @@ from time import time, mktime
 
 import django
 
+from django.conf import settings
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django.db.models import signals
@@ -308,10 +309,10 @@ class TaskState(models.Model):
                                                  self.task_id,
                                                  self.tstamp)
 
-
 if (django.VERSION[0], django.VERSION[1]) >= (1, 1):
     # Keep models away from syncdb/reset if Django database
     # backend is not being used.
-    if not getattr(celery.backend, "create_django_tables", False):
-        TaskMeta._meta.managed = False
-        TaskSetMeta._meta.managed = False
+    if "database" not in getattr(settings,
+                            "CELERY_RESULT_BACKEND", None) or "database":
+        for result_model in (TaskMeta, TaskSetMeta):
+            result_model._meta.managed = False
