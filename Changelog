@@ -5,7 +5,19 @@
 .. contents::
     :local:
 
+.. _version-2.3.2:
+
+2.3.2
+=====
+:release-date: 2011-08-20 12:00 AM BST
+
+* Fixes circular import of DatabaseBackend.
+
 .. _version-2.3.1:
+
+2.3.1
+=====
+:release-date: 2011-08-11 12:00 PM BST
 
 * Django database result backend tables were not created.
 
