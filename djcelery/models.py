@@ -312,7 +312,7 @@ class TaskState(models.Model):
 if (django.VERSION[0], django.VERSION[1]) >= (1, 1):
     # Keep models away from syncdb/reset if Django database
     # backend is not being used.
-    if "database" not in getattr(settings,
-                            "CELERY_RESULT_BACKEND", None) or "database":
+    if "database" not in (getattr(settings,
+                            "CELERY_RESULT_BACKEND", None) or "database"):
         for result_model in (TaskMeta, TaskSetMeta):
             result_model._meta.managed = False
