@@ -2,7 +2,7 @@
 import os
 
 
-VERSION = (2, 3, 2)
+VERSION = (2, 3, 3)
 
 __version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
 __author__ = "Ask Solem"

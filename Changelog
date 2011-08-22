@@ -5,6 +5,15 @@
 .. contents::
     :local:
 
+.. _version-2.3.3:
+
+2.3.3
+=====
+:release-date: 2011-08-22 12:00 AM BST
+
+* Precedence issue caused database backend tables to not be
+  created (Issue #62).
+
 .. _version-2.3.2:
 
 2.3.2
