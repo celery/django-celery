@@ -1,0 +1,222 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Event Snapshots - djcelery.snapshot &mdash; django-celery v2.3.3 documentation</title>
+    <link rel="stylesheet" href="../_static/celery.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/issuetracker.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.3.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="django-celery v2.3.3 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="index.html" />
+    <link rel="next" title="Database Backend - djcelery.backends.database" href="djcelery.backends.database.html" />
+    <link rel="prev" title="Periodic Task Schedulers - djcelery.schedulers" href="djcelery.schedulers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="djcelery.backends.database.html" title="Database Backend - djcelery.backends.database"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="djcelery.schedulers.html" title="Periodic Task Schedulers - djcelery.schedulers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">django-celery v2.3.3 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="event-snapshots-djcelery-snapshot">
+<h1>Event Snapshots - djcelery.snapshot<a class="headerlink" href="#event-snapshots-djcelery-snapshot" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-djcelery.snapshot"></span><dl class="class">
+<dt id="djcelery.snapshot.Camera">
+<em class="property">class </em><tt class="descclassname">djcelery.snapshot.</tt><tt class="descname">Camera</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="class">
+<dt id="djcelery.snapshot.Camera.TaskState">
+<em class="property">class </em><tt class="descname">TaskState</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState" title="Permalink to this definition">¶</a></dt>
+<dd><p>TaskState(id, state, task_id, name, tstamp, args, kwargs, eta, expires, result, traceback, runtime, retries, worker_id, hidden)</p>
+<dl class="exception">
+<dt id="djcelery.snapshot.Camera.TaskState.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="djcelery.snapshot.Camera.TaskState.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">Camera.TaskState.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.TaskState.get_next_by_tstamp">
+<tt class="descclassname">Camera.TaskState.</tt><tt class="descname">get_next_by_tstamp</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState.get_next_by_tstamp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.TaskState.get_previous_by_tstamp">
+<tt class="descclassname">Camera.TaskState.</tt><tt class="descname">get_previous_by_tstamp</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState.get_previous_by_tstamp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.TaskState.get_state_display">
+<tt class="descclassname">Camera.TaskState.</tt><tt class="descname">get_state_display</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState.get_state_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="djcelery.snapshot.Camera.TaskState.worker">
+<tt class="descclassname">Camera.TaskState.</tt><tt class="descname">worker</tt><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState.worker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="djcelery.snapshot.Camera.WorkerState">
+<em class="property">class </em><tt class="descclassname">Camera.</tt><tt class="descname">WorkerState</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.WorkerState" title="Permalink to this definition">¶</a></dt>
+<dd><p>WorkerState(id, hostname, last_heartbeat)</p>
+<dl class="exception">
+<dt id="djcelery.snapshot.Camera.WorkerState.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#djcelery.snapshot.Camera.WorkerState.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="djcelery.snapshot.Camera.WorkerState.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">Camera.WorkerState.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#djcelery.snapshot.Camera.WorkerState.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="djcelery.snapshot.Camera.WorkerState.heartbeat_timestamp">
+<tt class="descclassname">Camera.WorkerState.</tt><tt class="descname">heartbeat_timestamp</tt><a class="headerlink" href="#djcelery.snapshot.Camera.WorkerState.heartbeat_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.WorkerState.is_alive">
+<tt class="descclassname">Camera.WorkerState.</tt><tt class="descname">is_alive</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.WorkerState.is_alive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="djcelery.snapshot.Camera.WorkerState.taskstate_set">
+<tt class="descclassname">Camera.WorkerState.</tt><tt class="descname">taskstate_set</tt><a class="headerlink" href="#djcelery.snapshot.Camera.WorkerState.taskstate_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.get_heartbeat">
+<tt class="descclassname">Camera.</tt><tt class="descname">get_heartbeat</tt><big>(</big><em>worker</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.get_heartbeat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.handle_task">
+<tt class="descclassname">Camera.</tt><tt class="descname">handle_task</tt><big>(</big><em>(uuid</em>, <em>task)</em>, <em>worker=None</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.handle_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.handle_worker">
+<tt class="descclassname">Camera.</tt><tt class="descname">handle_worker</tt><big>(</big><em>(hostname</em>, <em>worker)</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.handle_worker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.on_cleanup">
+<tt class="descclassname">Camera.</tt><tt class="descname">on_cleanup</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.on_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.on_shutter">
+<tt class="descclassname">Camera.</tt><tt class="descname">on_shutter</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.on_shutter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.snapshot.Camera.update_task">
+<tt class="descclassname">Camera.</tt><tt class="descname">update_task</tt><big>(</big><em>state</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.update_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="../index.html">
+  <img class="logo" src="http://cloud.github.com/downloads/ask/celery/celery_favicon_128.png" alt="Logo"/>
+</a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="djcelery.schedulers.html"
+                        title="previous chapter">Periodic Task Schedulers - djcelery.schedulers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="djcelery.backends.database.html"
+                        title="next chapter">Database Backend - djcelery.backends.database</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/djcelery.snapshot.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="djcelery.backends.database.html" title="Database Backend - djcelery.backends.database"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="djcelery.schedulers.html" title="Periodic Task Schedulers - djcelery.schedulers"
+             >previous</a> |</li>
+        <li><a href="../index.html">django-celery v2.3.3 documentation</a> &raquo;</li>
+          <li><a href="index.html" >API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009-2011, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

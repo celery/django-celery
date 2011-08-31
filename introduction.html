@@ -1,0 +1,321 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>django-celery - Celery Integration for Django &mdash; django-celery v2.3.3 documentation</title>
+    <link rel="stylesheet" href="_static/celery.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/issuetracker.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.3.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-celery v2.3.3 documentation" href="index.html" />
+    <link rel="next" title="Getting Started" href="getting-started/index.html" />
+    <link rel="prev" title="Celery Integration for Django" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="getting-started/index.html" title="Getting Started"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Celery Integration for Django"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-celery v2.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="django-celery-celery-integration-for-django">
+<h1>django-celery - Celery Integration for Django<a class="headerlink" href="#django-celery-celery-integration-for-django" title="Permalink to this headline">¶</a></h1>
+<img alt="http://cloud.github.com/downloads/ask/celery/celery_128.png" src="http://cloud.github.com/downloads/ask/celery/celery_128.png" />
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">2.3.3</td>
+</tr>
+<tr class="field"><th class="field-name">Web:</th><td class="field-body"><a class="reference external" href="http://celeryproject.org/">http://celeryproject.org/</a></td>
+</tr>
+<tr class="field"><th class="field-name">Download:</th><td class="field-body"><a class="reference external" href="http://pypi.python.org/pypi/django-celery/">http://pypi.python.org/pypi/django-celery/</a></td>
+</tr>
+<tr class="field"><th class="field-name">Source:</th><td class="field-body"><a class="reference external" href="http://github.com/ask/django-celery/">http://github.com/ask/django-celery/</a></td>
+</tr>
+<tr class="field"><th class="field-name">Keywords:</th><td class="field-body">celery, task queue, job queue, asynchronous, rabbitmq, amqp, redis,
+python, django, webhooks, queue, distributed</td>
+</tr>
+</tbody>
+</table>
+<p>&#8211;</p>
+<p>django-celery provides Celery integration for Django; Using the Django ORM
+and cache backend for storing results, autodiscovery of task modules
+for applications listed in <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt>, and more.</p>
+<p><a class="reference external" href="http://celeryproject.org/">Celery</a> is a task queue/job queue based on distributed message passing.
+It is focused on real-time operation, but supports scheduling as well.</p>
+<p>The execution units, called tasks, are executed concurrently on a single or
+more worker servers. Tasks can execute asynchronously (in the background) or
+synchronously (wait until ready).</p>
+<p>Celery is already used in production to process millions of tasks a day.</p>
+<p>Celery is written in Python, but the protocol can be implemented in any
+language. It can also <a class="reference external" href="http://ask.github.com/celery/userguide/remote-tasks.html">operate with other languages using webhooks</a>.</p>
+<p>The recommended message broker is <a class="reference external" href="http://www.rabbitmq.com/">RabbitMQ</a>, but support for <a class="reference external" href="http://code.google.com/p/redis/">Redis</a> and
+databases (<a class="reference external" href="http://www.sqlalchemy.org/">SQLAlchemy</a> / <a class="reference external" href="http://www.djangoproject.org/">Django</a>) is also available.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#using-django-celery" id="id2">Using django-celery</a><ul>
+<li><a class="reference internal" href="#special-note-for-mod-wsgi-users" id="id3">Special note for mod_wsgi users</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#documentation" id="id4">Documentation</a></li>
+<li><a class="reference internal" href="#installation" id="id5">Installation</a><ul>
+<li><a class="reference internal" href="#downloading-and-installing-from-source" id="id6">Downloading and installing from source</a></li>
+<li><a class="reference internal" href="#using-the-development-version" id="id7">Using the development version</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getting-help" id="id8">Getting Help</a><ul>
+<li><a class="reference internal" href="#mailing-list" id="id9">Mailing list</a></li>
+<li><a class="reference internal" href="#irc" id="id10">IRC</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="id11">Bug tracker</a></li>
+<li><a class="reference internal" href="#wiki" id="id12">Wiki</a></li>
+<li><a class="reference internal" href="#contributing" id="id13">Contributing</a></li>
+<li><a class="reference internal" href="#license" id="id14">License</a></li>
+</ul>
+</div>
+<div class="section" id="using-django-celery">
+<h2><a class="toc-backref" href="#id2">Using django-celery</a><a class="headerlink" href="#using-django-celery" title="Permalink to this headline">¶</a></h2>
+<p>To enable <tt class="docutils literal"><span class="pre">django-celery</span></tt> for your project you need to add <tt class="docutils literal"><span class="pre">djcelery</span></tt> to
+<tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&quot;djcelery&quot;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>then add the following lines to your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">djcelery</span>
+<span class="n">djcelery</span><span class="o">.</span><span class="n">setup_loader</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Everything works the same as described in the <a class="reference external" href="http://docs.celeryproject.org/">Celery User Manual</a>, except you
+need to invoke the programs through <tt class="docutils literal"><span class="pre">manage.py</span></tt>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><strong>Program</strong></th>
+<th class="head"><strong>Replace with</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">celeryd</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">celeryd</span></tt></td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">celerybeat</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">celerybeat</span></tt></td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">camqadm</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">camqadm</span></tt></td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">celeryev</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">celeryev</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>The other main difference is that configuration values are stored in
+your Django projects&#8217; <tt class="docutils literal"><span class="pre">settings.py</span></tt> module rather than in
+<tt class="docutils literal"><span class="pre">celeryconfig.py</span></tt>.</p>
+<p>If you&#8217;re trying celery for the first time you should start by reading
+<a class="reference external" href="http://django-celery.readthedocs.org/en/latest/getting-started/first-steps-with-django.html">Getting started with django-celery</a></p>
+<div class="section" id="special-note-for-mod-wsgi-users">
+<h3><a class="toc-backref" href="#id3">Special note for mod_wsgi users</a><a class="headerlink" href="#special-note-for-mod-wsgi-users" title="Permalink to this headline">¶</a></h3>
+<p>If you&#8217;re using <tt class="docutils literal"><span class="pre">mod_wsgi</span></tt> to deploy your Django application you need to
+include the following in your <tt class="docutils literal"><span class="pre">.wsgi</span></tt> module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;CELERY_LOADER&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;django&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2><a class="toc-backref" href="#id4">Documentation</a><a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="http://docs.celeryproject.org/">Celery User Manual</a> contains user guides, tutorials and an API
+reference. Also the <a class="reference external" href="http://django-celery.readthedocs.org/">django-celery documentation</a>, contains information
+about the Django integration.</p>
+</div>
+<div class="section" id="installation">
+<h2><a class="toc-backref" href="#id5">Installation</a><a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>You can install <tt class="docutils literal"><span class="pre">django-celery</span></tt> either via the Python Package Index (PyPI)
+or from source.</p>
+<p>To install using <tt class="docutils literal"><span class="pre">pip</span></tt>,:</p>
+<div class="highlight-python"><pre>$ pip install django-celery</pre>
+</div>
+<p>To install using <tt class="docutils literal"><span class="pre">easy_install</span></tt>,:</p>
+<div class="highlight-python"><pre>$ easy_install django-celery</pre>
+</div>
+<div class="section" id="downloading-and-installing-from-source">
+<h3><a class="toc-backref" href="#id6">Downloading and installing from source</a><a class="headerlink" href="#downloading-and-installing-from-source" title="Permalink to this headline">¶</a></h3>
+<p>Download the latest version of <tt class="docutils literal"><span class="pre">django-celery</span></tt> from
+<a class="reference external" href="http://pypi.python.org/pypi/django-celery/">http://pypi.python.org/pypi/django-celery/</a></p>
+<p>You can install it by doing the following,:</p>
+<div class="highlight-python"><pre>$ tar xvfz django-celery-0.0.0.tar.gz
+$ cd django-celery-0.0.0
+$ python setup.py build
+# python setup.py install # as root</pre>
+</div>
+</div>
+<div class="section" id="using-the-development-version">
+<h3><a class="toc-backref" href="#id7">Using the development version</a><a class="headerlink" href="#using-the-development-version" title="Permalink to this headline">¶</a></h3>
+<p>You can clone the git repository by doing the following:</p>
+<div class="highlight-python"><pre>$ git clone git://github.com/ask/django-celery.git</pre>
+</div>
+</div>
+</div>
+<div class="section" id="getting-help">
+<h2><a class="toc-backref" href="#id8">Getting Help</a><a class="headerlink" href="#getting-help" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mailing-list">
+<h3><a class="toc-backref" href="#id9">Mailing list</a><a class="headerlink" href="#mailing-list" title="Permalink to this headline">¶</a></h3>
+<p>For discussions about the usage, development, and future of celery,
+please join the <a class="reference external" href="http://groups.google.com/group/celery-users/">celery-users</a> mailing list.</p>
+</div>
+<div class="section" id="irc">
+<h3><a class="toc-backref" href="#id10">IRC</a><a class="headerlink" href="#irc" title="Permalink to this headline">¶</a></h3>
+<p>Come chat with us on IRC. The <a class="reference external" href="irc://irc.freenode.net/celery">#celery</a> channel is located at the <a class="reference external" href="http://freenode.net">Freenode</a>
+network.</p>
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h2><a class="toc-backref" href="#id11">Bug tracker</a><a class="headerlink" href="#bug-tracker" title="Permalink to this headline">¶</a></h2>
+<p>If you have any suggestions, bug reports or annoyances please report them
+to our issue tracker at <a class="reference external" href="http://github.com/ask/django-celery/issues/">http://github.com/ask/django-celery/issues/</a></p>
+</div>
+<div class="section" id="wiki">
+<h2><a class="toc-backref" href="#id12">Wiki</a><a class="headerlink" href="#wiki" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://wiki.github.com/ask/celery/">http://wiki.github.com/ask/celery/</a></p>
+</div>
+<div class="section" id="contributing">
+<h2><a class="toc-backref" href="#id13">Contributing</a><a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>Development of <tt class="docutils literal"><span class="pre">django-celery</span></tt> happens at Github:
+<a class="reference external" href="http://github.com/ask/django-celery">http://github.com/ask/django-celery</a></p>
+<p>You are highly encouraged to participate in the development
+of <tt class="docutils literal"><span class="pre">celery</span></tt>. If you don&#8217;t like Github (for some reason) you&#8217;re welcome
+to send regular patches.</p>
+</div>
+<div class="section" id="license">
+<h2><a class="toc-backref" href="#id14">License</a><a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This software is licensed under the <tt class="docutils literal"><span class="pre">New</span> <span class="pre">BSD</span> <span class="pre">License</span></tt>. See the <tt class="docutils literal"><span class="pre">LICENSE</span></tt>
+file in the top distribution directory for the full license text.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="index.html">
+  <img class="logo" src="http://cloud.github.com/downloads/ask/celery/celery_favicon_128.png" alt="Logo"/>
+</a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">django-celery - Celery Integration for Django</a><ul>
+<li><a class="reference internal" href="#using-django-celery">Using django-celery</a><ul>
+<li><a class="reference internal" href="#special-note-for-mod-wsgi-users">Special note for mod_wsgi users</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#downloading-and-installing-from-source">Downloading and installing from source</a></li>
+<li><a class="reference internal" href="#using-the-development-version">Using the development version</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getting-help">Getting Help</a><ul>
+<li><a class="reference internal" href="#mailing-list">Mailing list</a></li>
+<li><a class="reference internal" href="#irc">IRC</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker">Bug tracker</a></li>
+<li><a class="reference internal" href="#wiki">Wiki</a></li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Celery Integration for Django</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="getting-started/index.html"
+                        title="next chapter">Getting Started</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/introduction.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="getting-started/index.html" title="Getting Started"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Celery Integration for Django"
+             >previous</a> |</li>
+        <li><a href="index.html">django-celery v2.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009-2011, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

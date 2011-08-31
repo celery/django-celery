@@ -1,0 +1,463 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Change history &mdash; django-celery v2.3.3 documentation</title>
+    <link rel="stylesheet" href="_static/celery.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/issuetracker.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.3.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-celery v2.3.3 documentation" href="index.html" />
+    <link rel="prev" title="Utilities - djcelery.utils" href="reference/djcelery.utils.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference/djcelery.utils.html" title="Utilities - djcelery.utils"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-celery v2.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="change-history">
+<h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#version-2-3-3" id="id16">2.3.3</a></li>
+<li><a class="reference internal" href="#version-2-3-2" id="id17">2.3.2</a></li>
+<li><a class="reference internal" href="#version-2-3-1" id="id18">2.3.1</a></li>
+<li><a class="reference internal" href="#version-2-3-0" id="id19">2.3.0</a></li>
+<li><a class="reference internal" href="#version-2-2-4" id="id20">2.2.4</a></li>
+<li><a class="reference internal" href="#version-2-2-3" id="id21">2.2.3</a></li>
+<li><a class="reference internal" href="#version-2-2-2" id="id22">2.2.2</a></li>
+<li><a class="reference internal" href="#version-2-2-1" id="id23">2.2.1</a></li>
+<li><a class="reference internal" href="#version-2-2-0" id="id24">2.2.0</a></li>
+<li><a class="reference internal" href="#version-2-1-1" id="id25">2.1.1</a></li>
+<li><a class="reference internal" href="#version-2-1-0" id="id26">2.1.0</a><ul>
+<li><a class="reference internal" href="#important-notes" id="id27">Important Notes</a></li>
+<li><a class="reference internal" href="#news" id="id28">News</a></li>
+<li><a class="reference internal" href="#fixes" id="id29">Fixes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id12" id="id30">2.0.2</a><ul>
+<li><a class="reference internal" href="#id13" id="id31">Important notes</a></li>
+<li><a class="reference internal" href="#id14" id="id32">News</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id15" id="id33">2.0.0</a></li>
+</ul>
+</div>
+<div class="section" id="version-2-3-3">
+<span id="id1"></span><h2><a class="toc-backref" href="#id16">2.3.3</a><a class="headerlink" href="#version-2-3-3" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2011-08-22 12:00 AM BST</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Precedence issue caused database backend tables to not be
+created (<a class="issue-closed reference-issue reference external" href="https://github.com/ask/celery/issues/62">Issue #62</a>).</li>
+</ul>
+</div>
+<div class="section" id="version-2-3-2">
+<span id="id2"></span><h2><a class="toc-backref" href="#id17">2.3.2</a><a class="headerlink" href="#version-2-3-2" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2011-08-20 12:00 AM BST</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Fixes circular import of DatabaseBackend.</li>
+</ul>
+</div>
+<div class="section" id="version-2-3-1">
+<span id="id3"></span><h2><a class="toc-backref" href="#id18">2.3.1</a><a class="headerlink" href="#version-2-3-1" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2011-08-11 12:00 PM BST</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p class="first">Django database result backend tables were not created.</p>
+<p>If you are having troubles because of this, be sure you do a <tt class="docutils literal"><span class="pre">syncdb</span></tt>
+after upgrading, that should resolve the issue.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="version-2-3-0">
+<span id="id4"></span><h2><a class="toc-backref" href="#id19">2.3.0</a><a class="headerlink" href="#version-2-3-0" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2011-08-05 12:00 PM BST</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p class="first">Now depends on Celery 2.3.0</p>
+<blockquote>
+<div><p>Please read the Celery 2.3.0 changelog!</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="version-2-2-4">
+<span id="id5"></span><h2><a class="toc-backref" href="#id20">2.2.4</a><a class="headerlink" href="#version-2-2-4" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">celerybeat: DatabaseScheduler would not react to changes when using MySQL and
+the default transaction isolation level <tt class="docutils literal"><span class="pre">REPEATABLE-READ</span></tt> (<a class="issue-closed reference-issue reference external" href="https://github.com/ask/celery/issues/41">Issue #41</a>).</p>
+<blockquote>
+<div><p>It is still recommended that you use isolation level <tt class="docutils literal"><span class="pre">READ-COMMITTED</span></tt>
+(see the Celery FAQ).</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="version-2-2-3">
+<span id="id6"></span><h2><a class="toc-backref" href="#id21">2.2.3</a><a class="headerlink" href="#version-2-2-3" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2011-02-12 16:00 PM CET</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>celerybeat: DatabaseScheduler did not respect the disabled setting after restart.</li>
+<li>celeryevcam: Expiring objects now works on PostgreSQL.</li>
+<li>Now requires Celery 2.2.3</li>
+</ul>
+</div>
+<div class="section" id="version-2-2-2">
+<span id="id7"></span><h2><a class="toc-backref" href="#id22">2.2.2</a><a class="headerlink" href="#version-2-2-2" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2011-02-03 16:00 PM CET</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Now requires Celery 2.2.2</li>
+<li>Periodic Task Admin broke if the CELERYBEAT_SCHEDULE setting was not set.</li>
+<li>DatabaseScheduler No longer creates duplicate interval models.</li>
+<li>The djcelery admin templates were not included in the distribution.</li>
+</ul>
+</div>
+<div class="section" id="version-2-2-1">
+<span id="id8"></span><h2><a class="toc-backref" href="#id23">2.2.1</a><a class="headerlink" href="#version-2-2-1" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2011-02-02 16:00 PM CET</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Should now work with Django versions previous to 1.2.</li>
+</ul>
+</div>
+<div class="section" id="version-2-2-0">
+<span id="id9"></span><h2><a class="toc-backref" href="#id24">2.2.0</a><a class="headerlink" href="#version-2-2-0" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2011-02-01 10:00 AM CET</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Now depends on Celery v2.2.0</li>
+<li>djceleryadm: Adds task actions Kill and Terminate task</li>
+<li>celerycam: Django&#8217;s queryset.delete() fetches everything in
+memory THEN deletes, so we need to use raw SQL to expire objects.</li>
+<li>djcelerymon: Added Command.stdout + Command.stderr  (<a class="issue-closed reference-issue reference external" href="https://github.com/ask/celery/issues/23">Issue #23</a>).</li>
+<li>Need to close any open database connection after any embedded
+celerybeat process forks.</li>
+<li>Added contrib/requirements/py25.txt</li>
+<li>Demoproject now does <tt class="docutils literal"><span class="pre">djcelery.setup_loader</span></tt> in settings.py.</li>
+</ul>
+</div>
+<div class="section" id="version-2-1-1">
+<span id="id10"></span><h2><a class="toc-backref" href="#id25">2.1.1</a><a class="headerlink" href="#version-2-1-1" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2010-10-14 02:00 PM CEST</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p class="first">Now depends on Celery v2.1.1.</p>
+</li>
+<li><p class="first">Snapshots: Fixed bug with losing events.</p>
+</li>
+<li><p class="first">Snapshots: Limited the number of worker timestamp updates to once every second.</p>
+</li>
+<li><p class="first">Snapshot: Handle transaction manually and commit every 100 task updates.</p>
+</li>
+<li><p class="first">snapshots: Can now configure when to expire task events.</p>
+<blockquote>
+<div><p>New settings:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_SUCCESS</span></tt> (default 1 day),</li>
+<li><tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_ERROR</span></tt> (default 3 days), and</li>
+<li><tt class="docutils literal"><span class="pre">CELERYCAM_EXPIRE_PENDING</span></tt> (default 5 days).</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Snapshots: <tt class="docutils literal"><span class="pre">TaskState.args</span></tt> and <tt class="docutils literal"><span class="pre">TaskState.kwargs</span></tt> are now
+represented as <tt class="docutils literal"><span class="pre">TextField</span></tt> instead of <tt class="docutils literal"><span class="pre">CharField</span></tt>.</p>
+<blockquote>
+<div><p>If you need to represent arguments larger than 200 chars you have
+to migrate the table.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">transaction.commit_manually</span></tt> doesn&#8217;t accept arguments on older
+Django version.</p>
+<blockquote>
+<div><p>Should now work with Django versions previous to v1.2.</p>
+</div></blockquote>
+</li>
+<li><p class="first">The tests doesn&#8217;t need <tt class="xref py py-mod docutils literal"><span class="pre">unittest2</span></tt> anymore if running on Python 2.7.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="version-2-1-0">
+<span id="id11"></span><h2><a class="toc-backref" href="#id26">2.1.0</a><a class="headerlink" href="#version-2-1-0" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2010-10-08 12:00 PM CEST</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="important-notes">
+<h3><a class="toc-backref" href="#id27">Important Notes</a><a class="headerlink" href="#important-notes" title="Permalink to this headline">¶</a></h3>
+<p>This release depends on Celery version 2.1.0.
+Be sure to read the Celery changelog before you upgrade:
+<a class="reference external" href="http://ask.github.com/celery/changelog.html#version-2-1-0">http://ask.github.com/celery/changelog.html#version-2-1-0</a></p>
+</div>
+<div class="section" id="news">
+<h3><a class="toc-backref" href="#id28">News</a><a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">The periodic task schedule can now be stored in the database and edited via
+the Django Admin interface.</p>
+<blockquote>
+<div><p>To use the new database schedule you need to start <tt class="docutils literal"><span class="pre">celerybeat</span></tt> with the
+following argument:</p>
+<div class="highlight-python"><pre>$ python manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler</pre>
+</div>
+<p>Note that you need to add your old periodic tasks to the database manually
+(using the Django admin interface for example).</p>
+</div></blockquote>
+</li>
+<li><p class="first">New Celery monitor for the Django Admin interface.</p>
+<blockquote>
+<div><p>To start monitoring your workers you have to start your workers
+in event mode:</p>
+<div class="highlight-python"><pre>$ python manage.py celeryd -E</pre>
+</div>
+<p>(you can do this without restarting the server too:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">celery.task.control</span> <span class="kn">import</span> <span class="n">broadcast</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">broadcast</span><span class="p">(</span><span class="s">&quot;enable_events&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You need to do a syncdb to create the new tables:</p>
+<blockquote>
+<div><p>python manage.py syncdb</p>
+</div></blockquote>
+<p>Then you need to start the snapshot camera:</p>
+<div class="highlight-python"><pre>$ python manage.py celerycam -f 2.0</pre>
+</div>
+<p>This will take a snapshot of the events every 2 seconds and store it in
+the database.</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="fixes">
+<h3><a class="toc-backref" href="#id29">Fixes</a><a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">database backend: Now shows warning if polling results with transaction isolation level
+repeatable-read on MySQL.</p>
+<blockquote>
+<div><p>See <a class="reference external" href="http://github.com/ask/django-celery/issues/issue/6">http://github.com/ask/django-celery/issues/issue/6</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">database backend: get result does no longer store the default result to
+database.</p>
+<blockquote>
+<div><p>See <a class="reference external" href="http://github.com/ask/django-celery/issues/issue/6">http://github.com/ask/django-celery/issues/issue/6</a></p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id12">
+<h2><a class="toc-backref" href="#id30">2.0.2</a><a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3><a class="toc-backref" href="#id31">Important notes</a><a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Due to some applications loading the Django models lazily, it is recommended
+that you add the following lines to your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
+<div class="highlight-python"><pre>   import djcelery
+   djcelery.setup_loader()
+
+This will ensure the Django celery loader is set even though the
+model modules haven't been imported yet.</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h3><a class="toc-backref" href="#id32">News</a><a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">djcelery.views.registered_tasks</span></tt>: Added a view to list currently known
+tasks.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id15">
+<h2><a class="toc-backref" href="#id33">2.0.0</a><a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">release-date:</th><td class="field-body">2010-07-02 02:30 P.M CEST</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Initial release</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="index.html">
+  <img class="logo" src="http://cloud.github.com/downloads/ask/celery/celery_favicon_128.png" alt="Logo"/>
+</a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Change history</a><ul>
+<li><a class="reference internal" href="#version-2-3-3">2.3.3</a></li>
+<li><a class="reference internal" href="#version-2-3-2">2.3.2</a></li>
+<li><a class="reference internal" href="#version-2-3-1">2.3.1</a></li>
+<li><a class="reference internal" href="#version-2-3-0">2.3.0</a></li>
+<li><a class="reference internal" href="#version-2-2-4">2.2.4</a></li>
+<li><a class="reference internal" href="#version-2-2-3">2.2.3</a></li>
+<li><a class="reference internal" href="#version-2-2-2">2.2.2</a></li>
+<li><a class="reference internal" href="#version-2-2-1">2.2.1</a></li>
+<li><a class="reference internal" href="#version-2-2-0">2.2.0</a></li>
+<li><a class="reference internal" href="#version-2-1-1">2.1.1</a></li>
+<li><a class="reference internal" href="#version-2-1-0">2.1.0</a><ul>
+<li><a class="reference internal" href="#important-notes">Important Notes</a></li>
+<li><a class="reference internal" href="#news">News</a></li>
+<li><a class="reference internal" href="#fixes">Fixes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id12">2.0.2</a><ul>
+<li><a class="reference internal" href="#id13">Important notes</a></li>
+<li><a class="reference internal" href="#id14">News</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id15">2.0.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reference/djcelery.utils.html"
+                        title="previous chapter">Utilities - djcelery.utils</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/changelog.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference/djcelery.utils.html" title="Utilities - djcelery.utils"
+             >previous</a> |</li>
+        <li><a href="index.html">django-celery v2.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009-2011, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
