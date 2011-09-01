@@ -16,6 +16,8 @@ class DatabaseBackend(BaseDictBackend):
     expires = default_app.conf.CELERY_TASK_RESULT_EXPIRES
     create_django_tables = True
 
+    subpolling_interval = 0.5
+
     def _store_result(self, task_id, result, status, traceback=None):
         """Store return value and status of an executed task."""
         self.TaskModel._default_manager.store_result(task_id, result, status,
