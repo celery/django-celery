@@ -16,6 +16,8 @@ from djcelery.models import WorkerState, TaskState
 
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
 SUCCESS_STATES = frozenset([states.SUCCESS])
+
+# Expiry can be timedelta or None for never expire.
 EXPIRE_SUCCESS = getattr(settings, "CELERYCAM_EXPIRE_SUCCESS",
                          timedelta(days=1))
 EXPIRE_ERROR = getattr(settings, "CELERYCAM_EXPIRE_ERROR",

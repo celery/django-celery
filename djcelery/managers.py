@@ -205,7 +205,8 @@ class TaskStateManager(ExtendedManager):
                            tstamp__lte=datetime.now() - expires)
 
     def expire_by_states(self, states, expires):
-        return self.expired(states, expires).update(hidden=True)
+        if expires is not None:
+            return self.expired(states, expires).update(hidden=True)
 
     def purge(self):
         cursor = self.connection_for_write().cursor()
