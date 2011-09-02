@@ -17,4 +17,5 @@ def run_tests(test_labels, *args, **kwargs):
 
     """
     settings.CELERY_ALWAYS_EAGER = True
+    settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True  # Issue #75
     return run_tests_orig(test_labels, *args, **kwargs)
