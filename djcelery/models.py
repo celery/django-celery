@@ -15,7 +15,6 @@ from celery import schedules
 from celery import states
 from celery.utils.timeutils import timedelta_seconds
 
-from djcelery.app import app as celery
 from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
 from djcelery.managers import TaskStateManager, PeriodicTaskManager
 
