@@ -5,6 +5,42 @@
 .. contents::
     :local:
 
+.. _version-2.3.4:
+
+2.3.4
+=====
+:release-date: TBD
+
+Important Notes
+---------------
+
+This release adds south_ migrations, which well assist users in automatically
+updating their database schemas with each django-celery release.
+
+.. _south: http://pypi.python.org/pypi/South/
+
+News
+----
+
+* south migrations have been added. Migration 0001 is a snapshot from the
+  last release, 2.3.3. For those who do not use south, no action is required.
+  south users will want to read the upgrading instructions in the
+  following section.
+
+Upgrading for south users
+-------------------------
+
+For those that are already using django-celery 2.3.x, you'll need to fake the
+newly added migration 0001, since your database already has the current
+``djcelery_*`` and ``celery_*`` tables::
+
+    $ python manage.py migrate djcelery 0001 --fake
+
+If you're upgrading from the 2.2.x series, you'll want to drop/reset your
+``celery_*`` and ``djcelery_*`` tables and run the migration::
+
+    $ python manage.py migrate djcelery
+
 .. _version-2.3.3:
 
 2.3.3

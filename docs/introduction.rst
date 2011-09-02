@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/ask/celery/celery_128.png
 
-:Version: 2.3.3
+:Version: 2.3.4
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/ask/django-celery/
@@ -109,6 +109,17 @@ To install using ``pip``,::
 To install using ``easy_install``,::
 
     $ easy_install django-celery
+
+You will then want to create the necessary tables. If you are using south_
+for schema migrations, you'll want to::
+
+    $ python manage.py migrate djcelery
+
+For those who are not using south, a normal :command:`syncdb` will work::
+
+    $ python manage.py syncdb
+
+.. _south: http://pypi.python.org/pypi/South/
 
 Downloading and installing from source
 --------------------------------------
