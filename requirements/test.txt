@@ -6,4 +6,3 @@ mock
 django
 django-nose
 python-memcached
-
