@@ -49,7 +49,7 @@ def colored_state(task):
     return """<b><span style="color: %s;">%s</span></b>""" % (color, state)
 
 
-@display_field(_("state"), "last_timestamp")
+@display_field(_("state"), "last_heartbeat")
 def node_state(node):
     state = node.is_alive() and "ONLINE" or "OFFLINE"
     color = NODE_STATE_COLORS[state]
