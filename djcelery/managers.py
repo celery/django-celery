@@ -87,6 +87,12 @@ class ExtendedManager(models.Manager):
             return connections[self.db]
         return connection
 
+    def current_engine(self):
+        try:
+            return settings.DATABASES[self.db]["ENGINE"]
+        except AttributeError:
+            return settings.DATABASE_ENGINE
+
 
 class ResultManager(ExtendedManager):
 
@@ -154,7 +160,7 @@ class TaskManager(ResultManager):
                                                "traceback": traceback})
 
     def warn_if_repeatable_read(self):
-        if settings.DATABASE_ENGINE.lower() == "mysql":
+        if "mysql" in self.current_engine().lower():
             cursor = self.connection_for_read().cursor()
             if cursor.execute("SELECT @@tx_isolation"):
                 isolation = cursor.fetchone()[0]
