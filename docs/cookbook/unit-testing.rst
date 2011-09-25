@@ -34,7 +34,7 @@ To enable the test runner, set the following settings:
 
 .. code-block:: python
 
-    TEST_RUNNER = 'djcelery.contrib.test_runner.run_tests'
+    TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
 Then we can put the tests in a ``tests.py`` somewhere:
 
