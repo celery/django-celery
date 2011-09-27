@@ -5,6 +5,21 @@
 .. contents::
     :local:
 
+.. _version-2.4.0:
+
+2.4.0
+=====
+:release-date: TBD
+
+* Test runner now compatible with Django 1.4.
+
+  Test runners are now classes instead of functions,
+  so you have to change the `TEST_RUNNER` setting to read::
+
+    TEST_RUNNER = "djcelery.tests.runners.CeleryTestSuiteRunner"
+
+  Contributed by Jonas Haag.
+
 .. _version-2.3.4:
 
 2.3.4
