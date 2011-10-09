@@ -171,7 +171,6 @@ class TaskMonitor(ModelMonitor):
             "object_name": force_unicode(opts.verbose_name),
             "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
             "opts": opts,
-            "root_path": self.admin_site.root_path,
             "app_label": app_label,
         }
 
