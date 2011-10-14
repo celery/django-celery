@@ -84,12 +84,16 @@ class DjangoLoader(BaseLoader):
             warnings.warn("Using settings.DEBUG leads to a memory leak, never "
                           "use this setting in production environments!")
 
-        # the parent process may have established these,
-        # so need to close them.
         self.close_database()
         self.close_cache()
         self.import_default_modules()
         autodiscover()
+
+    def on_worker_process_init(self):
+        # the parent process may have established these,
+        # so need to close them.
+        self.close_database()
+        self.close_cache()
 
     def mail_admins(self, subject, body, fail_silently=False, **kwargs):
         return mail_admins(subject, body, fail_silently=fail_silently)
