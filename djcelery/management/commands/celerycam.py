@@ -1,8 +1,10 @@
 """
 
-Curses Celery Event Viewer.
+Shortcut to the Django snapshot service.
 
 """
+from __future__ import absolute_import
+
 from celery.bin import celeryev
 
 from djcelery.app import app

@@ -3,6 +3,8 @@
 Start detached worker node from the Django management utility.
 
 """
+from __future__ import absolute_import
+
 import os
 import sys
 

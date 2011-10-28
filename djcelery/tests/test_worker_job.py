@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+
 from django.core import cache
 
 from celery.utils import gen_unique_id

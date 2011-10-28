@@ -1,8 +1,9 @@
 """
 
-Curses Celery Event Viewer.
+Celery manamagent and monitoring utility.
 
 """
+from __future__ import absolute_import
 
 from celery.bin.celeryctl import celeryctl, Command as _Command
 

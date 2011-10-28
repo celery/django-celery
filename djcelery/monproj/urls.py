@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from django.conf.urls.defaults import (patterns, include, url,  # noqa
                                        handler500, handler404)
 from django.contrib import admin

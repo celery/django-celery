@@ -3,6 +3,8 @@
 Start the celery daemon from the Django management command.
 
 """
+from __future__ import absolute_import
+
 from celery.bin import celeryd
 
 from djcelery.app import app

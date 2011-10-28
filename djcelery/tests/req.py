@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from django.test import Client
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.handlers.base import BaseHandler

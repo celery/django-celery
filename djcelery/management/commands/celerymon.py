@@ -3,6 +3,8 @@
 Start the celery clock service from the Django management command.
 
 """
+from __future__ import absolute_import
+
 import sys
 
 from djcelery.app import app

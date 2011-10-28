@@ -3,6 +3,8 @@
 Celery AMQP Administration Tool using the AMQP API.
 
 """
+from __future__ import absolute_import
+
 from celery.bin import camqadm
 
 from djcelery.app import app

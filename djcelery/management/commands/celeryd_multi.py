@@ -1,8 +1,10 @@
 """
 
-Start detached worker node from the Django management utility.
+Utility to manage multiple :program:`celeryd` instances.
 
 """
+from __future__ import absolute_import
+
 from celery.bin import celeryd_multi
 
 from djcelery.management.base import CeleryCommand
