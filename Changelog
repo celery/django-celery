@@ -5,11 +5,11 @@
 .. contents::
     :local:
 
-.. _version-2.3.4:
+.. _version-2.4.0:
 
-2.3.4
+2.4.0
 =====
-:release-date: TBD
+:release-date: 2011-10-29 04:00 P.M BST
 
 Important Notes
 ---------------
@@ -22,7 +22,9 @@ updating their database schemas with each django-celery release.
 News
 ----
 
-* south migrations have been added. Migration 0001 is a snapshot from the
+* Now depends on Celery 2.4.0 or higher.
+
+* South migrations have been added. Migration 0001 is a snapshot from the
   last release, 2.3.3. For those who do not use south, no action is required.
   south users will want to read the upgrading instructions in the
   following section.
