@@ -1,9 +1,9 @@
 from __future__ import absolute_import
 
-from celery.app import default_app
+from celery import current_app
 from celery.backends.base import BaseDictBackend
 
-from djcelery.models import TaskMeta, TaskSetMeta
+from ..models import TaskMeta, TaskSetMeta
 
 
 class DatabaseBackend(BaseDictBackend):
@@ -15,7 +15,7 @@ class DatabaseBackend(BaseDictBackend):
     TaskModel = TaskMeta
     TaskSetModel = TaskSetMeta
 
-    expires = default_app.conf.CELERY_TASK_RESULT_EXPIRES
+    expires = current_app.conf.CELERY_TASK_RESULT_EXPIRES
     create_django_tables = True
 
     subpolling_interval = 0.5

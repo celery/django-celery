@@ -24,19 +24,19 @@ DEFAULTS = {"ROOT_URLCONF": "djcelery.monproj.urls",
 
 
 def configure():
-    from celery.loaders import current_loader
+    from celery import current_app
     from django.conf import settings
 
     if not settings.configured:
         settings_module = os.environ.get("CELERY_CONFIG_MODULE",
                                          "celeryconfig")
         settings.configure(SETTINGS_MODULE=settings_module,
-                           **dict(DEFAULTS, **current_loader().conf))
+                           **dict(DEFAULTS, **current_app.loader.conf))
         settings.DEBUG = True
 
 
 def run_monitor(argv):
-    from djcelery.management.commands import djcelerymon
+    from .management.commands import djcelerymon
     djcelerymon.Command().run_from_argv([argv[0], "djcelerymon"] + argv[1:])
 
 

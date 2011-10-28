@@ -17,8 +17,7 @@ from celery import schedules
 from celery import states
 from celery.utils.timeutils import timedelta_seconds
 
-from djcelery.managers import TaskManager, TaskSetManager, ExtendedManager
-from djcelery.managers import TaskStateManager, PeriodicTaskManager
+from . import managers
 
 HEARTBEAT_EXPIRE = 150      # 2 minutes, 30 seconds
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
@@ -33,7 +32,7 @@ class TaskMeta(models.Model):
     date_done = models.DateTimeField(_(u"done at"), auto_now=True)
     traceback = models.TextField(_(u"traceback"), blank=True, null=True)
 
-    objects = TaskManager()
+    objects = managers.TaskManager()
 
     class Meta:
         """Model meta-data."""
@@ -58,7 +57,7 @@ class TaskSetMeta(models.Model):
     result = PickledObjectField()
     date_done = models.DateTimeField(_(u"done at"), auto_now=True)
 
-    objects = TaskSetManager()
+    objects = managers.TaskSetManager()
 
     class Meta:
         """Model meta-data."""
@@ -151,7 +150,7 @@ class PeriodicTasks(models.Model):
     ident = models.SmallIntegerField(default=1, primary_key=True, unique=True)
     last_update = models.DateTimeField(null=False)
 
-    objects = ExtendedManager()
+    objects = managers.ExtendedManager()
 
     @classmethod
     def changed(cls, instance, **kwargs):
@@ -202,7 +201,7 @@ class PeriodicTask(models.Model):
     total_run_count = models.PositiveIntegerField(default=0, editable=False)
     date_changed = models.DateTimeField(auto_now=True)
 
-    objects = PeriodicTaskManager()
+    objects = managers.PeriodicTaskManager()
     no_changes = False
 
     class Meta:
@@ -238,7 +237,7 @@ class WorkerState(models.Model):
     last_heartbeat = models.DateTimeField(_(u"last heartbeat"), null=True,
                                           db_index=True)
 
-    objects = ExtendedManager()
+    objects = managers.ExtendedManager()
 
     class Meta:
         """Model meta-data."""
@@ -286,7 +285,7 @@ class TaskState(models.Model):
                                verbose_name=_("worker"))
     hidden = models.BooleanField(editable=False, default=False, db_index=True)
 
-    objects = TaskStateManager()
+    objects = managers.TaskStateManager()
 
     class Meta:
         """Model meta-data."""

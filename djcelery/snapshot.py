@@ -13,7 +13,7 @@ from celery.events.state import Task
 from celery.events.snapshot import Polaroid
 from celery.utils.timeutils import maybe_iso8601
 
-from djcelery.models import WorkerState, TaskState
+from .models import WorkerState, TaskState
 
 
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.

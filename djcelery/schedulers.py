@@ -13,8 +13,8 @@ from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
 from celery.utils.encoding import safe_str, safe_repr
 
-from djcelery.models import (PeriodicTask, PeriodicTasks,
-                             CrontabSchedule, IntervalSchedule)
+from .models import (PeriodicTask, PeriodicTasks,
+                     CrontabSchedule, IntervalSchedule)
 
 
 class ModelEntry(ScheduleEntry):

@@ -18,11 +18,11 @@ from celery import registry
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
-from djcelery import loaders
-from djcelery.admin_utils import action, display_field, fixedwidth
-from djcelery.models import TaskState, WorkerState
-from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
-from djcelery.utils import naturaldate
+from . import loaders
+from .admin_utils import action, display_field, fixedwidth
+from .models import (TaskState, WorkerState,
+                     PeriodicTask, IntervalSchedule, CrontabSchedule)
+from .utils import naturaldate
 
 
 TASK_STATE_COLORS = {states.SUCCESS: "green",

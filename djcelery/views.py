@@ -4,15 +4,20 @@ from functools import wraps
 
 from django.http import HttpResponse, Http404
 
-from anyjson import serialize as JSON_dump
+from anyjson import serialize
 
-from celery.app import default_app
-from celery.utils import get_full_cls_name
-from celery.result import AsyncResult
+from celery import states
 from celery.registry import tasks
+from celery.result import AsyncResult
+from celery.utils import get_full_cls_name, kwdict
+from celery.utils.encoding import safe_repr
 
 # Ensure built-in tasks are loaded for task_list view
 import celery.task  # noqa
+
+
+def JsonResponse(response):
+    return HttpResponse(serialize(response), mimetype="application/json")
 
 
 def task_view(task):
@@ -26,16 +31,12 @@ def task_view(task):
     """
 
     def _applier(request, **options):
-        kwargs = request.method == "POST" and \
-            request.POST.copy() or request.GET.copy()
-        kwargs = dict((key.encode("utf-8"), value)
-                    for key, value in kwargs.items())
+        kwargs = kwdict(request.method == "POST" and \
+                        request.POST.copy() or request.GET.copy())
         kwargs.update(options)
 
         result = task.apply_async(kwargs=kwargs)
-        response_data = {"ok": "true", "task_id": result.task_id}
-        return HttpResponse(JSON_dump(response_data),
-                            mimetype="application/json")
+        return JsonResponse({"ok": "true", "task_id": result.task_id})
 
     return _applier
 
@@ -58,31 +59,28 @@ def is_task_successful(request, task_id):
     """Returns task execute status in JSON format."""
     response_data = {"task": {"id": task_id,
                               "executed": AsyncResult(task_id).successful()}}
-    return HttpResponse(JSON_dump(response_data), mimetype="application/json")
+    return HttpResponse(serialize(response_data), mimetype="application/json")
 
 
 def task_status(request, task_id):
     """Returns task status and result in JSON format."""
-    status = default_app.backend.get_status(task_id)
-    res = default_app.backend.get_result(task_id)
-    response_data = dict(id=task_id, status=status, result=res)
-    if status in default_app.backend.EXCEPTION_STATES:
-        traceback = default_app.backend.get_traceback(task_id)
-        response_data.update({"result": repr(res),
-                              "exc": get_full_cls_name(res.__class__),
+    result = AsyncResult(task_id)
+    state, retval = result.state, result.result
+    response_data = dict(id=task_id, status=state, result=retval)
+    if state in states.EXCEPTION_STATES:
+        traceback = result.traceback
+        response_data.update({"result": safe_repr(retval),
+                              "exc": get_full_cls_name(retval.__class__),
                               "traceback": traceback})
-
-    return HttpResponse(JSON_dump({"task": response_data}),
-            mimetype="application/json")
+    return JsonResponse({"task": response_data})
 
 
 def registered_tasks(request):
     """
     A view returning all defined tasks as a JSON object.
     """
-    response_data = {"regular": tasks.regular().keys(),
-                     "periodic": tasks.periodic().keys()}
-    return HttpResponse(JSON_dump(response_data), mimetype="application/json")
+    return JsonResponse({"regular": tasks.regular().keys(),
+                         "periodic": tasks.periodic().keys()})
 
 
 def task_webhook(fun):
@@ -114,10 +112,10 @@ def task_webhook(fun):
         try:
             retval = fun(*args, **kwargs)
         except Exception, exc:
-            response = {"status": "failure", "reason": str(exc)}
+            response = {"status": "failure", "reason": safe_repr(exc)}
         else:
             response = {"status": "success", "retval": retval}
 
-        return HttpResponse(JSON_dump(response), mimetype="application/json")
+        return JsonResponse(response)
 
     return _inner
