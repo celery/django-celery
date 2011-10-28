@@ -49,7 +49,7 @@ def colored_state(task):
     return """<b><span style="color: %s;">%s</span></b>""" % (color, state)
 
 
-@display_field(_("state"), "last_timestamp")
+@display_field(_("state"), "last_heartbeat")
 def node_state(node):
     state = node.is_alive() and "ONLINE" or "OFFLINE"
     color = NODE_STATE_COLORS[state]
@@ -171,7 +171,6 @@ class TaskMonitor(ModelMonitor):
             "object_name": force_unicode(opts.verbose_name),
             "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
             "opts": opts,
-            "root_path": self.admin_site.root_path,
             "app_label": app_label,
         }
 

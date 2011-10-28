@@ -97,9 +97,22 @@ class QuickRunTests(RunTests):
 
 
 class CIRunTests(RunTests):
-    extra_args = ["--with-coverage3", "--with-xunit",
-                  "--cover3-xml", "--xunit-file=nosetests.xml",
-                  "--cover3-xml-file=coverage.xml"]
+
+    @property
+    def extra_args(self):
+        toxinidir = os.environ.get("TOXINIDIR", "")
+        return [
+            "--with-coverage3",
+            "--cover3-xml",
+            "--cover3-xml-file=%s" % (
+                os.path.join(toxinidir, "coverage.xml"), ),
+            "--with-xunit",
+            "--xunit-file=%s" % (
+                os.path.join(toxinidir, "nosetests.xml"), ),
+            "--cover3-html",
+            "--cover3-html-dir=%s" % (
+                os.path.join(toxinidir, "cover"), ),
+        ]
 
 
 if os.path.exists("README.rst"):

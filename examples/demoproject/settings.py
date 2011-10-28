@@ -18,14 +18,12 @@ BROKER_VHOST = "/"
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'testdb.sqlite'
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost.
-                               # Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default.
-                               # Not used with sqlite3.
+DATABASES = {"default": {"NAME": "testdb.sqlite",
+                         "ENGINE": "django.db.backends.sqlite3",
+                         "USER": '',
+                         "PASSWORD": '',
+                         "HOST": '',
+                         "PORT": ''}}
 
 INSTALLED_APPS = (
     'django.contrib.auth',

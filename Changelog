@@ -10,24 +10,44 @@
 2.4.0
 =====
 :release-date: 2011-10-29 04:00 P.M BST
+:by: Ask Solem
+
+.. _240-important:
 
 Important Notes
 ---------------
 
-This release adds south_ migrations, which well assist users in automatically
+This release adds `South`_ migrations, which well assist users in automatically
 updating their database schemas with each django-celery release.
 
-.. _south: http://pypi.python.org/pypi/South/
+.. _`South`: http://pypi.python.org/pypi/South/
+
+.. _240-news:
 
 News
 ----
 
 * Now depends on Celery 2.4.0 or higher.
 
-* South migrations have been added. Migration 0001 is a snapshot from the
-  last release, 2.3.3. For those who do not use south, no action is required.
-  south users will want to read the upgrading instructions in the
-  following section.
+* South migrations have been added.
+
+    Migration 0001 is a snapshot from the previous stable release (2.3.3).
+    For those who do not use South, no action is required.
+    South users will want to read the :ref:`240-upgrade-south` section
+    below.
+
+    Contributed by Greg Taylor.
+
+* Test runner now compatible with Django 1.4.
+
+    Test runners are now classes instead of functions,
+    so you have to change the ``TEST_RUNNER`` setting to read::
+
+        TEST_RUNNER = "djcelery.contrib.test_runner.CeleryTestSuiteRunner"
+
+    Contributed by Jonas Haag.
+
+.. _240-upgrade_south:
 
 Upgrading for south users
 -------------------------
