@@ -137,7 +137,6 @@ class test_MemcacheWrapper(unittest.TestCase):
 
             self.assertEqual(cache.get(key, default=default), default)
             cache.set(key, val)
-            print("VAL: %r" % (cache.get(key, default=default), ))
             self.assertEqual(cache.get(key, default=default),
                               val)
         finally:
