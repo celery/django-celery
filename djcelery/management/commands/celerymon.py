@@ -11,7 +11,7 @@ from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
 try:
-    from celerymonitor.bin.celerymond import MonitorCommand
+    from celerymon.bin.celerymon import MonitorCommand
     monitor = MonitorCommand(app=app)
 except ImportError:
     monitor = None
