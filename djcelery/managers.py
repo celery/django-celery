@@ -16,6 +16,8 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.conf import settings
 
+from celery.utils.timeutils import maybe_timedelta
+
 
 class TxIsolationWarning(UserWarning):
     pass
@@ -208,9 +210,9 @@ class TaskStateManager(ExtendedManager):
     def active(self):
         return self.filter(hidden=False)
 
-    def expired(self, states, expires):
+    def expired(self, states, expires, nowfun=datetime.now):
         return self.filter(state__in=states,
-                           tstamp__lte=datetime.now() - expires)
+                           tstamp__lte=nowfun() - maybe_timedelta(expires))
 
     def expire_by_states(self, states, expires):
         if expires is not None:
