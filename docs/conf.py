@@ -76,6 +76,8 @@ html_sidebars = {
 
 ### Issuetracker
 
-issuetracker = "github"
-issuetracker_project = "ask/django-celery"
-issuetracker_issue_pattern = r'[Ii]ssue #(\d+)'
+# this is not working for some reason...
+if False:
+    issuetracker = "github"
+    issuetracker_project = "ask/django-celery"
+    issuetracker_issue_pattern = r'[Ii]ssue #(\d+)'
