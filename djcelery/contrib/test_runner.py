@@ -7,6 +7,7 @@ USAGE = """\
 Custom test runner to allow testing of celery delayed tasks.
 """
 
+
 class CeleryTestSuiteRunner(DjangoTestSuiteRunner):
     """Django test runner allowing testing of celery delayed tasks.
 
