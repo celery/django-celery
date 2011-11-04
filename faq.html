@@ -2,18 +2,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Frequently Asked Questions &mdash; django-celery v2.3.3 documentation</title>
+    <title>Frequently Asked Questions &mdash; django-celery 2.4.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/celery.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/issuetracker.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.3.3',
+        VERSION:     '2.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.3.3 documentation" href="index.html" />
+    <link rel="top" title="django-celery 2.4.0 documentation" href="index.html" />
     <link rel="next" title="Cookbook" href="cookbook/index.html" />
     <link rel="prev" title="First steps with Django" href="getting-started/first-steps-with-django.html" /> 
   </head>
@@ -42,7 +45,7 @@
         <li class="right" >
           <a href="getting-started/first-steps-with-django.html" title="First steps with Django"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">django-celery v2.3.3 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery 2.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -108,7 +111,7 @@ by default is a pet peeve for many. You should use a test runner that either</p>
 <blockquote>
 <div><a class="reference external" href="http://github.com/ask/celery/blob/f90491fe0194aa472b5aecdefe5cc83289e65e69/celery/tests/runners.py">http://github.com/ask/celery/blob/f90491fe0194aa472b5aecdefe5cc83289e65e69/celery/tests/runners.py</a></div></blockquote>
 <p>To use this test runner, add the following to your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s">&quot;djcelery.tests.runners.run_tests&quot;</span><span class="p">,</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s">&quot;djcelery.tests.runners.CeleryTestSuiteRunner&quot;</span><span class="p">,</span>
 <span class="n">TEST_APPS</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s">&quot;app1&quot;</span><span class="p">,</span>
     <span class="s">&quot;app2&quot;</span><span class="p">,</span>
@@ -119,7 +122,7 @@ by default is a pet peeve for many. You should use a test runner that either</p>
 </div>
 <p>Or, if you just want to skip the celery tests:</p>
 <div class="highlight-python"><pre>INSTALLED_APPS = (.....)
-TEST_RUNNER = "djcelery.tests.runners.run_tests",
+TEST_RUNNER = "djcelery.tests.runners.CeleryTestSuiteRunner",
 TEST_APPS = filter(lambda k: k != "celery", INSTALLED_APPS)</pre>
 </div>
 </div>
@@ -156,7 +159,7 @@ TEST_APPS = filter(lambda k: k != "celery", INSTALLED_APPS)</pre>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -185,12 +188,12 @@ TEST_APPS = filter(lambda k: k != "celery", INSTALLED_APPS)</pre>
         <li class="right" >
           <a href="getting-started/first-steps-with-django.html" title="First steps with Django"
              >previous</a> |</li>
-        <li><a href="index.html">django-celery v2.3.3 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery 2.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009-2011, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

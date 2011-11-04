@@ -2,18 +2,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Unit Testing &mdash; django-celery v2.3.3 documentation</title>
+    <title>Unit Testing &mdash; django-celery 2.4.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/celery.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/issuetracker.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.3.3',
+        VERSION:     '2.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.3.3 documentation" href="../index.html" />
+    <link rel="top" title="django-celery 2.4.0 documentation" href="../index.html" />
     <link rel="up" title="Cookbook" href="index.html" />
     <link rel="next" title="API Reference" href="../reference/index.html" />
     <link rel="prev" title="Cookbook" href="index.html" /> 
@@ -43,7 +46,7 @@
         <li class="right" >
           <a href="index.html" title="Cookbook"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.3.3 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery 2.4.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">Cookbook</a> &raquo;</li> 
       </ul>
     </div>  
@@ -77,7 +80,7 @@ own if you have other things that need to be done.
 <tt class="docutils literal"><span class="pre">add</span></tt> task from the <a class="reference external" href="http://docs.celeryq.org/en/latest/userguide/tasks.html">User Guide: Tasks</a> examples in the Celery
 documentation.</p>
 <p>To enable the test runner, set the following settings:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s">&#39;djcelery.contrib.test_runner.run_tests&#39;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s">&#39;djcelery.contrib.test_runner.CeleryTestSuiteRunner&#39;</span>
 </pre></div>
 </div>
 <p>Then we can put the tests in a <tt class="docutils literal"><span class="pre">tests.py</span></tt> somewhere:</p>
@@ -131,7 +134,7 @@ so adjust the import for wherever you put the class.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -160,13 +163,13 @@ so adjust the import for wherever you put the class.</p>
         <li class="right" >
           <a href="index.html" title="Cookbook"
              >previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.3.3 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery 2.4.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >Cookbook</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009-2011, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

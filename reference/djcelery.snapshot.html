@@ -2,18 +2,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Event Snapshots - djcelery.snapshot &mdash; django-celery v2.3.3 documentation</title>
+    <title>Event Snapshots - djcelery.snapshot &mdash; django-celery 2.4.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/celery.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/issuetracker.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.3.3',
+        VERSION:     '2.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.3.3 documentation" href="../index.html" />
+    <link rel="top" title="django-celery 2.4.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="Database Backend - djcelery.backends.database" href="djcelery.backends.database.html" />
     <link rel="prev" title="Periodic Task Schedulers - djcelery.schedulers" href="djcelery.schedulers.html" /> 
@@ -43,7 +46,7 @@
         <li class="right" >
           <a href="djcelery.schedulers.html" title="Periodic Task Schedulers - djcelery.schedulers"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.3.3 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery 2.4.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -88,6 +91,11 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="djcelery.snapshot.Camera.TaskState.objects">
+<tt class="descclassname">Camera.TaskState.</tt><tt class="descname">objects</tt><em class="property"> = &lt;djcelery.managers.TaskStateManager object at 0x10317b310&gt;</em><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="djcelery.snapshot.Camera.TaskState.worker">
 <tt class="descclassname">Camera.TaskState.</tt><tt class="descname">worker</tt><a class="headerlink" href="#djcelery.snapshot.Camera.TaskState.worker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -119,11 +127,26 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="djcelery.snapshot.Camera.WorkerState.objects">
+<tt class="descclassname">Camera.WorkerState.</tt><tt class="descname">objects</tt><em class="property"> = &lt;djcelery.managers.ExtendedManager object at 0x103179390&gt;</em><a class="headerlink" href="#djcelery.snapshot.Camera.WorkerState.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="djcelery.snapshot.Camera.WorkerState.taskstate_set">
 <tt class="descclassname">Camera.WorkerState.</tt><tt class="descname">taskstate_set</tt><a class="headerlink" href="#djcelery.snapshot.Camera.WorkerState.taskstate_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
+
+<dl class="attribute">
+<dt id="djcelery.snapshot.Camera.clear_after">
+<tt class="descclassname">Camera.</tt><tt class="descname">clear_after</tt><em class="property"> = True</em><a class="headerlink" href="#djcelery.snapshot.Camera.clear_after" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="djcelery.snapshot.Camera.expire_states">
+<tt class="descclassname">Camera.</tt><tt class="descname">expire_states</tt><em class="property"> = {frozenset(['SUCCESS']): datetime.timedelta(1), frozenset(['STARTED', 'RECEIVED', 'RETRY', 'PENDING']): datetime.timedelta(5), frozenset(['FAILURE', 'RETRY', 'REVOKED']): datetime.timedelta(3)}</em><a class="headerlink" href="#djcelery.snapshot.Camera.expire_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="djcelery.snapshot.Camera.get_heartbeat">
@@ -155,6 +178,11 @@
 <tt class="descclassname">Camera.</tt><tt class="descname">update_task</tt><big>(</big><em>state</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#djcelery.snapshot.Camera.update_task" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="djcelery.snapshot.Camera.worker_update_freq">
+<tt class="descclassname">Camera.</tt><tt class="descname">worker_update_freq</tt><em class="property"> = 60</em><a class="headerlink" href="#djcelery.snapshot.Camera.worker_update_freq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -181,7 +209,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -210,13 +238,13 @@
         <li class="right" >
           <a href="djcelery.schedulers.html" title="Periodic Task Schedulers - djcelery.schedulers"
              >previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.3.3 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery 2.4.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009-2011, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

@@ -5,6 +5,64 @@
 .. contents::
     :local:
 
+.. _version-2.4.0:
+
+2.4.0
+=====
+:release-date: 2011-11-04 04:00 P.M GMT
+:by: Ask Solem
+
+.. _240-important:
+
+Important Notes
+---------------
+
+This release adds `South`_ migrations, which well assist users in automatically
+updating their database schemas with each django-celery release.
+
+.. _`South`: http://pypi.python.org/pypi/South/
+
+.. _240-news:
+
+News
+----
+
+* Now depends on Celery 2.4.0 or higher.
+
+* South migrations have been added.
+
+    Migration 0001 is a snapshot from the previous stable release (2.3.3).
+    For those who do not use South, no action is required.
+    South users will want to read the :ref:`240-upgrade-south` section
+    below.
+
+    Contributed by Greg Taylor.
+
+* Test runner now compatible with Django 1.4.
+
+    Test runners are now classes instead of functions,
+    so you have to change the ``TEST_RUNNER`` setting to read::
+
+        TEST_RUNNER = "djcelery.contrib.test_runner.CeleryTestSuiteRunner"
+
+    Contributed by Jonas Haag.
+
+.. _240-upgrade_south:
+
+Upgrading for south users
+-------------------------
+
+For those that are already using django-celery 2.3.x, you'll need to fake the
+newly added migration 0001, since your database already has the current
+``djcelery_*`` and ``celery_*`` tables::
+
+    $ python manage.py migrate djcelery 0001 --fake
+
+If you're upgrading from the 2.2.x series, you'll want to drop/reset your
+``celery_*`` and ``djcelery_*`` tables and run the migration::
+
+    $ python manage.py migrate djcelery
+
 .. _version-2.3.3:
 
 2.3.3

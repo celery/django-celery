@@ -2,18 +2,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django-celery - Celery Integration for Django &mdash; django-celery v2.3.3 documentation</title>
+    <title>django-celery - Celery Integration for Django &mdash; django-celery 2.4.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/celery.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/issuetracker.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.3.3',
+        VERSION:     '2.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.3.3 documentation" href="index.html" />
+    <link rel="top" title="django-celery 2.4.0 documentation" href="index.html" />
     <link rel="next" title="Getting Started" href="getting-started/index.html" />
     <link rel="prev" title="Celery Integration for Django" href="index.html" /> 
   </head>
@@ -42,7 +45,7 @@
         <li class="right" >
           <a href="index.html" title="Celery Integration for Django"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">django-celery v2.3.3 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery 2.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -58,15 +61,15 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">2.3.3</td>
+<tr class="field-odd field"><th class="field-name">Version:</th><td class="field-body">2.4.0</td>
 </tr>
-<tr class="field"><th class="field-name">Web:</th><td class="field-body"><a class="reference external" href="http://celeryproject.org/">http://celeryproject.org/</a></td>
+<tr class="field-even field"><th class="field-name">Web:</th><td class="field-body"><a class="reference external" href="http://celeryproject.org/">http://celeryproject.org/</a></td>
 </tr>
-<tr class="field"><th class="field-name">Download:</th><td class="field-body"><a class="reference external" href="http://pypi.python.org/pypi/django-celery/">http://pypi.python.org/pypi/django-celery/</a></td>
+<tr class="field-odd field"><th class="field-name">Download:</th><td class="field-body"><a class="reference external" href="http://pypi.python.org/pypi/django-celery/">http://pypi.python.org/pypi/django-celery/</a></td>
 </tr>
-<tr class="field"><th class="field-name">Source:</th><td class="field-body"><a class="reference external" href="http://github.com/ask/django-celery/">http://github.com/ask/django-celery/</a></td>
+<tr class="field-even field"><th class="field-name">Source:</th><td class="field-body"><a class="reference external" href="http://github.com/ask/django-celery/">http://github.com/ask/django-celery/</a></td>
 </tr>
-<tr class="field"><th class="field-name">Keywords:</th><td class="field-body">celery, task queue, job queue, asynchronous, rabbitmq, amqp, redis,
+<tr class="field-odd field"><th class="field-name">Keywords:</th><td class="field-body">celery, task queue, job queue, asynchronous, rabbitmq, amqp, redis,
 python, django, webhooks, queue, distributed</td>
 </tr>
 </tbody>
@@ -128,21 +131,21 @@ need to invoke the programs through <tt class="docutils literal"><span class="pr
 <col width="50%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head"><strong>Program</strong></th>
+<tr class="row-odd"><th class="head"><strong>Program</strong></th>
 <th class="head"><strong>Replace with</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td><tt class="docutils literal"><span class="pre">celeryd</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">celeryd</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">celeryd</span></tt></td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">celerybeat</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">celerybeat</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">celerybeat</span></tt></td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">camqadm</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">camqadm</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">camqadm</span></tt></td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">celeryev</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">celeryev</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">celeryev</span></tt></td>
 </tr>
 </tbody>
@@ -177,6 +180,13 @@ or from source.</p>
 </div>
 <p>To install using <tt class="docutils literal"><span class="pre">easy_install</span></tt>,:</p>
 <div class="highlight-python"><pre>$ easy_install django-celery</pre>
+</div>
+<p>You will then want to create the necessary tables. If you are using <a class="reference external" href="http://pypi.python.org/pypi/South/">south</a>
+for schema migrations, you&#8217;ll want to:</p>
+<div class="highlight-python"><pre>$ python manage.py migrate djcelery</pre>
+</div>
+<p>For those who are not using south, a normal <strong class="command">syncdb</strong> will work:</p>
+<div class="highlight-python"><pre>$ python manage.py syncdb</pre>
 </div>
 <div class="section" id="downloading-and-installing-from-source">
 <h3><a class="toc-backref" href="#id6">Downloading and installing from source</a><a class="headerlink" href="#downloading-and-installing-from-source" title="Permalink to this headline">¶</a></h3>
@@ -281,7 +291,7 @@ file in the top distribution directory for the full license text.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -310,12 +320,12 @@ file in the top distribution directory for the full license text.</p>
         <li class="right" >
           <a href="index.html" title="Celery Integration for Django"
              >previous</a> |</li>
-        <li><a href="index.html">django-celery v2.3.3 documentation</a> &raquo;</li> 
+        <li><a href="index.html">django-celery 2.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009-2011, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

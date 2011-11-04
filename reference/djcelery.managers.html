@@ -2,18 +2,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Managers - djcelery.managers &mdash; django-celery v2.3.3 documentation</title>
+    <title>Managers - djcelery.managers &mdash; django-celery 2.4.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/celery.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/issuetracker.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.3.3',
+        VERSION:     '2.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="django-celery v2.3.3 documentation" href="../index.html" />
+    <link rel="top" title="django-celery 2.4.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="Celery Loaders - djcelery.loaders" href="djcelery.loaders.html" />
     <link rel="prev" title="Django Models - celery.models" href="djcelery.models.html" /> 
@@ -43,7 +46,7 @@
         <li class="right" >
           <a href="djcelery.models.html" title="Django Models - celery.models"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.3.3 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery 2.4.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -66,6 +69,11 @@
 <dl class="method">
 <dt id="djcelery.managers.ExtendedManager.connection_for_write">
 <tt class="descname">connection_for_write</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.managers.ExtendedManager.connection_for_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="djcelery.managers.ExtendedManager.current_engine">
+<tt class="descname">current_engine</tt><big>(</big><big>)</big><a class="headerlink" href="#djcelery.managers.ExtendedManager.current_engine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -129,7 +137,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exception_retry_count</strong> &#8211; How many times to retry by
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exception_retry_count</strong> &#8211; How many times to retry by
 transaction rollback on exception. This could theoretically
 happen in a race condition if another worker is trying to
 create the same task. The default is to retry once.</td>
@@ -146,7 +154,7 @@ create the same task. The default is to retry once.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>task_id</strong> &#8211; task id</li>
 <li><strong>result</strong> &#8211; The return value of the task, or an exception
 instance raised by the task.</li>
@@ -197,7 +205,7 @@ create the same task. The default is to retry twice.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>taskset_id</strong> &#8211; task set id</li>
 <li><strong>result</strong> &#8211; The return value of the taskset</li>
 </ul>
@@ -224,7 +232,7 @@ create the same task. The default is to retry twice.</li>
 
 <dl class="method">
 <dt id="djcelery.managers.TaskStateManager.expired">
-<tt class="descname">expired</tt><big>(</big><em>states</em>, <em>expires</em><big>)</big><a class="headerlink" href="#djcelery.managers.TaskStateManager.expired" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">expired</tt><big>(</big><em>states</em>, <em>expires</em>, <em>nowfun=&lt;built-in method now of type object at 0x1007af5c0&gt;</em><big>)</big><a class="headerlink" href="#djcelery.managers.TaskStateManager.expired" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -276,7 +284,7 @@ at most <tt class="docutils literal"><span class="pre">max_retries</span></tt> t
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -305,13 +313,13 @@ at most <tt class="docutils literal"><span class="pre">max_retries</span></tt> t
         <li class="right" >
           <a href="djcelery.models.html" title="Django Models - celery.models"
              >previous</a> |</li>
-        <li><a href="../index.html">django-celery v2.3.3 documentation</a> &raquo;</li>
+        <li><a href="../index.html">django-celery 2.4.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2009-2011, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
