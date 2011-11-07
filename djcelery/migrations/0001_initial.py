@@ -5,106 +5,109 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from django.db.utils import DatabaseError
+
+
+def ignore_exists(self, fun, *args, **kwargs):
+    try:
+        fun(*args, **kwargs)
+    except DatabaseError, exc:
+        if "exists" in str(exc):
+            return False
+        raise
+    return True
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding model 'TaskMeta'
-        db.create_table('celery_taskmeta', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('task_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
-            ('status', self.gf('django.db.models.fields.CharField')(default='PENDING', max_length=50)),
-            ('result', self.gf('picklefield.fields.PickledObjectField')(default=None, null=True)),
-            ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('traceback', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('djcelery', ['TaskMeta'])
+        if ignore_exists(db.create_table, 'celery_taskmeta', (
+                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                ('task_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
+                ('status', self.gf('django.db.models.fields.CharField')(default='PENDING', max_length=50)),
+                ('result', self.gf('picklefield.fields.PickledObjectField')(default=None, null=True)),
+                ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+                ('traceback', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),)):
+            db.send_create_signal('djcelery', ['TaskMeta'])
 
         # Adding model 'TaskSetMeta'
-        db.create_table('celery_tasksetmeta', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('taskset_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
-            ('result', self.gf('picklefield.fields.PickledObjectField')()),
-            ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-        ))
-        db.send_create_signal('djcelery', ['TaskSetMeta'])
+        if ignore_exists(db.create_table, 'celery_tasksetmeta', (
+                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                ('taskset_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
+                ('result', self.gf('picklefield.fields.PickledObjectField')()),
+                ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),)):
+            db.send_create_signal('djcelery', ['TaskSetMeta'])
 
         # Adding model 'IntervalSchedule'
-        db.create_table('djcelery_intervalschedule', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('every', self.gf('django.db.models.fields.IntegerField')()),
-            ('period', self.gf('django.db.models.fields.CharField')(max_length=24)),
-        ))
-        db.send_create_signal('djcelery', ['IntervalSchedule'])
+        if ignore_exists(db.create_table, 'djcelery_intervalschedule', (
+                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                ('every', self.gf('django.db.models.fields.IntegerField')()),
+                ('period', self.gf('django.db.models.fields.CharField')(max_length=24)),)):
+            db.send_create_signal('djcelery', ['IntervalSchedule'])
 
         # Adding model 'CrontabSchedule'
-        db.create_table('djcelery_crontabschedule', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('minute', self.gf('django.db.models.fields.CharField')(default='*', max_length=64)),
-            ('hour', self.gf('django.db.models.fields.CharField')(default='*', max_length=64)),
-            ('day_of_week', self.gf('django.db.models.fields.CharField')(default='*', max_length=64)),
-        ))
-        db.send_create_signal('djcelery', ['CrontabSchedule'])
+        if ignore_exists(db.create_table, 'djcelery_crontabschedule', (
+                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                ('minute', self.gf('django.db.models.fields.CharField')(default='*', max_length=64)),
+                ('hour', self.gf('django.db.models.fields.CharField')(default='*', max_length=64)),
+                ('day_of_week', self.gf('django.db.models.fields.CharField')(default='*', max_length=64)),)):
+            db.send_create_signal('djcelery', ['CrontabSchedule'])
 
         # Adding model 'PeriodicTasks'
-        db.create_table('djcelery_periodictasks', (
-            ('ident', self.gf('django.db.models.fields.SmallIntegerField')(default=1, unique=True, primary_key=True)),
-            ('last_update', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal('djcelery', ['PeriodicTasks'])
+        if ignore_exists(db.create_table, 'djcelery_periodictasks', (
+                ('ident', self.gf('django.db.models.fields.SmallIntegerField')(default=1, unique=True, primary_key=True)),
+                ('last_update', self.gf('django.db.models.fields.DateTimeField')()),)):
+            db.send_create_signal('djcelery', ['PeriodicTasks'])
 
         # Adding model 'PeriodicTask'
-        db.create_table('djcelery_periodictask', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=200)),
-            ('task', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('interval', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['djcelery.IntervalSchedule'], null=True, blank=True)),
-            ('crontab', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['djcelery.CrontabSchedule'], null=True, blank=True)),
-            ('args', self.gf('django.db.models.fields.TextField')(default='[]', blank=True)),
-            ('kwargs', self.gf('django.db.models.fields.TextField')(default='{}', blank=True)),
-            ('queue', self.gf('django.db.models.fields.CharField')(default=None, max_length=200, null=True, blank=True)),
-            ('exchange', self.gf('django.db.models.fields.CharField')(default=None, max_length=200, null=True, blank=True)),
-            ('routing_key', self.gf('django.db.models.fields.CharField')(default=None, max_length=200, null=True, blank=True)),
-            ('expires', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('enabled', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('last_run_at', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('total_run_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('date_changed', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-        ))
-        db.send_create_signal('djcelery', ['PeriodicTask'])
+        if ignore_exists(db.create_table, 'djcelery_periodictask', (
+                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=200)),
+                ('task', self.gf('django.db.models.fields.CharField')(max_length=200)),
+                ('interval', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['djcelery.IntervalSchedule'], null=True, blank=True)),
+                ('crontab', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['djcelery.CrontabSchedule'], null=True, blank=True)),
+                ('args', self.gf('django.db.models.fields.TextField')(default='[]', blank=True)),
+                ('kwargs', self.gf('django.db.models.fields.TextField')(default='{}', blank=True)),
+                ('queue', self.gf('django.db.models.fields.CharField')(default=None, max_length=200, null=True, blank=True)),
+                ('exchange', self.gf('django.db.models.fields.CharField')(default=None, max_length=200, null=True, blank=True)),
+                ('routing_key', self.gf('django.db.models.fields.CharField')(default=None, max_length=200, null=True, blank=True)),
+                ('expires', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+                ('enabled', self.gf('django.db.models.fields.BooleanField')(default=True)),
+                ('last_run_at', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+                ('total_run_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+                ('date_changed', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),)):
+            db.send_create_signal('djcelery', ['PeriodicTask'])
 
         # Adding model 'WorkerState'
-        db.create_table('djcelery_workerstate', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('hostname', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
-            ('last_heartbeat', self.gf('django.db.models.fields.DateTimeField')(null=True, db_index=True)),
-        ))
-        db.send_create_signal('djcelery', ['WorkerState'])
+        if ignore_exists(db.create_table, 'djcelery_workerstate', (
+                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                ('hostname', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
+                ('last_heartbeat', self.gf('django.db.models.fields.DateTimeField')(null=True, db_index=True)),)):
+            db.send_create_signal('djcelery', ['WorkerState'])
 
         # Adding model 'TaskState'
-        db.create_table('djcelery_taskstate', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('task_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=36)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, db_index=True)),
-            ('tstamp', self.gf('django.db.models.fields.DateTimeField')(db_index=True)),
-            ('args', self.gf('django.db.models.fields.TextField')(null=True)),
-            ('kwargs', self.gf('django.db.models.fields.TextField')(null=True)),
-            ('eta', self.gf('django.db.models.fields.DateTimeField')(null=True)),
-            ('expires', self.gf('django.db.models.fields.DateTimeField')(null=True)),
-            ('result', self.gf('django.db.models.fields.TextField')(null=True)),
-            ('traceback', self.gf('django.db.models.fields.TextField')(null=True)),
-            ('runtime', self.gf('django.db.models.fields.FloatField')(null=True)),
-            ('retries', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('worker', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['djcelery.WorkerState'], null=True)),
-            ('hidden', self.gf('django.db.models.fields.BooleanField')(default=False, db_index=True)),
-        ))
-        db.send_create_signal('djcelery', ['TaskState'])
+        if ignore_exists(db.create_table, 'djcelery_taskstate', (
+                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                ('state', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+                ('task_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=36)),
+                ('name', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, db_index=True)),
+                ('tstamp', self.gf('django.db.models.fields.DateTimeField')(db_index=True)),
+                ('args', self.gf('django.db.models.fields.TextField')(null=True)),
+                ('kwargs', self.gf('django.db.models.fields.TextField')(null=True)),
+                ('eta', self.gf('django.db.models.fields.DateTimeField')(null=True)),
+                ('expires', self.gf('django.db.models.fields.DateTimeField')(null=True)),
+                ('result', self.gf('django.db.models.fields.TextField')(null=True)),
+                ('traceback', self.gf('django.db.models.fields.TextField')(null=True)),
+                ('runtime', self.gf('django.db.models.fields.FloatField')(null=True)),
+                ('retries', self.gf('django.db.models.fields.IntegerField')(default=0)),
+                ('worker', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['djcelery.WorkerState'], null=True)),
+                ('hidden', self.gf('django.db.models.fields.BooleanField')(default=False, db_index=True)),)):
+            db.send_create_signal('djcelery', ['TaskState'])
 
 
     def backwards(self, orm):
-        
+
         # Deleting model 'TaskMeta'
         db.delete_table('celery_taskmeta')
 
