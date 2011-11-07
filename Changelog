@@ -5,6 +5,20 @@
 .. contents::
     :local:
 
+.. _version-2.4.1:
+
+2.4.1
+=====
+:release-date: 2011-11-07 06:00 P.M GMT
+:by: Ask Solem
+
+* Management commands was missing command line arguments because of recent
+  changes to Celery.
+
+* Management commands now supports the ``--broker|-b`` option.
+
+* South migrations now ignores errors when tables already exist.
+
 .. _version-2.4.0:
 
 2.4.0
