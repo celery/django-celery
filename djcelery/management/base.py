@@ -4,7 +4,7 @@ import os
 import sys
 
 from django.conf import settings
-from django.core.management.base import BaseCommand, make_option as Option
+from django.core.management.base import BaseCommand
 
 import celery
 import djcelery
@@ -56,4 +56,3 @@ class CeleryCommand(BaseCommand):
     def option_list(self):
         return [x for x in self.options
                     if x._long_opts[0] not in self.skip_opts]
-
