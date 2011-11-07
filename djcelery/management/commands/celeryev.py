@@ -24,7 +24,9 @@ Please use one of: %s
 
 class Command(CeleryCommand):
     """Run the celery curses event viewer."""
-    option_list = CeleryCommand.option_list + ev.get_options()
+    options = (CeleryCommand.options
+             + ev.get_options()
+             + ev.preload_options)
     help = 'curses celery event viewer'
 
     def handle(self, *args, **options):

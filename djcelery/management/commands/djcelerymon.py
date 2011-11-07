@@ -32,7 +32,9 @@ class WebserverThread(threading.Thread):
 class Command(CeleryCommand):
     """Run the celery curses event viewer."""
     args = '[optional port number, or ipaddr:port]'
-    option_list = runserver.Command.option_list + ev.get_options()
+    options = (runserver.Command.option_list
+             + ev.get_options()
+             + ev.preload_options)
     help = 'Starts Django Admin instance and celerycam in the same process.'
     # see http://code.djangoproject.com/changeset/13319.
     stdout, stderr = sys.stdout, sys.stderr

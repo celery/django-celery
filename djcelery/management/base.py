@@ -11,11 +11,8 @@ import djcelery
 
 
 class CeleryCommand(BaseCommand):
-
-    option_list = BaseCommand.option_list + (
-                    Option("-b", "--broker",
-                        default=None, action="store", dest="broker",
-                        help="Broker URL. transport://u:p@host:port/vhost"), )
+    options = BaseCommand.option_list
+    skip_opts = ["--app", "--loader", "--config"]
 
     def get_version(self):
         return "celery %s\ndjango-celery %s" % (celery.__version__,
@@ -54,3 +51,9 @@ class CeleryCommand(BaseCommand):
         sys.stderr.write(msg)
         sys.stderr.write("\n")
         sys.exit()
+
+    @property
+    def option_list(self):
+        return [x for x in self.options
+                    if x._long_opts[0] not in self.skip_opts]
+
