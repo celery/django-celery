@@ -8,7 +8,7 @@ from django.db import models
 from django.db.utils import DatabaseError
 
 
-def ignore_exists(self, fun, *args, **kwargs):
+def ignore_exists(fun, *args, **kwargs):
     try:
         fun(*args, **kwargs)
     except DatabaseError, exc:
