@@ -5,6 +5,16 @@
 .. contents::
     :local:
 
+.. _version-2.4.2:
+
+2.4.2
+=====
+:release-date: 2011-11-14 12:00 P.M GMT
+
+* Fixed syntax error in South migrations code (Issue #88).
+
+    Fix contributed by Olivier Tabone.
+
 .. _version-2.4.1:
 
 2.4.1
