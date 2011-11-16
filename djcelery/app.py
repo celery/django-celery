@@ -1,3 +1,7 @@
-from celery import Celery
+from __future__ import absolute_import
 
-app = Celery(loader="djcelery.loaders.DjangoLoader")
+from celery.app import default_app
+
+
+#: The Django-Celery app instance.
+app = default_app

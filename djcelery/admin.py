@@ -1,4 +1,5 @@
-from pprint import pformat
+from __future__ import absolute_import
+from __future__ import with_statement
 
 from django import forms
 from django.conf import settings
@@ -11,16 +12,17 @@ from django.utils.encoding import force_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
+from celery import current_app
 from celery import states
 from celery import registry
-from celery.app import default_app
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils import abbrtask
 
-from djcelery import loaders
-from djcelery.models import TaskState, WorkerState
-from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
-from djcelery.utils import naturaldate
+from . import loaders
+from .admin_utils import action, display_field, fixedwidth
+from .models import (TaskState, WorkerState,
+                     PeriodicTask, IntervalSchedule, CrontabSchedule)
+from .utils import naturaldate
 
 
 TASK_STATE_COLORS = {states.SUCCESS: "green",
@@ -40,25 +42,6 @@ class MonitorList(main_views.ChangeList):
         self.title = self.model_admin.list_page_title
 
 
-def attrs(**kwargs):
-    def _inner(fun):
-        for attr_name, attr_value in kwargs.items():
-            setattr(fun, attr_name, attr_value)
-        return fun
-    return _inner
-
-
-def display_field(short_description, admin_order_field, allow_tags=True,
-        **kwargs):
-    return attrs(short_description=short_description,
-                 admin_order_field=admin_order_field,
-                 allow_tags=allow_tags, **kwargs)
-
-
-def action(short_description, **kwargs):
-    return attrs(short_description=short_description, **kwargs)
-
-
 @display_field(_("state"), "state")
 def colored_state(task):
     state = escape(task.state)
@@ -66,7 +49,7 @@ def colored_state(task):
     return """<b><span style="color: %s;">%s</span></b>""" % (color, state)
 
 
-@display_field(_("state"), "last_timestamp")
+@display_field(_("state"), "last_heartbeat")
 def node_state(node):
     state = node.is_alive() and "ONLINE" or "OFFLINE"
     color = NODE_STATE_COLORS[state]
@@ -91,26 +74,6 @@ def name(task):
     short_name = abbrtask(task.name, 16)
     return """<div title="%s"><b>%s</b></div>""" % (escape(task.name),
                                                     escape(short_name))
-
-
-def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
-
-    @display_field(name or field, field)
-    def f(task):
-        val = getattr(task, field)
-        if pretty:
-            val = pformat(val, width=width)
-        if val.startswith("u'") or val.startswith('u"'):
-            val = val[2:-1]
-        shortval = val.replace(",", ",\n")
-        shortval = shortval.replace("\n", "<br />")
-
-        if len(shortval) > maxlen:
-            shortval = shortval[:maxlen] + "..."
-        return """<span title="%s", style="font-size: %spt;
-                               font-family: Menlo, Courier;
-                  ">%s</span>""" % (escape(val[:255]), pt, escape(shortval), )
-    return f
 
 
 class ModelMonitor(admin.ModelAdmin):
@@ -167,16 +130,28 @@ class TaskMonitor(ModelMonitor):
     list_filter = ("state", "name", "tstamp", "eta", "worker")
     search_fields = ("name", "task_id", "args", "kwargs", "worker__hostname")
     actions = ["revoke_tasks",
+               "terminate_tasks",
+               "kill_tasks",
                "rate_limit_tasks"]
 
     @action(_("Revoke selected tasks"))
     def revoke_tasks(self, request, queryset):
-        connection = default_app.broker_connection()
-        try:
+        with current_app.default_connection() as connection:
             for state in queryset:
                 revoke(state.task_id, connection=connection)
-        finally:
-            connection.close()
+
+    @action(_("Terminate selected tasks"))
+    def terminate_tasks(self, request, queryset):
+        with current_app.default_connection() as connection:
+            for state in queryset:
+                revoke(state.task_id, connection=connection, terminate=True)
+
+    @action(_("Kill selected tasks"))
+    def kill_tasks(self, request, queryset):
+        with current_app.default_connection() as connection:
+            for state in queryset:
+                revoke(state.task_id, connection=connection,
+                       terminate=True, signal="KILL")
 
     @action(_("Rate limit selected tasks"))
     def rate_limit_tasks(self, request, queryset):
@@ -185,12 +160,9 @@ class TaskMonitor(ModelMonitor):
         app_label = opts.app_label
         if request.POST.get("post"):
             rate = request.POST["rate_limit"]
-            connection = default_app.broker_connection()
-            try:
+            with current_app.default_connection() as connection:
                 for task_name in tasks:
                     rate_limit(task_name, rate, connection=connection)
-            finally:
-                connection.close()
             return None
 
         context = {
@@ -199,7 +171,6 @@ class TaskMonitor(ModelMonitor):
             "object_name": force_unicode(opts.verbose_name),
             "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
             "opts": opts,
-            "root_path": self.admin_site.root_path,
             "app_label": app_label,
         }
 
@@ -314,8 +285,8 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        if not hasattr(settings, 'CELERYBEAT_SCHEDULER') \
-           or settings.CELERYBEAT_SCHEDULER != 'djcelery.schedulers.DatabaseScheduler':
+        scheduler = getattr(settings, "CELERYBEAT_SCHEDULER", None)
+        if scheduler != 'djcelery.schedulers.DatabaseScheduler':
             extra_context['wrong_scheduler'] = True
         return super(PeriodicTaskAdmin, self).changelist_view(request,
                                                               extra_context)

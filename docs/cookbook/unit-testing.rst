@@ -28,13 +28,13 @@ For this example, we'll use the ``djcelery.contrib.test_runner`` to test the
 ``add`` task from the `User Guide: Tasks`_ examples in the Celery
 documentation.
 
-.. _`User Guide: Tasks`: http://celeryq.org/docs/userguide/tasks.html
+.. _`User Guide: Tasks`: http://docs.celeryq.org/en/latest/userguide/tasks.html
 
 To enable the test runner, set the following settings:
 
 .. code-block:: python
 
-    TEST_RUNNER = 'djcelery.contrib.test_runner.run_tests'
+    TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
 Then we can put the tests in a ``tests.py`` somewhere:
 

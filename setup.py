@@ -3,15 +3,13 @@
 import os
 import sys
 import codecs
-import platform
 
 try:
-    from setuptools import setup, find_packages, Command
+    from setuptools import setup, Command
 except ImportError:
     from ez_setup import use_setuptools
     use_setuptools()
-    from setuptools import setup, find_packages, Command
-from distutils.command.install_data import install_data
+    from setuptools import setup, Command  # noqa
 from distutils.command.install import INSTALL_SCHEMES
 
 import djcelery as distmeta
@@ -21,13 +19,6 @@ root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
 src_dir = "djcelery"
-
-
-def osx_install_data(install_data):
-
-    def finalize_options(self):
-        self.set_undefined_options("install", ("install_lib", "install_dir"))
-        install_data.finalize_options(self)
 
 
 def fullsplit(path, result=None):
@@ -72,6 +63,7 @@ class RunTests(Command):
     description = "Run the django test suite from the tests dir."
     user_options = []
     extra_env = {}
+    extra_args = []
 
     def run(self):
         for env_name, env_value in self.extra_env.items():
@@ -86,9 +78,12 @@ class RunTests(Command):
                         "DJANGO_SETTINGS_MODULE", "settings")
         settings_file = os.environ["DJANGO_SETTINGS_MODULE"]
         settings_mod = __import__(settings_file, {}, {}, [''])
-        execute_manager(settings_mod, argv=[
-            __file__, "test"])
-        os.chdir(this_dir)
+        prev_argv = list(sys.argv)
+        try:
+            sys.argv = [__file__, "test"] + self.extra_args
+            execute_manager(settings_mod, argv=sys.argv)
+        finally:
+            sys.argv = prev_argv
 
     def initialize_options(self):
         pass
@@ -99,6 +94,25 @@ class RunTests(Command):
 
 class QuickRunTests(RunTests):
     extra_env = dict(SKIP_RLIMITS=1, QUICKTEST=1)
+
+
+class CIRunTests(RunTests):
+
+    @property
+    def extra_args(self):
+        toxinidir = os.environ.get("TOXINIDIR", "")
+        return [
+            "--with-coverage3",
+            "--cover3-xml",
+            "--cover3-xml-file=%s" % (
+                os.path.join(toxinidir, "coverage.xml"), ),
+            "--with-xunit",
+            "--xunit-file=%s" % (
+                os.path.join(toxinidir, "nosetests.xml"), ),
+            "--cover3-html",
+            "--cover3-html-dir=%s" % (
+                os.path.join(toxinidir, "cover"), ),
+        ]
 
 
 if os.path.exists("README.rst"):
@@ -122,9 +136,11 @@ setup(
     zip_safe=False,
     install_requires=[
         "django-picklefield",
-        "celery>=2.1.1",
+        "celery>=2.4.2",
     ],
-    cmdclass={"test": RunTests, "quicktest": QuickRunTests},
+    cmdclass={"test": RunTests,
+              "quicktest": QuickRunTests,
+              "citest": CIRunTests},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Framework :: Django",
@@ -138,7 +154,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     entry_points={
-        "console_scripts": ["djcelerymon = djcelery.mon:main"]
+        "console_scripts": ["djcelerymon = djcelery.mon:main"],
     },
     long_description=long_description,
 )

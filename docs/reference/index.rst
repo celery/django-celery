@@ -8,6 +8,7 @@
 .. toctree::
     :maxdepth: 2
 
+    djcelery.app
     djcelery.views
     djcelery.urls
     djcelery.models

@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import (patterns, url, include,
+from django.conf.urls.defaults import (patterns, url, include,  # noqa
                                        handler500, handler404)
 from djcelery.views import apply
 

@@ -1,17 +1,19 @@
 """celery.backends.cache"""
+from __future__ import absolute_import
+
 from datetime import timedelta
 
+import django
 from django.utils.encoding import smart_str
 from django.core.cache import cache, get_cache
-from django.core.cache.backends.base import InvalidCacheBackendError
 
-from celery.app import default_app
+from celery import current_app
 from celery.utils.timeutils import timedelta_seconds
 from celery.backends.base import KeyValueStoreBackend
 
 # CELERY_CACHE_BACKEND overrides the django-global(tm) backend settings.
-if default_app.conf.CELERY_CACHE_BACKEND:
-    cache = get_cache(default_app.conf.CELERY_CACHE_BACKEND)
+if current_app.conf.CELERY_CACHE_BACKEND:
+    cache = get_cache(current_app.conf.CELERY_CACHE_BACKEND)  # noqa
 
 
 class DjangoMemcacheWrapper(object):
@@ -33,15 +35,15 @@ class DjangoMemcacheWrapper(object):
         self.cache.set(key, value, timeout)
 
 # Check if django is using memcache as the cache backend. If so, wrap the
-# cache object in a DjangoMemcacheWrapper that fixes a bug with retrieving
-# pickled data
+# cache object in a DjangoMemcacheWrapper for Django < 1.2 that fixes a bug
+# with retrieving pickled data.
 from django.core.cache.backends.base import InvalidCacheBackendError
 try:
     from django.core.cache.backends.memcached import CacheClass
 except InvalidCacheBackendError:
     pass
 else:
-    if isinstance(cache, CacheClass):
+    if django.VERSION[0:2] < (1, 2) and isinstance(cache, CacheClass):
         cache = DjangoMemcacheWrapper(cache)
 
 
@@ -51,7 +53,7 @@ class CacheBackend(KeyValueStoreBackend):
     def __init__(self, *args, **kwargs):
         super(CacheBackend, self).__init__(self, *args, **kwargs)
         expires = kwargs.get("expires",
-                             default_app.conf.CELERY_TASK_RESULT_EXPIRES)
+                             current_app.conf.CELERY_TASK_RESULT_EXPIRES)
         if isinstance(expires, timedelta):
             expires = int(timedelta_seconds(expires))
         self.expires = expires

@@ -2,9 +2,9 @@
  django-celery - Celery Integration for Django
 ===============================================
 
-.. image:: http://cloud.github.com/downloads/ask/celery/celery_favicon_128.png
+.. image:: http://cloud.github.com/downloads/ask/celery/celery_128.png
 
-:Version: 2.2.0a3
+:Version: 2.4.2
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/ask/django-celery/
@@ -91,11 +91,10 @@ The `Celery User Manual`_ contains user guides, tutorials and an API
 reference. Also the `django-celery documentation`_, contains information
 about the Django integration.
 
-.. _`django-celery documentation`:
-    http://celeryproject.org/docs/django-celery/
-.. _`Celery User Manual`: http://celeryproject.org/docs/
+.. _`django-celery documentation`: http://django-celery.readthedocs.org/
+.. _`Celery User Manual`: http://docs.celeryproject.org/
 .. _`Getting started with django-celery`:
-    http://celeryq.org/docs/django-celery/getting-started/first-steps-with-django.html
+    http://django-celery.readthedocs.org/en/latest/getting-started/first-steps-with-django.html
 
 Installation
 =============
@@ -110,6 +109,17 @@ To install using ``pip``,::
 To install using ``easy_install``,::
 
     $ easy_install django-celery
+
+You will then want to create the necessary tables. If you are using south_
+for schema migrations, you'll want to::
+
+    $ python manage.py migrate djcelery
+
+For those who are not using south, a normal :command:`syncdb` will work::
+
+    $ python manage.py syncdb
+
+.. _south: http://pypi.python.org/pypi/South/
 
 Downloading and installing from source
 --------------------------------------

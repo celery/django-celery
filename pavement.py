@@ -1,6 +1,11 @@
+import os
+import sys
+
 from paver.easy import *
 from paver import doctools
 from paver.setuputils import setup
+
+PYCOMPILE_CACHES = ["*.pyc", "*$py.class"]
 
 options(
         sphinx=Bunch(builddir=".build"),
@@ -37,7 +42,6 @@ def qhtml(options):
 @needs("clean_docs", "paver.doctools.html")
 def ghdocs(options):
     builtdocs = sphinx_builddir(options)
-    sh("sphinx-to-github", cwd=builtdocs)
     sh("git checkout gh-pages && \
             cp -r %s/* .    && \
             git commit . -m 'Rendered documentation for Github Pages.' && \
@@ -49,7 +53,8 @@ def ghdocs(options):
 @needs("clean_docs", "paver.doctools.html")
 def upload_pypi_docs(options):
     builtdocs = path("docs") / options.builddir / "html"
-    sh("python setup.py upload_sphinx --upload-dir='%s'" % (builtdocs))
+    sh("%s setup.py upload_sphinx --upload-dir='%s'" % (
+        sys.executable, builtdocs))
 
 
 @task
@@ -69,8 +74,38 @@ def verifyindex(options):
 
 
 @task
+@cmdopts([
+    ("noerror", "E", "Ignore errors"),
+])
+def flake8(options):
+    noerror = getattr(options, "noerror", False)
+    complexity = getattr(options, "complexity", 22)
+    migrations_path = os.path.join("djcelery", "migrations", "0.+?\.py")
+    sh("""flake8 djcelery | perl -mstrict -mwarnings -nle'
+        my $ignore = (m/too complex \((\d+)\)/ && $1 le %s)
+                   || (m{^%s});
+        if (! $ignore) { print STDERR; our $FOUND_FLAKE = 1 }
+        }{exit $FOUND_FLAKE;
+        '""" % (complexity, migrations_path), ignore_error=noerror)
+
+
+@task
+@cmdopts([
+    ("noerror", "E", "Ignore errors"),
+])
+def flakeplus(options):
+    noerror = getattr(options, "noerror", False)
+    sh("python contrib/release/flakeplus.py djcelery",
+       ignore_error=noerror)
+
+
+@task
+@cmdopts([
+    ("noerror", "E", "Ignore errors")
+])
 def flakes(options):
-    sh("find djcelery -name '*.py' | xargs pyflakes")
+    flake8(options)
+    flakeplus(options)
 
 
 @task
@@ -82,8 +117,8 @@ def clean_readme(options):
 @task
 @needs("clean_readme")
 def readme(options):
-    sh("python contrib/release/sphinx-to-rst.py docs/introduction.rst \
-            > README.rst")
+    sh("%s contrib/release/sphinx-to-rst.py docs/introduction.rst \
+            > README.rst" % (sys.executable, ))
     sh("ln -sf README.rst README")
 
 
@@ -99,7 +134,7 @@ def bump(options):
     ("verbose", "V", "Make more noise"),
 ])
 def test(options):
-    sh("python setup.py test")
+    sh("%s setup.py test" % (sys.executable, ))
 
 
 @task
@@ -114,7 +149,8 @@ def pep8(options):
 
 @task
 def removepyc(options):
-    sh("find . -name '*.pyc' | xargs rm")
+    sh("find . -type f -a \\( %s \\) | xargs rm" % (
+        " -o ".join("-name '%s'" % (pat, ) for pat in PYCOMPILE_CACHES), ))
 
 
 @task
@@ -130,7 +166,7 @@ def gitcleanforce(options):
 
 
 @task
-@needs("pep8", "autodoc", "verifyindex", "test", "gitclean")
+@needs("flakes", "autodoc", "verifyindex", "test", "gitclean")
 def releaseok(options):
     pass
 
@@ -139,3 +175,13 @@ def releaseok(options):
 @needs("releaseok", "removepyc", "upload_docs")
 def release(options):
     pass
+
+
+@task
+def testloc(options):
+    sh("sloccount djcelery/tests")
+
+
+@task
+def loc(options):
+    sh("sloccount djcelery")

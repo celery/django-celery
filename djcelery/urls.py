@@ -11,9 +11,11 @@ URLs defined for celery.
     URL  to :func:`~celery.views.task_status`.
 
 """
+from __future__ import absolute_import
+
 from django.conf.urls.defaults import patterns, url
 
-from djcelery import views
+from . import views
 
 task_pattern = r'(?P<task_id>[\w\d\-\.]+)'
 

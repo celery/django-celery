@@ -1,7 +1,9 @@
-from celery.app import default_app
+from __future__ import absolute_import
+
+from celery import current_app
 from celery.backends.base import BaseDictBackend
 
-from djcelery.models import TaskMeta, TaskSetMeta
+from ..models import TaskMeta, TaskSetMeta
 
 
 class DatabaseBackend(BaseDictBackend):
@@ -12,7 +14,11 @@ class DatabaseBackend(BaseDictBackend):
     """
     TaskModel = TaskMeta
     TaskSetModel = TaskSetMeta
-    expires = default_app.conf.CELERY_TASK_RESULT_EXPIRES
+
+    expires = current_app.conf.CELERY_TASK_RESULT_EXPIRES
+    create_django_tables = True
+
+    subpolling_interval = 0.5
 
     def _store_result(self, task_id, result, status, traceback=None):
         """Store return value and status of an executed task."""
@@ -34,6 +40,9 @@ class DatabaseBackend(BaseDictBackend):
         meta = self.TaskSetModel._default_manager.restore_taskset(taskset_id)
         if meta:
             return meta.to_dict()
+
+    def _delete_taskset(self, taskset_id):
+        self.TaskSetModel._default_manager.delete_taskset(taskset_id)
 
     def _forget(self, task_id):
         try:

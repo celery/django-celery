@@ -1,2 +1,0 @@
-django-picklefield
--e git+http://github.com/ask/celery.git/#egg=celery

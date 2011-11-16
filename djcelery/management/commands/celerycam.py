@@ -1,8 +1,10 @@
 """
 
-Curses Celery Event Viewer.
+Shortcut to the Django snapshot service.
 
 """
+from __future__ import absolute_import
+
 from celery.bin import celeryev
 
 from djcelery.app import app
@@ -13,7 +15,9 @@ ev = celeryev.EvCommand(app=app)
 
 class Command(CeleryCommand):
     """Run the celery curses event viewer."""
-    option_list = CeleryCommand.option_list + ev.get_options()
+    options = (CeleryCommand.options
+             + ev.get_options()
+             + ev.preload_options)
     help = 'Takes snapshots of the clusters state to the database.'
 
     def handle(self, *args, **options):

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from datetime import datetime, timedelta
 from itertools import count
 from time import time
@@ -6,6 +8,7 @@ from celery.schedules import schedule, crontab
 from celery.utils.timeutils import timedelta_seconds
 
 from djcelery import schedulers
+from djcelery.app import app
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
 from djcelery.tests.utils import unittest
@@ -58,9 +61,9 @@ class TrackingScheduler(schedulers.DatabaseScheduler):
         self.flushed = 0
         schedulers.DatabaseScheduler.__init__(self, *args, **kwargs)
 
-    def flush(self):
+    def sync(self):
         self.flushed += 1
-        schedulers.DatabaseScheduler.flush(self)
+        schedulers.DatabaseScheduler.sync(self)
 
 
 class test_ModelEntry(unittest.TestCase):
@@ -99,6 +102,8 @@ class test_DatabaseScheduler(unittest.TestCase):
 
     def setUp(self):
         PeriodicTask.objects.all().delete()
+        self.prev_schedule = app.conf.CELERYBEAT_SCHEDULE
+        app.conf.CELERYBEAT_SCHEDULE = {}
         m1 = create_model_interval(schedule(timedelta(seconds=10)))
         m2 = create_model_interval(schedule(timedelta(minutes=20)))
         m3 = create_model_crontab(crontab(minute="2,4,5"))
@@ -109,15 +114,20 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.m2 = PeriodicTask.objects.get(name=m2.name)
         self.m3 = PeriodicTask.objects.get(name=m3.name)
 
+    def tearDown(self):
+        app.conf.CELERYBEAT_SCHEDULE = self.prev_schedule
+        PeriodicTask.objects.all().delete()
+
     def test_constructor(self):
         self.assertIsInstance(self.s._dirty, set)
-        self.assertIsNone(self.s._last_flush)
-        self.assertTrue(self.s._flush_every)
+        self.assertIsNone(self.s._last_sync)
+        self.assertTrue(self.s.sync_every)
 
     def test_all_as_schedule(self):
         sched = self.s.schedule
         self.assertTrue(sched)
-        self.assertEqual(len(sched), 3)
+        self.assertEqual(len(sched), 4)
+        self.assertIn("celery.backend_cleanup", sched)
         for n, e in sched.items():
             self.assertIsInstance(e, self.s.Entry)
 
@@ -137,46 +147,43 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.m3.delete()
         self.assertRaises(KeyError, self.s.schedule.__getitem__, self.m3.name)
 
-    def tearDown(self):
-        PeriodicTask.objects.all().delete()
-
-    def test_should_flush(self):
-        self.assertTrue(self.s.should_flush())
-        self.s._last_flush = time()
-        self.assertFalse(self.s.should_flush())
-        self.s._last_flush -= self.s._flush_every
-        self.assertTrue(self.s.should_flush())
+    def test_should_sync(self):
+        self.assertTrue(self.s.should_sync())
+        self.s._last_sync = time()
+        self.assertFalse(self.s.should_sync())
+        self.s._last_sync -= self.s.sync_every
+        self.assertTrue(self.s.should_sync())
 
     def test_reserve(self):
         e1 = self.s.schedule[self.m1.name]
-        self.s[self.m1.name] = self.s.reserve(e1)
+        self.s.schedule[self.m1.name] = self.s.reserve(e1)
         self.assertEqual(self.s.flushed, 2)
 
         e2 = self.s.schedule[self.m2.name]
-        self.s[self.m2.name] = self.s.reserve(e2)
+        self.s.schedule[self.m2.name] = self.s.reserve(e2)
         self.assertEqual(self.s.flushed, 2)
         self.assertIn(self.m2.name, self.s._dirty)
 
-    def test_flush_saves_last_run_at(self):
+    def test_sync_saves_last_run_at(self):
         e1 = self.s.schedule[self.m2.name]
         last_run = e1.last_run_at
         last_run2 = last_run - timedelta(days=1)
         e1.model.last_run_at = last_run2
         self.s._dirty.add(self.m2.name)
-        self.s.flush()
+        self.s.sync()
 
         e2 = self.s.schedule[self.m2.name]
         self.assertEqual(e2.last_run_at, last_run2)
 
-    def test_flush_syncs_before_save(self):
+    def test_sync_syncs_before_save(self):
 
         # Get the entry for m2
         e1 = self.s.schedule[self.m2.name]
 
-        # Increment the entry (but make sure it doesn't flush)
-        self.s._last_flush = time()
+        # Increment the entry (but make sure it doesn't sync)
+        self.s._last_sync = time()
         e2 = self.s.schedule[e1.name] = self.s.reserve(e1)
-        self.assertEqual(self.s.flushed, 1)
+        self.assertEqual(self.s.flushed, 2)
 
         # Fetch the raw object from db, change the args
         # and save the changes.
@@ -185,24 +192,24 @@ class test_DatabaseScheduler(unittest.TestCase):
         m2.save()
 
         # get_schedule should now see the schedule has changed.
-        # and also flush the dirty objects.
+        # and also sync the dirty objects.
         e3 = self.s.schedule[self.m2.name]
-        self.assertEqual(self.s.flushed, 2)
+        self.assertEqual(self.s.flushed, 3)
         self.assertEqual(e3.last_run_at, e2.last_run_at)
         self.assertListEqual(e3.args, [16, 16])
 
-    def test_flush_not_dirty(self):
+    def test_sync_not_dirty(self):
         self.s._dirty.clear()
-        self.s.flush()
+        self.s.sync()
 
-    def test_flush_object_gone(self):
+    def test_sync_object_gone(self):
         self.s._dirty.add("does-not-exist")
-        self.s.flush()
+        self.s.sync()
 
-    def test_flush_rollback_on_save_error(self):
+    def test_sync_rollback_on_save_error(self):
         self.s.schedule[self.m1.name] = EntrySaveRaises(self.m1)
         self.s._dirty.add(self.m1.name)
-        self.assertRaises(RuntimeError, self.s.flush)
+        self.assertRaises(RuntimeError, self.s.sync)
 
 
 class test_models(unittest.TestCase):

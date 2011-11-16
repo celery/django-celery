@@ -15,7 +15,8 @@ import djcelery
 # General configuration
 # ---------------------
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage',
+             'sphinxcontrib.issuetracker']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']
@@ -28,7 +29,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-celery'
-copyright = u'2009, Ask Solem'
+copyright = u'2009-2011, Ask Solem'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -72,3 +73,11 @@ html_sidebars = {
     '**': ['sidebarlogo.html', 'localtoc.html', 'relations.html',
            'sourcelink.html', 'searchbox.html'],
 }
+
+### Issuetracker
+
+# this is not working for some reason...
+if False:
+    issuetracker = "github"
+    issuetracker_project = "ask/django-celery"
+    issuetracker_issue_pattern = r'[Ii]ssue #(\d+)'

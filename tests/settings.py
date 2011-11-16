@@ -48,11 +48,12 @@ CELERY_QUEUES = {"testcelery": {"binding_key": "testcelery"}}
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''
-DATABASE_PORT = ''
+DATABASES = {"default": {"NAME": "djcelery-test-db",
+                         "ENGINE": "django.db.backends.sqlite3",
+                         "USER": '',
+                         "PASSWORD": '',
+                         "PORT": ''}}
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',

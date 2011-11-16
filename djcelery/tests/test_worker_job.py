@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+
 from django.core import cache
 
 from celery.utils import gen_unique_id
-from celery.decorators import task as task_dec
+from celery.task import task as task_dec
 
-from celery.tests.test_worker_job import jail
+from celery.tests.test_worker.test_worker_job import jail
 
 from djcelery.tests.utils import unittest
 
 
 @task_dec()
-def mytask(i, **kwargs):
+def mytask(i):
     return i ** i
 
 
 @task_dec()
-def get_db_connection(i, **kwargs):
+def get_db_connection(i):
     from django.db import connection
     return id(connection)
 get_db_connection.ignore_result = True
@@ -40,7 +42,6 @@ class TestJail(unittest.TestCase):
             connection.close = old_connection_close
 
     def test_django_cache_connection_is_closed(self):
-        from django.core import cache
         old_cache_close = getattr(cache.cache, "close", None)
         cache._was_closed = False
         old_cache_parse_backend = getattr(cache, "parse_backend_uri", None)
@@ -59,7 +60,6 @@ class TestJail(unittest.TestCase):
             cache.parse_backend_uri = old_cache_parse_backend
 
     def test_django_cache_connection_is_closed_django_1_1(self):
-        from django.core import cache
         old_cache_close = getattr(cache.cache, "close", None)
         cache._was_closed = False
         old_cache_parse_backend = getattr(cache, "parse_backend_uri", None)

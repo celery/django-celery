@@ -1,7 +1,10 @@
+from __future__ import absolute_import
+
 import imp
 import importlib
 import warnings
 
+from celery import signals
 from celery.loaders.base import BaseLoader
 from celery.datastructures import DictAttribute
 
@@ -18,6 +21,15 @@ class DjangoLoader(BaseLoader):
             "database": "djcelery.backends.database.DatabaseBackend",
             "cache": "djcelery.backends.cache.CacheBackend"}
 
+    def __init__(self, *args, **kwargs):
+        super(DjangoLoader, self).__init__(*args, **kwargs)
+        self._install_signal_handlers()
+
+    def _install_signal_handlers(self):
+        # Need to close any open database connection after
+        # any embedded celerybeat process forks.
+        signals.beat_embedded_init.connect(self.close_database)
+
     def read_configuration(self):
         """Load configuration from Django settings."""
         from django.conf import settings
@@ -30,7 +42,7 @@ class DjangoLoader(BaseLoader):
             settings.CELERY_RESULT_BACKEND = "database"
         return DictAttribute(settings)
 
-    def close_database(self):
+    def close_database(self, **kwargs):
         import django.db
         db_reuse_max = getattr(self.conf, "CELERY_DB_REUSE_MAX", None)
         if not db_reuse_max:
@@ -57,6 +69,10 @@ class DjangoLoader(BaseLoader):
         self.close_database()
         self.close_cache()
 
+    def on_task_init(self, *args, **kwargs):
+        """Called before every task."""
+        self.close_database()
+
     def on_worker_init(self):
         """Called when the worker starts.
 
@@ -67,15 +83,19 @@ class DjangoLoader(BaseLoader):
 
         from django.conf import settings
         if settings.DEBUG:
-            warnings.warn("Using settings.DEBUG leads to a memory leak, never"
+            warnings.warn("Using settings.DEBUG leads to a memory leak, never "
                           "use this setting in production environments!")
 
-        # the parent process may have established these,
-        # so need to close them.
         self.close_database()
         self.close_cache()
         self.import_default_modules()
         autodiscover()
+
+    def on_worker_process_init(self):
+        # the parent process may have established these,
+        # so need to close them.
+        self.close_database()
+        self.close_cache()
 
     def mail_admins(self, subject, body, fail_silently=False, **kwargs):
         return mail_admins(subject, body, fail_silently=fail_silently)
@@ -110,9 +130,4 @@ def find_related_module(app, related_name):
     except ImportError:
         return
 
-    module = importlib.import_module("%s.%s" % (app, related_name))
-
-    try:
-        return getattr(module, related_name)
-    except AttributeError:
-        return
+    return importlib.import_module("%s.%s" % (app, related_name))

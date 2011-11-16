@@ -3,6 +3,8 @@
 Start detached worker node from the Django management utility.
 
 """
+from __future__ import absolute_import
+
 import os
 import sys
 
@@ -15,7 +17,7 @@ class Command(CeleryCommand):
     """Run the celery daemon."""
     help = 'Runs a detached Celery worker node.'
     requires_model_validation = True
-    option_list = celeryd_detach.OPTION_LIST
+    options = celeryd_detach.OPTION_LIST
 
     def run_from_argv(self, argv):
 

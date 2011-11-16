@@ -40,7 +40,7 @@ this should do. For all of the options available, please see the
 all configurations listed there should be added to ``settings.py``.
 
 .. _`configuration directive reference`:
-    http://celeryq.org/docs/configuration.html
+    http://docs.celeryq.org/en/latest/configuration.html
 
 
 **Note:** If you're using SQLite as the Django database back-end,
@@ -69,7 +69,7 @@ background as a daemon. To do this you need to use the tools provided by your
 platform. See `Running Celery as a daemon`_.
 
 .. _`Running Celery as a Daemon`:
-    http://celeryq.org/docs/cookbook/daemonizing.html
+    http://docs.celeryq.org/en/latest/cookbook/daemonizing.html
 
 For a complete listing of the command line options available, use the help command::
 
@@ -105,7 +105,7 @@ greater control of the task execution.
 See `Executing Tasks`_ for more information.
 
 .. _`Executing Tasks`:
-    http://celeryq.org/docs/userguide/executing.html
+    http://docs.celeryq.org/en/latest/userguide/executing.html
 
     >>> from myapp.tasks import MyTask
     >>> MyTask.delay(some_arg="foo")
@@ -150,5 +150,5 @@ To learn more you should read the `Celery User Guide`_, and the
 `Celery Documentation`_ in general
 
 
-.. _`Celery User Guide`: http://celeryproject.org/docs/userguide/
-.. _`Celery Documentation`: http://celeryproject.org/docs/
+.. _`Celery User Guide`: http://docs.celeryproject.org/en/latest/userguide/
+.. _`Celery Documentation`: http://docs.celeryproject.org/

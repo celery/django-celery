@@ -5,6 +5,194 @@
 .. contents::
     :local:
 
+.. _version-2.4.2:
+
+2.4.2
+=====
+:release-date: 2011-11-14 12:00 P.M GMT
+
+* Fixed syntax error in South migrations code (Issue #88).
+
+    Fix contributed by Olivier Tabone.
+
+.. _version-2.4.1:
+
+2.4.1
+=====
+:release-date: 2011-11-07 06:00 P.M GMT
+:by: Ask Solem
+
+* Management commands was missing command line arguments because of recent
+  changes to Celery.
+
+* Management commands now supports the ``--broker|-b`` option.
+
+* South migrations now ignores errors when tables already exist.
+
+.. _version-2.4.0:
+
+2.4.0
+=====
+:release-date: 2011-11-04 04:00 P.M GMT
+:by: Ask Solem
+
+.. _240-important:
+
+Important Notes
+---------------
+
+This release adds `South`_ migrations, which well assist users in automatically
+updating their database schemas with each django-celery release.
+
+.. _`South`: http://pypi.python.org/pypi/South/
+
+.. _240-news:
+
+News
+----
+
+* Now depends on Celery 2.4.0 or higher.
+
+* South migrations have been added.
+
+    Migration 0001 is a snapshot from the previous stable release (2.3.3).
+    For those who do not use South, no action is required.
+    South users will want to read the :ref:`240-upgrade-south` section
+    below.
+
+    Contributed by Greg Taylor.
+
+* Test runner now compatible with Django 1.4.
+
+    Test runners are now classes instead of functions,
+    so you have to change the ``TEST_RUNNER`` setting to read::
+
+        TEST_RUNNER = "djcelery.contrib.test_runner.CeleryTestSuiteRunner"
+
+    Contributed by Jonas Haag.
+
+.. _240-upgrade_south:
+
+Upgrading for south users
+-------------------------
+
+For those that are already using django-celery 2.3.x, you'll need to fake the
+newly added migration 0001, since your database already has the current
+``djcelery_*`` and ``celery_*`` tables::
+
+    $ python manage.py migrate djcelery 0001 --fake
+
+If you're upgrading from the 2.2.x series, you'll want to drop/reset your
+``celery_*`` and ``djcelery_*`` tables and run the migration::
+
+    $ python manage.py migrate djcelery
+
+.. _version-2.3.3:
+
+2.3.3
+=====
+:release-date: 2011-08-22 12:00 AM BST
+
+* Precedence issue caused database backend tables to not be
+  created (Issue #62).
+
+.. _version-2.3.2:
+
+2.3.2
+=====
+:release-date: 2011-08-20 12:00 AM BST
+
+* Fixes circular import of DatabaseBackend.
+
+.. _version-2.3.1:
+
+2.3.1
+=====
+:release-date: 2011-08-11 12:00 PM BST
+
+* Django database result backend tables were not created.
+
+  If you are having troubles because of this, be sure you do a ``syncdb``
+  after upgrading, that should resolve the issue.
+
+.. _version-2.3.0:
+
+2.3.0
+=====
+:release-date: 2011-08-05 12:00 PM BST
+
+* Now depends on Celery 2.3.0
+
+    Please read the Celery 2.3.0 changelog!
+
+.. _version-2.2.4:
+
+2.2.4
+=====
+
+* celerybeat: DatabaseScheduler would not react to changes when using MySQL and
+  the default transaction isolation level ``REPEATABLE-READ`` (Issue #41).
+
+    It is still recommended that you use isolation level ``READ-COMMITTED``
+    (see the Celery FAQ).
+
+.. _version-2.2.3:
+
+2.2.3
+=====
+:release-date: 2011-02-12 16:00 PM CET
+
+* celerybeat: DatabaseScheduler did not respect the disabled setting after restart.
+
+* celeryevcam: Expiring objects now works on PostgreSQL.
+
+* Now requires Celery 2.2.3
+
+.. _version-2.2.2:
+
+2.2.2
+=====
+:release-date: 2011-02-03 16:00 PM CET
+
+* Now requires Celery 2.2.2
+
+* Periodic Task Admin broke if the CELERYBEAT_SCHEDULE setting was not set.
+
+* DatabaseScheduler No longer creates duplicate interval models.
+
+* The djcelery admin templates were not included in the distribution.
+
+.. _version-2.2.1:
+
+2.2.1
+=====
+
+:release-date: 2011-02-02 16:00 PM CET
+
+* Should now work with Django versions previous to 1.2.
+
+.. _version-2.2.0:
+
+2.2.0
+=====
+:release-date: 2011-02-01 10:00 AM CET
+
+* Now depends on Celery v2.2.0
+
+* djceleryadm: Adds task actions Kill and Terminate task
+
+* celerycam: Django's queryset.delete() fetches everything in
+  memory THEN deletes, so we need to use raw SQL to expire objects.
+
+* djcelerymon: Added Command.stdout + Command.stderr  (Issue #23).
+
+* Need to close any open database connection after any embedded
+  celerybeat process forks.
+
+* Added contrib/requirements/py25.txt
+
+* Demoproject now does ``djcelery.setup_loader`` in settings.py.
+
 .. _version-2.1.1:
 
 2.1.1

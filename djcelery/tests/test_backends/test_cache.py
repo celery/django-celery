@@ -1,8 +1,9 @@
+from __future__ import absolute_import
+
 import sys
 
 from datetime import timedelta
 
-from celery.serialization import pickle
 from django.core.cache.backends.base import InvalidCacheBackendError
 
 from celery import result
@@ -44,7 +45,7 @@ class test_CacheBackend(unittest.TestCase):
         self.assertNotIn(tid, b._cache)
         self.assertIsNone(b.get_result(tid))
 
-    def test_save_restore_taskset(self):
+    def test_save_restore_delete_taskset(self):
         backend = CacheBackend()
         taskset_id = gen_unique_id()
         subtask_ids = [gen_unique_id() for i in range(10)]
@@ -54,6 +55,9 @@ class test_CacheBackend(unittest.TestCase):
         saved = result.TaskSetResult.restore(taskset_id, backend=backend)
         self.assertListEqual(saved.subtasks, subtasks)
         self.assertEqual(saved.taskset_id, taskset_id)
+        saved.delete(backend=backend)
+        self.assertIsNone(result.TaskSetResult.restore(taskset_id,
+                                                       backend=backend))
 
     def test_is_pickled(self):
         cb = CacheBackend()
@@ -95,10 +99,10 @@ class test_CacheBackend(unittest.TestCase):
 class test_custom_CacheBackend(unittest.TestCase):
 
     def test_custom_cache_backend(self):
-        from celery.app import default_app
-        prev_backend = default_app.conf.CELERY_CACHE_BACKEND
+        from celery import current_app
+        prev_backend = current_app.conf.CELERY_CACHE_BACKEND
         prev_module = sys.modules["djcelery.backends.cache"]
-        default_app.conf.CELERY_CACHE_BACKEND = "dummy://"
+        current_app.conf.CELERY_CACHE_BACKEND = "dummy://"
         sys.modules.pop("djcelery.backends.cache")
         try:
             from djcelery.backends.cache import cache
@@ -107,7 +111,7 @@ class test_custom_CacheBackend(unittest.TestCase):
                               "django.core.cache.backends.dummy")
             self.assertIsNot(cache, django_cache)
         finally:
-            default_app.conf.CELERY_CACHE_BACKEND = prev_backend
+            current_app.conf.CELERY_CACHE_BACKEND = prev_backend
             sys.modules["djcelery.backends.cache"] = prev_module
 
 
@@ -126,16 +130,14 @@ class test_MemcacheWrapper(unittest.TestCase):
         memcached.CacheClass = locmem.CacheClass
         prev_backend_module = sys.modules.pop("djcelery.backends.cache")
         try:
-            from djcelery.backends.cache import cache, DjangoMemcacheWrapper
-            self.assertIsInstance(cache, DjangoMemcacheWrapper)
-
+            from djcelery.backends.cache import cache
             key = "cu.test_memcache_wrapper"
             val = "The quick brown fox."
             default = "The lazy dog."
 
             self.assertEqual(cache.get(key, default=default), default)
             cache.set(key, val)
-            self.assertEqual(pickle.loads(cache.get(key, default=default)),
+            self.assertEqual(cache.get(key, default=default),
                               val)
         finally:
             memcached.CacheClass = prev_cache_cls

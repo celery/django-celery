@@ -1,8 +1,9 @@
+from __future__ import absolute_import
+
 import logging
 
 from datetime import datetime
 from multiprocessing.util import Finalize
-from time import time
 
 from anyjson import deserialize, serialize
 from django.db import transaction
@@ -10,9 +11,10 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
+from celery.utils.encoding import safe_str, safe_repr
 
-from djcelery.models import (PeriodicTask, PeriodicTasks,
-                             CrontabSchedule, IntervalSchedule)
+from .models import (PeriodicTask, PeriodicTasks,
+                     CrontabSchedule, IntervalSchedule)
 
 
 class ModelEntry(ScheduleEntry):
@@ -42,14 +44,23 @@ class ModelEntry(ScheduleEntry):
         self.model = model
 
         if not model.last_run_at:
-            model.last_run_at = datetime.now()
+            model.last_run_at = self._default_now()
         self.last_run_at = model.last_run_at
+
+    def is_due(self):
+        if not self.model.enabled:
+            return False, 5.0   # 5 second delay for re-enable.
+        return self.schedule.is_due(self.last_run_at)
+
+    def _default_now(self):
+        return datetime.now()
 
     def next(self):
         self.model.last_run_at = datetime.now()
         self.model.total_run_count += 1
         self.model.no_changes = True
         return self.__class__(self.model)
+    __next__ = next  # for 2to3
 
     def save(self):
         # Object may not be synchronized, so only
@@ -82,11 +93,11 @@ class ModelEntry(ScheduleEntry):
                                                             defaults=fields))
 
     def __repr__(self):
-        return "<ModelEntry: %s %s(*%s, **%s) {%s}" % (self.name,
-                                                        self.task,
-                                                        self.args,
-                                                        self.kwargs,
-                                                        self.schedule)
+        return "<ModelEntry: %s %s(*%s, **%s) {%s}" % (safe_str(self.name),
+                                                       self.task,
+                                                       safe_repr(self.args),
+                                                       safe_repr(self.kwargs),
+                                                       self.schedule)
 
 
 class DatabaseScheduler(Scheduler):
@@ -97,15 +108,14 @@ class DatabaseScheduler(Scheduler):
     _last_timestamp = None
 
     def __init__(self, *args, **kwargs):
+        self._dirty = set()
+        self._finalize = Finalize(self, self.sync, exitpriority=5)
         Scheduler.__init__(self, *args, **kwargs)
         self.max_interval = 5
-        self._dirty = set()
-        self._last_flush = None
-        self._flush_every = 3 * 60
-        self._finalize = Finalize(self, self.flush, exitpriority=5)
 
     def setup_schedule(self):
-        pass
+        self.install_default_entries(self.schedule)
+        self.update_from_dict(self.app.conf.CELERYBEAT_SCHEDULE)
 
     def all_as_schedule(self):
         self.logger.debug("DatabaseScheduler: Fetching database schedule")
@@ -119,6 +129,15 @@ class DatabaseScheduler(Scheduler):
 
     def schedule_changed(self):
         if self._last_timestamp is not None:
+            # If MySQL is running with transaction isolation level
+            # REPEATABLE-READ (default), then we won't see changes done by
+            # other transactions until the current transaction is
+            # committed (Issue #41).
+            try:
+                transaction.commit()
+            except transaction.TransactionManagementError:
+                pass  # not in transaction management.
+
             ts = self.Changes.last_change()
             if not ts or ts < self._last_timestamp:
                 return False
@@ -126,38 +145,28 @@ class DatabaseScheduler(Scheduler):
         self._last_timestamp = datetime.now()
         return True
 
-    def should_flush(self):
-        return not self._last_flush or \
-                    (time() - self._last_flush) > self._flush_every
-
     def reserve(self, entry):
         new_entry = Scheduler.reserve(self, entry)
-        # Need to story entry by name, because the entry may change
+        # Need to store entry by name, because the entry may change
         # in the mean time.
         self._dirty.add(new_entry.name)
-        if self.should_flush():
-            self.logger.debug("Celerybeat: Writing schedule changes...")
-            self.flush()
         return new_entry
 
     @transaction.commit_manually
-    def flush(self):
+    def sync(self):
         self.logger.debug("Writing dirty entries...")
-        if not self._dirty:
-            return
         try:
             while self._dirty:
                 try:
                     name = self._dirty.pop()
                     self.schedule[name].save()
                 except (KeyError, ObjectDoesNotExist):
-                    continue
+                    pass
         except:
             transaction.rollback()
             raise
         else:
             transaction.commit()
-            self._last_flush = time()
 
     def update_from_dict(self, dict_):
         s = {}
@@ -172,7 +181,7 @@ class DatabaseScheduler(Scheduler):
 
     def get_schedule(self):
         if self.schedule_changed():
-            self.flush()
+            self.sync()
             self.logger.debug("DatabaseScheduler: Schedule changed.")
             self._schedule = self.all_as_schedule()
             if self.logger.isEnabledFor(logging.DEBUG):

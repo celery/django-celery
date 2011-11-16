@@ -1,8 +1,9 @@
 """Django Celery Integration."""
+from __future__ import absolute_import
+
 import os
 
-
-VERSION = (2, 2, 0, "a5")
+VERSION = (2, 4, 2)
 
 __version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
 __author__ = "Ask Solem"

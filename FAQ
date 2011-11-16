@@ -63,7 +63,7 @@ To use this test runner, add the following to your ``settings.py``:
 
 .. code-block:: python
 
-    TEST_RUNNER = "djcelery.tests.runners.run_tests",
+    TEST_RUNNER = "djcelery.tests.runners.CeleryTestSuiteRunner",
     TEST_APPS = (
         "app1",
         "app2",
@@ -76,6 +76,6 @@ Or, if you just want to skip the celery tests:
 .. code-block:: python
 
     INSTALLED_APPS = (.....)
-    TEST_RUNNER = "djcelery.tests.runners.run_tests",
+    TEST_RUNNER = "djcelery.tests.runners.CeleryTestSuiteRunner",
     TEST_APPS = filter(lambda k: k != "celery", INSTALLED_APPS)
 
