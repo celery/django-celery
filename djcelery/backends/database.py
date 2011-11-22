@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from celery import current_app
 from celery.backends.base import BaseDictBackend
+from celery.utils.timeutils import maybe_timedelta
 
 from ..models import TaskMeta, TaskSetMeta
 
@@ -52,5 +53,6 @@ class DatabaseBackend(BaseDictBackend):
 
     def cleanup(self):
         """Delete expired metadata."""
+        expires = maybe_timedelta(self.expires)
         for model in self.TaskModel, self.TaskSetModel:
-            model._default_manager.delete_expired(self.expires)
+            model._default_manager.delete_expired(expires)
