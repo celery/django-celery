@@ -5,7 +5,7 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
-from django.db.utils import DatabaseError
+from django.db import DatabaseError
 
 
 def ignore_exists(fun, *args, **kwargs):
