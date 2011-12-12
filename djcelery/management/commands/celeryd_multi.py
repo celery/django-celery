@@ -16,6 +16,7 @@ class Command(CeleryCommand):
     help = "Manage multiple Celery worker nodes."
     requires_model_validation = True
     options = ()
+    keep_base_opts = True
 
     def run_from_argv(self, argv):
         argv = self.handle_default_options(argv)

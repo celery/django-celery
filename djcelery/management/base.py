@@ -13,6 +13,7 @@ import djcelery
 class CeleryCommand(BaseCommand):
     options = BaseCommand.option_list
     skip_opts = ["--app", "--loader", "--config"]
+    keep_base_opts = False
 
     def get_version(self):
         return "celery %s\ndjango-celery %s" % (celery.__version__,
@@ -40,12 +41,12 @@ class CeleryCommand(BaseCommand):
             elif "--broker=" in arg:
                 _, broker = arg.split("=")
             elif arg == "-b":
-                broker = argv.pop(i + 1)
+                broker = argv[i + 1]
             else:
                 acc.append(arg)
         if broker:
             self.set_broker(broker)
-        return acc
+        return argv if self.keep_base_opts else acc
 
     def die(self, msg):
         sys.stderr.write(msg)
