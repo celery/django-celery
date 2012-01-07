@@ -4,6 +4,13 @@ from datetime import datetime
 
 from django.utils.translation import ungettext, ugettext as _
 
+
+try:
+    from django.utils.timezone import now
+except ImportError:
+    now = datetime.now
+
+
 JUST_NOW = _("just now")
 SECONDS_AGO = (_("%(seconds)d second ago"), _("%(seconds)d seconds ago"))
 MINUTES_AGO = (_("%(minutes)d minute ago"), _("%(minutes)d minutes ago"))
@@ -33,9 +40,9 @@ def naturaldate(date):
     if not date:
         return ''
 
-    now = datetime.now()
-    today = datetime(now.year, now.month, now.day)
-    delta = now - date
+    _now = now()
+    today = datetime(_now.year, _now.month, _now.day, tzinfo=_now.tzinfo)
+    delta = _now - date
     delta_midnight = today - date
 
     days = delta.days

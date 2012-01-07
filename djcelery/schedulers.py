@@ -7,6 +7,7 @@ from multiprocessing.util import Finalize
 
 from anyjson import deserialize, serialize
 from django.db import transaction
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from celery import schedules
@@ -15,6 +16,12 @@ from celery.utils.encoding import safe_str, safe_repr
 
 from .models import (PeriodicTask, PeriodicTasks,
                      CrontabSchedule, IntervalSchedule)
+
+
+try:
+    from django.utils.timezone import now
+except ImportError:
+    now = datetime.now
 
 
 class ModelEntry(ScheduleEntry):
@@ -50,13 +57,13 @@ class ModelEntry(ScheduleEntry):
     def is_due(self):
         if not self.model.enabled:
             return False, 5.0   # 5 second delay for re-enable.
-        return self.schedule.is_due(self.last_run_at)
+        return self.schedule.is_due(self.last_run_at.replace(tzinfo=None))
 
     def _default_now(self):
-        return datetime.now()
+        return now()
 
     def next(self):
-        self.model.last_run_at = datetime.now()
+        self.model.last_run_at = now()
         self.model.total_run_count += 1
         self.model.no_changes = True
         return self.__class__(self.model)
@@ -142,7 +149,7 @@ class DatabaseScheduler(Scheduler):
             if not ts or ts < self._last_timestamp:
                 return False
 
-        self._last_timestamp = datetime.now()
+        self._last_timestamp = now()
         return True
 
     def reserve(self, entry):
