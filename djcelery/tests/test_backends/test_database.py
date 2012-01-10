@@ -9,6 +9,7 @@ from celery.task import PeriodicTask
 from celery.utils import gen_unique_id
 
 from djcelery.backends.database import DatabaseBackend
+from djcelery.utils import now
 from djcelery.tests.utils import unittest
 
 
@@ -89,8 +90,7 @@ class TestDatabaseBackend(unittest.TestCase):
 
         self.assertEqual(b.TaskModel._default_manager.count(), 3)
 
-        then = datetime.now() - \
-                current_app.conf.CELERY_TASK_RESULT_EXPIRES * 2
+        then = now() - current_app.conf.CELERY_TASK_RESULT_EXPIRES * 2
         # Have to avoid save() because it applies the auto_now=True.
         b.TaskModel._default_manager.filter(task_id__in=ids[:-1]) \
                                     .update(date_done=then)

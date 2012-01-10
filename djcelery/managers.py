@@ -18,6 +18,8 @@ from django.conf import settings
 
 from celery.utils.timeutils import maybe_timedelta
 
+from .utils import now
+
 
 class TxIsolationWarning(UserWarning):
     pass
@@ -102,7 +104,7 @@ class ResultManager(ExtendedManager):
 
     def get_all_expired(self, expires):
         """Get all expired task results."""
-        return self.filter(date_done__lt=datetime.now() - expires)
+        return self.filter(date_done__lt=now() - expires)
 
     def delete_expired(self, expires):
         """Delete all expired taskset results."""
@@ -210,7 +212,7 @@ class TaskStateManager(ExtendedManager):
     def active(self):
         return self.filter(hidden=False)
 
-    def expired(self, states, expires, nowfun=datetime.now):
+    def expired(self, states, expires, nowfun=now):
         return self.filter(state__in=states,
                            tstamp__lte=nowfun() - maybe_timedelta(expires))
 

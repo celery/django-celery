@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from datetime import datetime
 
+from django.conf import settings
 from django.utils.translation import ungettext, ugettext as _
 
 JUST_NOW = _("just now")
@@ -26,6 +27,28 @@ def _un(singular__plural, n=None):
     singular, plural = singular__plural
     return ungettext(singular, plural, n)
 
+try:
+    from django.utils import timezone
+
+    def make_aware(value):
+        if getattr(settings, "USE_TZ", False):
+            default_tz = timezone.get_default_timezone()
+            value = timezone.make_aware(value, default_tz)
+        return value
+
+    def make_naive(value):
+        if getattr(settings, "USE_TZ", False):
+            default_tz = timezone.get_default_timezone()
+            value = timezone.make_naive(value, default_tz)
+        return value
+
+    def now():
+        return timezone.localtime(timezone.now())
+
+except ImportError:
+    now = datetime.now
+    make_aware = make_naive = lambda x: x
+
 
 def naturaldate(date):
     """Convert datetime into a human natural date string."""
@@ -33,9 +56,9 @@ def naturaldate(date):
     if not date:
         return ''
 
-    now = datetime.now()
-    today = datetime(now.year, now.month, now.day)
-    delta = now - date
+    right_now = now()
+    today = datetime(right_now.year, right_now.month, right_now.day, tzinfo=right_now.tzinfo)
+    delta = right_now - date
     delta_midnight = today - date
 
     days = delta.days
