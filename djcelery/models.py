@@ -18,6 +18,7 @@ from celery import states
 from celery.utils.timeutils import timedelta_seconds
 
 from . import managers
+from .utils import now
 
 HEARTBEAT_EXPIRE = 150      # 2 minutes, 30 seconds
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
@@ -155,9 +156,8 @@ class PeriodicTasks(models.Model):
     @classmethod
     def changed(cls, instance, **kwargs):
         if not instance.no_changes:
-            now = datetime.now()
             cls.objects.update_or_create(ident=1,
-                                         defaults={"last_update": now})
+                                         defaults={"last_update": now()})
 
     @classmethod
     def last_change(cls):

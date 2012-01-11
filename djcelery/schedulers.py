@@ -15,6 +15,7 @@ from celery.utils.encoding import safe_str, safe_repr
 
 from .models import (PeriodicTask, PeriodicTasks,
                      CrontabSchedule, IntervalSchedule)
+from .utils import now, make_naive
 
 
 class ModelEntry(ScheduleEntry):
@@ -53,10 +54,10 @@ class ModelEntry(ScheduleEntry):
         return self.schedule.is_due(self.last_run_at)
 
     def _default_now(self):
-        return datetime.now()
+        return now()
 
     def next(self):
-        self.model.last_run_at = datetime.now()
+        self.model.last_run_at = now()
         self.model.total_run_count += 1
         self.model.no_changes = True
         return self.__class__(self.model)
@@ -93,7 +94,7 @@ class ModelEntry(ScheduleEntry):
                                                             defaults=fields))
 
     def __repr__(self):
-        return "<ModelEntry: %s %s(*%s, **%s) {%s}" % (safe_str(self.name),
+        return "<ModelEntry: %s %s(*%s, **%s) {%s}>" % (safe_str(self.name),
                                                        self.task,
                                                        safe_repr(self.args),
                                                        safe_repr(self.kwargs),
@@ -139,10 +140,10 @@ class DatabaseScheduler(Scheduler):
                 pass  # not in transaction management.
 
             ts = self.Changes.last_change()
-            if not ts or ts < self._last_timestamp:
+            if not ts or ts < make_naive(self._last_timestamp):
                 return False
 
-        self._last_timestamp = datetime.now()
+        self._last_timestamp = now()
         return True
 
     def reserve(self, entry):

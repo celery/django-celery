@@ -8,6 +8,7 @@ from celery.utils import gen_unique_id
 
 from djcelery.models import TaskMeta, TaskSetMeta
 from djcelery.tests.utils import unittest
+from djcelery.utils import now
 
 
 class TestModels(unittest.TestCase):
@@ -43,7 +44,7 @@ class TestModels(unittest.TestCase):
 
         # Have to avoid save() because it applies the auto_now=True.
         TaskMeta.objects.filter(task_id=m1.task_id).update(
-                date_done=datetime.now() - timedelta(days=10))
+                date_done=now() - timedelta(days=10))
 
         expired = TaskMeta.objects.get_all_expired(
                     current_app.conf.CELERY_TASK_RESULT_EXPIRES)
@@ -69,7 +70,7 @@ class TestModels(unittest.TestCase):
 
         # Have to avoid save() because it applies the auto_now=True.
         TaskSetMeta.objects.filter(taskset_id=m1.taskset_id).update(
-                date_done=datetime.now() - timedelta(days=10))
+                date_done=now() - timedelta(days=10))
 
         expired = TaskSetMeta.objects.get_all_expired(
                     current_app.conf.CELERY_TASK_RESULT_EXPIRES)
