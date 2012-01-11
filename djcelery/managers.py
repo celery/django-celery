@@ -18,10 +18,7 @@ from django.conf import settings
 
 from celery.utils.timeutils import maybe_timedelta
 
-try:
-    from django.utils.timezone import now
-except ImportError:
-    now = datetime.now
+from .utils import now
 
 
 class TxIsolationWarning(UserWarning):

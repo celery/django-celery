@@ -13,3 +13,7 @@ erl_crash.dump
 *.db
 Documentation/
 *.sqlite
+.tox/
+cover/
+coverage.xml
+nosetests.xml

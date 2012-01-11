@@ -18,6 +18,7 @@ from celery import states
 from celery.utils.timeutils import timedelta_seconds
 
 from . import managers
+from .utils import now
 
 try:
     from django.utils.timezone import now

@@ -11,6 +11,7 @@ from djcelery import schedulers
 from djcelery.app import app
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
+from djcelery.utils import now, make_aware
 from djcelery.tests.utils import unittest
 
 
@@ -85,12 +86,12 @@ class test_ModelEntry(unittest.TestCase):
                                        "exchange": "foo",
                                        "routing_key": "cpu"}, e.options)
 
-        now = datetime.now()
+        right_now = now()
         m2 = create_model_interval(schedule(timedelta(seconds=10)),
-                                   last_run_at=now)
+                                   last_run_at=right_now)
         self.assertTrue(m2.last_run_at)
         e2 = self.Entry(m2)
-        self.assertIs(e2.last_run_at, now)
+        self.assertIs(e2.last_run_at, right_now)
 
         e3 = e2.next()
         self.assertGreater(e3.last_run_at, e2.last_run_at)
@@ -173,7 +174,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.s.sync()
 
         e2 = self.s.schedule[self.m2.name]
-        self.assertEqual(e2.last_run_at, last_run2)
+        self.assertEqual(make_aware(e2.last_run_at), last_run2)
 
     def test_sync_syncs_before_save(self):
 
@@ -195,7 +196,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         # and also sync the dirty objects.
         e3 = self.s.schedule[self.m2.name]
         self.assertEqual(self.s.flushed, 3)
-        self.assertEqual(e3.last_run_at, e2.last_run_at)
+        self.assertEqual(make_aware(e3.last_run_at), e2.last_run_at)
         self.assertListEqual(e3.args, [16, 16])
 
     def test_sync_not_dirty(self):

@@ -16,6 +16,7 @@ from celery.utils.encoding import safe_str, safe_repr
 
 from .models import (PeriodicTask, PeriodicTasks,
                      CrontabSchedule, IntervalSchedule)
+from .utils import now, make_naive
 
 
 try:
@@ -100,7 +101,7 @@ class ModelEntry(ScheduleEntry):
                                                             defaults=fields))
 
     def __repr__(self):
-        return "<ModelEntry: %s %s(*%s, **%s) {%s}" % (safe_str(self.name),
+        return "<ModelEntry: %s %s(*%s, **%s) {%s}>" % (safe_str(self.name),
                                                        self.task,
                                                        safe_repr(self.args),
                                                        safe_repr(self.kwargs),
@@ -146,7 +147,7 @@ class DatabaseScheduler(Scheduler):
                 pass  # not in transaction management.
 
             ts = self.Changes.last_change()
-            if not ts or ts < self._last_timestamp:
+            if not ts or ts < make_naive(self._last_timestamp):
                 return False
 
         self._last_timestamp = now()
