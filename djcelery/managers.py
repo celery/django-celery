@@ -4,7 +4,6 @@ import warnings
 
 from functools import wraps
 from itertools import count
-from datetime import datetime
 
 from django.db import transaction, connection
 try:

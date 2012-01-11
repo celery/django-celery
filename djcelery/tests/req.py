@@ -4,6 +4,8 @@ from django.test import Client
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.handlers.base import BaseHandler
 
+from celery.utils.compat import WhateverIO
+
 
 class RequestFactory(Client):
     """Class that lets you create mock Request objects for use in testing.
@@ -36,6 +38,7 @@ class RequestFactory(Client):
             'SERVER_NAME': 'testserver',
             'SERVER_PORT': 80,
             'SERVER_PROTOCOL': 'HTTP/1.1',
+            'wsgi.input': WhateverIO(),
         }
 
         environ.update(self.defaults)

@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from time import time, mktime
 
 import django
@@ -19,12 +19,6 @@ from celery.utils.timeutils import timedelta_seconds
 
 from . import managers
 from .utils import now
-
-try:
-    from django.utils.timezone import now
-except ImportError:
-    now = datetime.now
-
 
 HEARTBEAT_EXPIRE = 150      # 2 minutes, 30 seconds
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)

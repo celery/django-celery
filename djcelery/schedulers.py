@@ -2,12 +2,10 @@ from __future__ import absolute_import
 
 import logging
 
-from datetime import datetime
 from multiprocessing.util import Finalize
 
 from anyjson import deserialize, serialize
 from django.db import transaction
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from celery import schedules
@@ -17,12 +15,6 @@ from celery.utils.encoding import safe_str, safe_repr
 from .models import (PeriodicTask, PeriodicTasks,
                      CrontabSchedule, IntervalSchedule)
 from .utils import now, make_naive
-
-
-try:
-    from django.utils.timezone import now
-except ImportError:
-    now = datetime.now
 
 
 class ModelEntry(ScheduleEntry):
@@ -58,7 +50,7 @@ class ModelEntry(ScheduleEntry):
     def is_due(self):
         if not self.model.enabled:
             return False, 5.0   # 5 second delay for re-enable.
-        return self.schedule.is_due(self.last_run_at.replace(tzinfo=None))
+        return self.schedule.is_due(self.last_run_at)
 
     def _default_now(self):
         return now()
