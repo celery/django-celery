@@ -10,6 +10,8 @@ from celery.datastructures import DictAttribute
 
 from django.core.mail import mail_admins
 
+from .utils import now
+
 _RACE_PROTECTION = False
 
 
@@ -29,6 +31,9 @@ class DjangoLoader(BaseLoader):
         # Need to close any open database connection after
         # any embedded celerybeat process forks.
         signals.beat_embedded_init.connect(self.close_database)
+
+    def now(self):
+        return now()
 
     def read_configuration(self):
         """Load configuration from Django settings."""
