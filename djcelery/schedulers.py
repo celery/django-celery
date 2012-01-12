@@ -139,7 +139,7 @@ class DatabaseScheduler(Scheduler):
                 pass  # not in transaction management.
 
             ts = self.Changes.last_change()
-            if not ts or ts < make_naive(self._last_timestamp):
+            if not ts or ts < self._last_timestamp:
                 return False
 
         self._last_timestamp = now()

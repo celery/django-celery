@@ -174,7 +174,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.s.sync()
 
         e2 = self.s.schedule[self.m2.name]
-        self.assertEqual(make_aware(e2.last_run_at), last_run2)
+        self.assertEqual(e2.last_run_at, last_run2)
 
     def test_sync_syncs_before_save(self):
 
@@ -196,7 +196,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         # and also sync the dirty objects.
         e3 = self.s.schedule[self.m2.name]
         self.assertEqual(self.s.flushed, 3)
-        self.assertEqual(make_aware(e3.last_run_at), e2.last_run_at)
+        self.assertEqual(e3.last_run_at, e2.last_run_at)
         self.assertListEqual(e3.args, [16, 16])
 
     def test_sync_not_dirty(self):
