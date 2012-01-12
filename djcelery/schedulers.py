@@ -179,6 +179,16 @@ class DatabaseScheduler(Scheduler):
                     "Contents: %r" % (name, exc, entry))
         self.schedule.update(s)
 
+    def install_default_entries(self, data):
+        entries = {}
+        if self.app.conf.CELERY_TASK_RESULT_EXPIRES:
+            if "celery.backend_cleanup" not in data:
+                entries["celery.backend_cleanup"] = {
+                        "task": "celery.backend_cleanup",
+                        "schedule": schedules.crontab("0", "4", "*", nowfun=now),
+                        "options": {"expires": 12 * 3600}}
+        self.update_from_dict(entries)
+
     def get_schedule(self):
         if self.schedule_changed():
             self.sync()

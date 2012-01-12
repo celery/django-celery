@@ -138,7 +138,8 @@ class CrontabSchedule(models.Model):
     def schedule(self):
         return schedules.crontab(minute=self.minute,
                                 hour=self.hour,
-                                day_of_week=self.day_of_week)
+                                day_of_week=self.day_of_week,
+                                nowfun=now)
 
     @classmethod
     def from_schedule(cls, schedule):
