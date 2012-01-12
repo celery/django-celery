@@ -1,5 +1,11 @@
 # Django settings for testproj project.
 
+import warnings
+warnings.filterwarnings(
+        'error', r"DateTimeField received a naive datetime",
+        RuntimeWarning, r'django\.db\.models\.fields')
+
+
 import os
 import sys
 # import source code dir

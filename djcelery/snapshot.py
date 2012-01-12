@@ -14,6 +14,7 @@ from celery.events.snapshot import Polaroid
 from celery.utils.timeutils import maybe_iso8601
 
 from .models import WorkerState, TaskState
+from .utils import make_aware
 
 
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
@@ -49,7 +50,7 @@ class Camera(Polaroid):
             heartbeat = worker.heartbeats[-1]
         except IndexError:
             return
-        return datetime.fromtimestamp(heartbeat)
+        return make_aware(datetime.fromtimestamp(heartbeat))
 
     def handle_worker(self, (hostname, worker)):
         last_write, obj = self._last_worker_write[hostname]
@@ -71,7 +72,8 @@ class Camera(Polaroid):
                           "eta": maybe_iso8601(task.eta),
                           "expires": maybe_iso8601(task.expires),
                           "state": task.state,
-                          "tstamp": datetime.fromtimestamp(task.timestamp),
+                          "tstamp": make_aware(datetime.fromtimestamp(
+                                        task.timestamp)),
                           "result": task.result or task.exception,
                           "traceback": task.traceback,
                           "runtime": task.runtime,
