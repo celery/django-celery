@@ -10,11 +10,7 @@ ADMINS = (
 )
 
 CELERY_RESULT_BACKEND = "database"
-BROKER_HOST = "localhost"
-BROKER_PORT = 5672
-BROKER_USER = "guest"
-BROKER_PASSWORD = "guest"
-BROKER_VHOST = "/"
+BROKER_URL = "amqp://guest:guest@localhost:5672//"
 
 MANAGERS = ADMINS
 
@@ -40,6 +36,7 @@ TIME_ZONE = 'America/Chicago'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
+USE_TZ = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
