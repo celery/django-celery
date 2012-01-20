@@ -22,6 +22,9 @@ If you're going the ``CELERY_ALWAYS_EAGER`` route, which is probably better than
 just never testing some parts of your app, a custom Django test runner does the
 trick. Celery provides a simple test runner, but it's easy enough to roll your
 own if you have other things that need to be done.
+
+This test runner provides ability to query results of task execution in the test
+database via ``djcelery.models.TaskState`` model.
 http://docs.djangoproject.com/en/dev/topics/testing/#defining-a-test-runner
 
 For this example, we'll use the ``djcelery.contrib.test_runner`` to test the
@@ -41,6 +44,7 @@ Then we can put the tests in a ``tests.py`` somewhere:
 .. code-block:: python
 
     from django.test import TestCase
+    from djcelery.models import TaskState
     from myapp.tasks import add
 
     class AddTestCase(TestCase):
@@ -53,6 +57,22 @@ Then we can put the tests in a ``tests.py`` somewhere:
             self.assertEquals(result.get(), 16)
             self.assertTrue(result.successful())
 
+            # Run another task
+            add.delay(4, 4)
+
+            # Assert we have 2 task results in the test database
+            self.assertEqual(TaskState.objects.count(), 2)
+
+            # Assert results
+            self.assertEqual([task_state.result for task_state
+                              in TaskState.objects.all()], [16, 8])
 
 This test assumes that you put your example ``add`` task in ``maypp.tasks``
 so adjust the import for wherever you put the class.
+
+If you're  going to use ``'djcelery.contrib.test_runner.CeleryTestSuiteRunner`` then if your task will raise exception it will propagate through. If you need to test ``on_failure`` behavior of your task, set ``settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS`` to ``False``:
+
+.. code-block:: python
+
+    settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = False
+
