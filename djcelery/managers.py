@@ -103,7 +103,7 @@ class ResultManager(ExtendedManager):
 
     def get_all_expired(self, expires):
         """Get all expired task results."""
-        return self.filter(date_done__lt=now() - expires)
+        return self.filter(date_done__lt=now() - maybe_timedelta(expires))
 
     def delete_expired(self, expires):
         """Delete all expired taskset results."""
