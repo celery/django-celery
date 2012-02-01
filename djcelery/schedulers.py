@@ -2,19 +2,20 @@ from __future__ import absolute_import
 
 import logging
 
-from multiprocessing.util import Finalize
+from warnings import warn
 
 from anyjson import deserialize, serialize
-from django.db import transaction
-from django.core.exceptions import ObjectDoesNotExist
-
 from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
 from celery.utils.encoding import safe_str, safe_repr
+from kombu.utils.finalize import Finalize
+
+from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import (PeriodicTask, PeriodicTasks,
                      CrontabSchedule, IntervalSchedule)
-from .utils import now, make_naive
+from .utils import DATABASE_ERRORS, now
 
 
 class ModelEntry(ScheduleEntry):
@@ -130,19 +131,22 @@ class DatabaseScheduler(Scheduler):
 
     def schedule_changed(self):
         if self._last_timestamp is not None:
-            # If MySQL is running with transaction isolation level
-            # REPEATABLE-READ (default), then we won't see changes done by
-            # other transactions until the current transaction is
-            # committed (Issue #41).
             try:
-                transaction.commit()
-            except transaction.TransactionManagementError:
-                pass  # not in transaction management.
+                # If MySQL is running with transaction isolation level
+                # REPEATABLE-READ (default), then we won't see changes done by
+                # other transactions until the current transaction is
+                # committed (Issue #41).
+                try:
+                    transaction.commit()
+                except transaction.TransactionManagementError:
+                    pass  # not in transaction management.
 
-            ts = self.Changes.last_change()
-            if not ts or ts < self._last_timestamp:
+                ts = self.Changes.last_change()
+                if not ts or ts < self._last_timestamp:
+                    return False
+            except DATABASE_ERRORS, exc:
+                warn(RuntimeWarning("Database gave error: %r" % (exc, )))
                 return False
-
         self._last_timestamp = now()
         return True
 
@@ -183,11 +187,10 @@ class DatabaseScheduler(Scheduler):
     def install_default_entries(self, data):
         entries = {}
         if self.app.conf.CELERY_TASK_RESULT_EXPIRES:
-            if "celery.backend_cleanup" not in data:
-                entries["celery.backend_cleanup"] = {
-                        "task": "celery.backend_cleanup",
-                        "schedule": schedules.crontab("0", "4", "*", nowfun=now),
-                        "options": {"expires": 12 * 3600}}
+            entries.setdefault("celery.backend_cleanup", {
+                    "task": "celery.backend_cleanup",
+                    "schedule": schedules.crontab("0", "4", "*", nowfun=now),
+                    "options": {"expires": 12 * 3600}})
         self.update_from_dict(entries)
 
     def get_schedule(self):
