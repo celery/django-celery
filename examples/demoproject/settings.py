@@ -62,7 +62,7 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
-CACHE_BACKEND = "memcached://127.0.0.1:11211"
+#CACHE_BACKEND = "memcached://127.0.0.1:11211"
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
