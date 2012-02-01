@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils.translation import ungettext, ugettext as _
 
 # Database-related exceptions.
-from django.db.utils import DatabaseError, IntegrityError
+from django.db.utils import DatabaseError
 try:
     import MySQLdb as mysql
     _my_database_errors = (mysql.DatabaseError, )

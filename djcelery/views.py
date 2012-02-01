@@ -31,7 +31,6 @@ def task_view(task):
     """
 
     def _applier(request, **options):
-        from celery import current_app
         kwargs = kwdict(request.method == "POST" and \
                         request.POST or request.GET)
         kwargs = dict((k, v[0])

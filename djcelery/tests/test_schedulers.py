@@ -11,7 +11,7 @@ from djcelery import schedulers
 from djcelery.app import app
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
-from djcelery.utils import now, make_aware
+from djcelery.utils import now
 from djcelery.tests.utils import unittest
 
 
@@ -237,7 +237,8 @@ class test_models(unittest.TestCase):
                         "%s: every 10.0 seconds" % p.name)
 
     def test_PeriodicTask_unicode_crontab(self):
-        p = create_model_crontab(crontab(hour="4, 5", day_of_week="4, 5", nowfun=now))
+        p = create_model_crontab(crontab(hour="4, 5", day_of_week="4, 5",
+                                 nowfun=now))
         self.assertEqual(unicode(p),
                         "%s: * 4,5 4,5 (m/h/d)" % p.name)
 
@@ -246,7 +247,8 @@ class test_models(unittest.TestCase):
         s1 = p1.schedule
         self.assertEqual(timedelta_seconds(s1.run_every), 10)
 
-        p2 = create_model_crontab(crontab(hour="4, 5", minute="10,20,30", nowfun=now))
+        p2 = create_model_crontab(crontab(hour="4, 5", minute="10,20,30",
+                                          nowfun=now))
         s2 = p2.schedule
         self.assertSetEqual(s2.hour, set([4, 5]))
         self.assertSetEqual(s2.minute, set([10, 20, 30]))
