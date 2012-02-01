@@ -31,9 +31,11 @@ def task_view(task):
     """
 
     def _applier(request, **options):
+        from celery import current_app
         kwargs = kwdict(request.method == "POST" and \
-                        request.POST.copy() or request.GET.copy())
-        kwargs.update(options)
+                        request.POST or request.GET)
+        kwargs = dict((k, v[0])
+                        for k, v in dict(kwargs, **options).iteritems())
 
         result = task.apply_async(kwargs=kwargs)
         return JsonResponse({"ok": "true", "task_id": result.task_id})
