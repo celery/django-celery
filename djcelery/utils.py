@@ -5,6 +5,35 @@ from datetime import datetime
 from django.conf import settings
 from django.utils.translation import ungettext, ugettext as _
 
+# Database-related exceptions.
+from django.db.utils import DatabaseError, IntegrityError
+try:
+    import MySQLdb as mysql
+    _my_database_errors = (mysql.DatabaseError, )
+except ImportError:
+    _my_database_errors = ()      # noqa
+try:
+    import psycopg2 as pg
+    _pg_database_errors = (pg.DatabaseError, )
+except ImportError:
+    _pg_database_errors = ()      # noqa
+try:
+    import sqlite3
+    _lite_database_errors = (sqlite3.DatabaseError, )
+except ImportError:
+    _lite_database_errors = ()    # noqa
+try:
+    import cx_Oracle as oracle
+    _oracle_database_errors = (oracle.DatabaseError, )
+except ImportError:
+    _oracle_database_errors = ()  # noqa
+
+DATABASE_ERRORS = ((DatabaseError, ) +
+                   _my_database_errors +
+                   _pg_database_errors +
+                   _lite_database_errors +
+                   _oracle_database_errors)
+
 JUST_NOW = _("just now")
 SECONDS_AGO = (_("%(seconds)d second ago"), _("%(seconds)d seconds ago"))
 MINUTES_AGO = (_("%(minutes)d minute ago"), _("%(minutes)d minutes ago"))

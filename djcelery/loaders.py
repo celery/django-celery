@@ -10,7 +10,7 @@ from celery.datastructures import DictAttribute
 
 from django.core.mail import mail_admins
 
-from .utils import now
+from .utils import DATABASE_ERRORS, now
 
 _RACE_PROTECTION = False
 
@@ -47,14 +47,27 @@ class DjangoLoader(BaseLoader):
             settings.CELERY_RESULT_BACKEND = "database"
         return DictAttribute(settings)
 
-    def close_database(self, **kwargs):
+    def _close_database(self):
         import django.db
+        try:
+            funs = [conn.close for conn in django.db.connections]
+        except AttributeError:
+            funs = [django.db.close_connection]  # pre multidb
+
+        for close in funs:
+            try:
+                close()
+            except DATABASE_ERRORS, exc:
+                if "closed" not in str(exc):
+                    raise
+
+    def close_database(self, **kwargs):
         db_reuse_max = getattr(self.conf, "CELERY_DB_REUSE_MAX", None)
         if not db_reuse_max:
-            return django.db.close_connection()
+            return self._close_database()
         if self._db_reuse >= db_reuse_max * 2:
             self._db_reuse = 0
-            return django.db.close_connection()
+            self._close_database()
         self._db_reuse += 1
 
     def close_cache(self):
