@@ -5,6 +5,24 @@
 .. contents::
     :local:
 
+.. _version-2.5.0:
+
+2.5.0
+=====
+:release-date: TBA
+
+.. _v250-important:
+
+Important Notes
+---------------
+
+* Database schema has been updated with new fields for the database result
+  backend tables.
+
+    So after upgrading you need to syncdb or migrate using South.
+
+    The changes means that expiring results will take less memory than before.
+
 .. _version-2.4.2:
 
 2.4.2
