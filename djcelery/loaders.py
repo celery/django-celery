@@ -8,6 +8,9 @@ from celery import signals
 from celery.loaders.base import BaseLoader
 from celery.datastructures import DictAttribute
 
+from django import db
+from django.conf import settings
+from django.core import cache
 from django.core.mail import mail_admins
 
 from .utils import DATABASE_ERRORS, now
@@ -37,7 +40,6 @@ class DjangoLoader(BaseLoader):
 
     def read_configuration(self):
         """Load configuration from Django settings."""
-        from django.conf import settings
         self.configured = True
         # Default backend needs to be the database backend for backward
         # compatibility.
@@ -48,11 +50,10 @@ class DjangoLoader(BaseLoader):
         return DictAttribute(settings)
 
     def _close_database(self):
-        import django.db
         try:
-            funs = [conn.close for conn in django.db.connections]
+            funs = [conn.close for conn in db.connections]
         except AttributeError:
-            funs = [django.db.close_connection]  # pre multidb
+            funs = [db.close_connection]  # pre multidb
 
         for close in funs:
             try:
@@ -72,7 +73,6 @@ class DjangoLoader(BaseLoader):
 
     def close_cache(self):
         try:
-            from django.core import cache
             cache.cache.close()
         except (TypeError, AttributeError):
             pass
@@ -99,7 +99,6 @@ class DjangoLoader(BaseLoader):
 
         """
 
-        from django.conf import settings
         if settings.DEBUG:
             warnings.warn("Using settings.DEBUG leads to a memory leak, never "
                           "use this setting in production environments!")
@@ -121,7 +120,6 @@ class DjangoLoader(BaseLoader):
 
 def autodiscover():
     """Include tasks for all applications in ``INSTALLED_APPS``."""
-    from django.conf import settings
     global _RACE_PROTECTION
 
     if _RACE_PROTECTION:
