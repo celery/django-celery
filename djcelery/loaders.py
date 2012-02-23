@@ -106,7 +106,13 @@ class DjangoLoader(BaseLoader):
         self.close_database()
         self.close_cache()
         self.import_default_modules()
-        autodiscover()
+
+    def import_default_modules(self):
+        super(DjangoLoader, self).import_default_modules()
+        self.autodiscover()
+
+    def autodiscover(self):
+        self.task_modules.update(mod.__name__ for mod in autodiscover())
 
     def on_worker_process_init(self):
         # the parent process may have established these,
