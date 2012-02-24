@@ -15,7 +15,8 @@ SKIP_FILES="djcelery.management.rst
             djcelery.contrib.rst
             djcelery.backends.rst
             djcelery.migrations.rst
-            djcelery.migrations.0001_initial.rst"
+            djcelery.migrations.0001_initial.rst
+            djcelery.migrations.0002_v25_changes.rst"
 
 modules=$(find "$PACKAGE" -name "*.py")
 

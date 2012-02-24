@@ -115,7 +115,7 @@ class test_registered_tasks(ViewTestCase):
     def test_list_registered_tasks(self):
         json = self.client.get(registered_tasks())
         tasks = deserialize(json.content)
-        self.assertIn("celery.ping", tasks["regular"])
+        self.assertIn("celery.backend_cleanup", tasks["regular"])
 
 
 class test_webhook_task(ViewTestCase):

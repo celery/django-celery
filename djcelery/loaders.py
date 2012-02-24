@@ -112,7 +112,7 @@ class DjangoLoader(BaseLoader):
         self.autodiscover()
 
     def autodiscover(self):
-        self.task_modules.update(mod.__name__ for mod in autodiscover())
+        self.task_modules.update(mod.__name__ for mod in autodiscover() or ())
 
     def on_worker_process_init(self):
         # the parent process may have established these,
