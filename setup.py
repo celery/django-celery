@@ -136,7 +136,7 @@ setup(
     zip_safe=False,
     install_requires=[
         "django-picklefield",
-        "celery>=2.4.2",
+        "celery>=2.5.0",
     ],
     cmdclass={"test": RunTests,
               "quicktest": QuickRunTests,
