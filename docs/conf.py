@@ -3,6 +3,9 @@
 import sys
 import os
 
+# test settings should not load django_nose when building docs.
+os.environ["DJCELERY_NO_NOSE"] = "1"
+
 # If your extensions are in another directory, add it here. If the directory
 # is relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.

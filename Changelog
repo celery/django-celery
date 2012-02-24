@@ -174,7 +174,7 @@ News
 
     Migration 0001 is a snapshot from the previous stable release (2.3.3).
     For those who do not use South, no action is required.
-    South users will want to read the :ref:`240-upgrade-south` section
+    South users will want to read the :ref:`240-upgrade_south` section
     below.
 
     Contributed by Greg Taylor.
