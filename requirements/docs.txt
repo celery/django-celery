@@ -2,3 +2,4 @@ Django
 Sphinx
 sphinxcontrib-issuetracker
 python-memcached
+django-nose
