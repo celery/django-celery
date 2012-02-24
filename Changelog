@@ -16,12 +16,55 @@
 Important Notes
 ---------------
 
-* Database schema has been updated with new fields for the database result
-  backend tables.
+* Database schema has been updated.
 
-    So after upgrading you need to syncdb or migrate using South.
+    After upgrading you need to syncdb or migrate using South.
 
-    The changes means that expiring results will take less memory than before.
+    These changes means that expiring results will be faster and
+    take less memory than before.
+
+    In addition a description field to the PeriodicTask model has
+    been added so that the purpose of a periodic task
+    in the database can be documented via the Admin interface.
+
+    To manually add the new fields:
+
+    using PostgreSQL:
+
+    .. code-block: sql
+
+        ALTER TABLE celery_taskmeta
+            ADD hidden BOOLEAN NOT NULL DEFAULT FALSE;
+
+        ALTER TABLE celery_tasksetmeta
+            ADD hidden BOOLEAN NOT NULL DEFAULT FALSE;
+
+        ALTER TABLE djcelery_periodictask
+            ADD description TEXT NOT NULL DEFAULT ""
+
+    using MySQL:
+
+    .. code-block:: sql
+
+        ALTER TABLE celery_taskmeta
+            ADD hidden TINYINT NOT NULL DEFAULT 0;
+
+        ALTER TABLE celery_tasksetmeta
+            ADD hidden TINYINT NOT NULL DEFAULT 0;
+
+        ALTER TABLE djcelery_periodictask
+            ADD description TEXT NOT NULL DEFAULT "";
+
+    using SQLite:
+
+    .. code-block:: sql
+
+        ALTER TABLE celery_taskmeta
+            ADD hidden BOOL NOT NULL DEFAULT FALSE;
+        ALTER TABLE celery_tasksetmeta
+            ADD hidden BOOL NOT NULL DEFAULT FALSE;
+        ALTER TABLE djcelery_periodictask
+            ADD description TEXT NOT NULL DEFAULT "";
 
 .. _version-2.4.2:
 

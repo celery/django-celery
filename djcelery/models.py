@@ -203,6 +203,7 @@ class PeriodicTask(models.Model):
                               editable=False, blank=True, null=True)
     total_run_count = models.PositiveIntegerField(default=0, editable=False)
     date_changed = models.DateTimeField(auto_now=True)
+    description = models.TextField(_("description"), blank=True)
 
     objects = managers.PeriodicTaskManager()
     no_changes = False
