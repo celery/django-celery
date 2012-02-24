@@ -9,16 +9,19 @@
 
 2.5.0
 =====
-:release-date: TBA
+:release-date: 2012-02-24 02:00 P.M GMT
 
 .. _v250-important:
 
 Important Notes
 ---------------
 
+* Now depends on Celery 2.5.
+
 * Database schema has been updated.
 
-    After upgrading you need to syncdb or migrate using South.
+    After upgrading you need migrate using South, or migrate manually
+    as described below.
 
     These changes means that expiring results will be faster and
     take less memory than before.
@@ -27,7 +30,20 @@ Important Notes
     been added so that the purpose of a periodic task
     in the database can be documented via the Admin interface.
 
-    To manually add the new fields:
+    **South Migration**
+
+    To migrate using South execute the following command::
+
+        $ python manage.py migrate djcelery
+
+    If this is a new project that is also using South then you need
+    to fake the migration:
+
+        $ python manage.y migrate djcelery --fake
+
+    **Manual Migration**
+
+    To manually add the new fields,
 
     using PostgreSQL:
 
@@ -64,7 +80,47 @@ Important Notes
         ALTER TABLE celery_tasksetmeta
             ADD hidden BOOL NOT NULL DEFAULT FALSE;
         ALTER TABLE djcelery_periodictask
-            ADD description TEXT NOT NULL DEFAULT "";
+            ADD description VARCHAR(200) NOT NULL DEFAULT "";
+
+.. _v250-news:
+
+News
+----
+
+* Auto-discovered task modules now works with the new auto-reloader
+  functionality.
+
+* The database periodic task scheduler now tried to recover from
+  operational database errors.
+
+* The periodic task schedule entry now accepts both int and
+  timedelta (Issue #100).
+
+* 'Connection already closed' errors occurring while closing
+  the database connection are now ignored (Issue #93).
+
+* The ``djcelerymon`` command used to start a Django admin monitor
+  instance outside of Django projects now starts without a celery
+  config module.
+
+* Should now work with Django 1.4's new timezone support.
+
+   Contributed by Jannis Leidel and Donald Stufft.
+
+* South migrations did not work properly.
+
+    Fix contributed by Christopher Grebs.
+
+* celeryd-multi now preserves django-related arguments,
+  like ``--settings`` (Issue #94).
+
+
+* Migrations now work with Django < 1.3 (Issue #92).
+
+    Fix contributed by Jude Nagurney.
+
+* The expiry of the database result backend can now be an int (Issue #84).
+
 
 .. _version-2.4.2:
 
