@@ -7,9 +7,11 @@ import os
 # is relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
 sys.path.insert(0, os.getcwd())
-from django.core.management import setup_environ
-import settings
-setup_environ(settings)
+import django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+if django.VERSION < (2, 4):
+    from django.core.management import setup_environ
+    setup_environ(__import__(os.environ["DJANGO_SETTINGS_MODULE"]))
 import djcelery
 
 # General configuration
