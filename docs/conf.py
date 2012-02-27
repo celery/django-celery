@@ -9,7 +9,7 @@ import os
 sys.path.insert(0, os.getcwd())
 import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-if django.VERSION < (2, 4):
+if django.VERSION < (1, 4):
     from django.core.management import setup_environ
     setup_environ(__import__(os.environ["DJANGO_SETTINGS_MODULE"]))
 import djcelery
