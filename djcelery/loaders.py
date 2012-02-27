@@ -63,7 +63,7 @@ class DjangoLoader(BaseLoader):
                     raise
 
     def close_database(self, **kwargs):
-        db_reuse_max = getattr(self.conf, "CELERY_DB_REUSE_MAX", None)
+        db_reuse_max = self.conf.get("CELERY_DB_REUSE_MAX", None)
         if not db_reuse_max:
             return self._close_database()
         if self._db_reuse >= db_reuse_max * 2:
