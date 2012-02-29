@@ -4,6 +4,8 @@ import os
 import sys
 import types
 
+from celery.app.defaults import str_to_bool
+
 DEFAULT_APPS = ("django.contrib.auth",
                 "django.contrib.contenttypes",
                 "django.contrib.sessions",
@@ -20,7 +22,7 @@ DEFAULTS = {"ROOT_URLCONF": "djcelery.monproj.urls",
             "BROKER_URL": "amqp://",
             "SITE_ID": 1,
             "INSTALLED_APPS": DEFAULT_APPS,
-            "DEBUG": False}
+            "DEBUG": str_to_bool(os.environ.get("DJCELERYMON_DEBUG", False))}
 
 
 def default_settings(name="__default_settings__"):
@@ -43,7 +45,6 @@ def configure():
             settings_module = default_settings()
         settings.configure(SETTINGS_MODULE=settings_module,
                            **dict(DEFAULTS, **current_app.loader.conf))
-        settings.DEBUG = True
 
 
 def run_monitor(argv):
