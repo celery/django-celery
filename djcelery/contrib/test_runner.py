@@ -15,7 +15,7 @@ class CeleryTestSuiteRunner(DjangoTestSuiteRunner):
 
     To use this runner set ``settings.TEST_RUNNER``::
 
-        TEST_RUNNER = "celery.contrib.test_runner.CeleryTestSuiteRunner"
+        TEST_RUNNER = "djcelery.contrib.test_runner.CeleryTestSuiteRunner"
 
     """
     def setup_test_environment(self, **kwargs):
