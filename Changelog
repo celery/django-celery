@@ -5,11 +5,43 @@
 .. contents::
     :local:
 
+.. _version-2.5.1:
+
+2.5.1
+=====
+:release-date: 2012-03-01 01:00 P.M GMT
+:by: Ask Solem
+
+.. _v251-fixes:
+
+Fixes
+-----
+
+* Now depends on Celery 2.5.1
+
+* Fixed problem with recursive imports when USE_I18N was enabled
+  (Issue #109).
+
+* The ``CELERY_DB_REUSE_MAX`` setting was not honored.
+
+* The djcelerymon command no longer runs with DEBUG.
+
+    To enable debug you can set the :envvar:`DJCELERYMON_DEBUG`
+    environment variable.
+
+* Fixed eventlet/gevent compatability with Django 1.4's new thread
+  sharing detection.
+
+* Now depends on django-picklefield 0.2.0 or greater.
+
+    Previous versions would not work correctly with Django 1.4.
+
 .. _version-2.5.0:
 
 2.5.0
 =====
 :release-date: 2012-02-24 02:00 P.M GMT
+:by: Ask Solem
 
 .. _v250-important:
 

@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 import os
 
-VERSION = (2, 5, 0)
+VERSION = (2, 5, 1)
 
 __version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
 __author__ = "Ask Solem"
