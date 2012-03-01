@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from datetime import datetime
 
 from django.utils.translation import ungettext, ugettext as _
+from .utils import now
 
 JUST_NOW = _("just now")
 SECONDS_AGO = (_("%(seconds)d second ago"), _("%(seconds)d seconds ago"))
