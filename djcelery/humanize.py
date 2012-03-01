@@ -27,6 +27,7 @@ def _un(singular__plural, n=None):
     singular, plural = singular__plural
     return ungettext(singular, plural, n)
 
+
 def naturaldate(date):
     """Convert datetime into a human natural date string."""
 

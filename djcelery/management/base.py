@@ -43,7 +43,8 @@ def patch_thread_ident():
                                 self.alias, self._thread_ident, _get_ident()))
 
             BaseDatabaseWrapper.__init__ = _init
-            BaseDatabaseWrapper.validate_thread_sharing = _validate_thread_sharing
+            BaseDatabaseWrapper.validate_thread_sharing \
+                    = _validate_thread_sharing
 
         patch_thread_ident.called = True
     except ImportError:
