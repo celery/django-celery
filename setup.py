@@ -135,7 +135,7 @@ setup(
     scripts=["bin/djcelerymon"],
     zip_safe=False,
     install_requires=[
-        "django-picklefield",
+        "django-picklefield>=0.2.0",
         "celery>=2.5.0",
     ],
     cmdclass={"test": RunTests,
