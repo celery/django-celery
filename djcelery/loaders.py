@@ -87,9 +87,14 @@ class DjangoLoader(BaseLoader):
         self.close_database()
         self.close_cache()
 
-    def on_task_init(self, *args, **kwargs):
+    def on_task_init(self, task_id, task):
         """Called before every task."""
-        self.close_database()
+        try:
+            is_eager = task.request.is_eager
+        except AttributeError:
+            is_eager = False
+        if not is_eager:
+            self.close_database()
 
     def on_worker_init(self):
         """Called when the worker starts.
