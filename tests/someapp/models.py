@@ -1,3 +1,5 @@
 from django.db import models  # noqa
 
-# Create your models here.
+
+class Thing(models.Model):
+    name = models.CharField(max_length=10)
