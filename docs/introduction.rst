@@ -34,7 +34,7 @@ databases (`SQLAlchemy`_ / `Django`_) is also available.
 
 .. _`Celery`: http://celeryproject.org/
 .. _`RabbitMQ`: http://www.rabbitmq.com/
-.. _`Redis`: http://code.google.com/p/redis/
+.. _`Redis`: http://redis.io/
 .. _`Django`: http://www.djangoproject.org/
 .. _`SQLAlchemy`: http://www.sqlalchemy.org/
 .. _`operate with other languages using webhooks`:
