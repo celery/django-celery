@@ -7,7 +7,7 @@ from datetime import datetime
 from django.conf import settings
 
 # Database-related exceptions.
-from django.db.utils import DatabaseError
+from django.db import DatabaseError
 try:
     import MySQLdb as mysql
     _my_database_errors = (mysql.DatabaseError, )
