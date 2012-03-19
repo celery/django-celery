@@ -38,8 +38,7 @@ def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
 
         if len(shortval) > maxlen:
             shortval = shortval[:maxlen] + "..."
-        result = ("""<span title="%s", style="font-size: %spt;
-                               font-family: Menlo, Courier;
-                  ">%s</span>""" % (escape(val[:255]), pt, escape(shortval), )).replace('|br/|', '<br/>')
-        return result
+        return """<span title="%s", style="font-size: %spt;\
+                        font-family: Menlo, Courier; ">%s</span>""" % (
+            escape(val[:255]), pt, escape(shortval)).replace("|br/|", "<br/>")
     return f
