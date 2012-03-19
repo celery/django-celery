@@ -22,7 +22,7 @@ DEFAULTS = {"ROOT_URLCONF": "djcelery.monproj.urls",
             "BROKER_URL": "amqp://",
             "SITE_ID": 1,
             "INSTALLED_APPS": DEFAULT_APPS,
-            "DEBUG": str_to_bool(os.environ.get("DJCELERYMON_DEBUG", False))}
+            "DEBUG": str_to_bool(os.environ.get("DJCELERYMON_DEBUG", "0"))}
 
 
 def default_settings(name="__default_settings__"):
