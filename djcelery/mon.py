@@ -5,6 +5,7 @@ import sys
 import types
 
 from celery.app.defaults import str_to_bool
+from celery.utils import import_from_cwd
 
 DEFAULT_APPS = ("django.contrib.auth",
                 "django.contrib.contenttypes",
@@ -37,14 +38,22 @@ def configure():
     from celery.loaders.default import DEFAULT_CONFIG_MODULE
     from django.conf import settings
 
+    app = current_app
+    conf = {}
+
     if not settings.configured:
-        if current_app.loader.configured:
+        if "loader" in app.__dict__ and app.loader.configured:
+            conf = current_app.loader.conf
+        else:
+            os.environ.pop("CELERY_LOADER", None)
             settings_module = os.environ.get("CELERY_CONFIG_MODULE",
                                              DEFAULT_CONFIG_MODULE)
-        else:
-            settings_module = default_settings()
+            try:
+                import_from_cwd(settings_module)
+            except ImportError:
+                settings_module = default_settings()
         settings.configure(SETTINGS_MODULE=settings_module,
-                           **dict(DEFAULTS, **current_app.loader.conf))
+                           **dict(DEFAULTS, **conf))
 
 
 def run_monitor(argv):
