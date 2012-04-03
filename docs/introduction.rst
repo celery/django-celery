@@ -17,29 +17,6 @@ django-celery provides Celery integration for Django; Using the Django ORM
 and cache backend for storing results, autodiscovery of task modules
 for applications listed in ``INSTALLED_APPS``, and more.
 
-`Celery`_ is a task queue/job queue based on distributed message passing.
-It is focused on real-time operation, but supports scheduling as well.
-
-The execution units, called tasks, are executed concurrently on a single or
-more worker servers. Tasks can execute asynchronously (in the background) or
-synchronously (wait until ready).
-
-Celery is already used in production to process millions of tasks a day.
-
-Celery is written in Python, but the protocol can be implemented in any
-language. It can also `operate with other languages using webhooks`_.
-
-The recommended message broker is `RabbitMQ`_, but support for `Redis`_ and
-databases (`SQLAlchemy`_ / `Django`_) is also available.
-
-.. _`Celery`: http://celeryproject.org/
-.. _`RabbitMQ`: http://www.rabbitmq.com/
-.. _`Redis`: http://redis.io/
-.. _`Django`: http://www.djangoproject.org/
-.. _`SQLAlchemy`: http://www.sqlalchemy.org/
-.. _`operate with other languages using webhooks`:
-    http://ask.github.com/celery/userguide/remote-tasks.html
-
 .. contents::
     :local:
 
@@ -63,12 +40,14 @@ need to invoke the programs through ``manage.py``:
 **Program**                            **Replace with**
 =====================================  =====================================
 ``celeryd``                            ``python manage.py celeryd``
+``celeryctl``                          ``python manage.py celeryctl``
 ``celerybeat``                         ``python manage.py celerybeat``
 ``camqadm``                            ``python manage.py camqadm``
 ``celeryev``                           ``python manage.py celeryev``
+``celeryd-multi``                      ``python manage.py celeryd_multi``
 =====================================  =====================================
 
-The other main difference is that configuration values are stored in 
+The other main difference is that configuration values are stored in
 your Django projects' ``settings.py`` module rather than in
 ``celeryconfig.py``.
 
@@ -81,8 +60,8 @@ Special note for mod_wsgi users
 If you're using ``mod_wsgi`` to deploy your Django application you need to
 include the following in your ``.wsgi`` module::
 
-    import os
-    os.environ["CELERY_LOADER"] = "django"
+    import djcelery
+    djcelery.setup_loader()
 
 Documentation
 =============
@@ -131,7 +110,6 @@ You can install it by doing the following,::
 
     $ tar xvfz django-celery-0.0.0.tar.gz
     $ cd django-celery-0.0.0
-    $ python setup.py build
     # python setup.py install # as root
 
 Using the development version
@@ -179,8 +157,8 @@ Contributing
 Development of ``django-celery`` happens at Github:
 http://github.com/ask/django-celery
 
-You are highly encouraged to participate in the development
-of ``celery``. If you don't like Github (for some reason) you're welcome
+You are highly encouraged to participate in the development.
+If you don't like Github (for some reason) you're welcome
 to send regular patches.
 
 License
