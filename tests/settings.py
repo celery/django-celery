@@ -57,7 +57,7 @@ CELERY_QUEUES = {"testcelery": {"binding_key": "testcelery"}}
 MANAGERS = ADMINS
 
 DATABASES = {"default": {"NAME": "djcelery-test-db",
-                         "ENGINE": "django.db.backends.sqlite3",
+                         "ENGINE": "django.db.backends.postgresql_psycopg2",
                          "USER": '',
                          "PASSWORD": '',
                          "PORT": ''}}
