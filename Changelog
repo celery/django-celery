@@ -5,6 +5,44 @@
 .. contents::
     :local:
 
+.. _version-2.5.2:
+
+2.5.2
+=====
+:release-date: 2012-04-12 05:00 P.M GMT
+:by: Ask Solem
+
+.. _v251-news:
+
+* PeriodicTask admin now lists the enabled field in the list view
+
+    Contributed by Gabe Jackson.
+
+.. _v251-fixes:
+
+* Fixed a compatibility issue with Django < 1.3
+
+    Fix contributed by Roman Barczyski
+
+* Admin monitor now properly escapes args and kwargs.
+
+    Fix contributed by Serj Zavadsky
+
+* PeriodicTask admin now gives error if no schedule set (or both set)
+  (Issue #126).
+
+* examples/demoproject has been updated to use the Django 1.4 template.
+
+* Database connection is no longer closed for eager tasks (Issue #116).
+
+    Fix contributed by Mark Lavin.
+
+* The first-steps document for django-celery has been moved to the main
+  Celery documentation.
+
+* djcelerymon command no longer worked properly, this has now been fixed
+  (Issue #123).
+
 .. _version-2.5.1:
 
 2.5.1
