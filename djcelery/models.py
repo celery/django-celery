@@ -6,7 +6,7 @@ from time import time, mktime
 import django
 
 from django.conf import settings
-from django.core.exceptions import MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ValidationError
 from django.db import models
 from django.db.models import signals
 from django.utils.translation import ugettext_lazy as _
@@ -211,6 +211,15 @@ class PeriodicTask(models.Model):
     class Meta:
         verbose_name = _(u"periodic task")
         verbose_name_plural = _(u"periodic tasks")
+
+    def validate_unique(self, *args, **kwargs):
+        super(PeriodicTask, self).validate_unique(*args, **kwargs)
+        if not self.interval and not self.crontab:
+            raise ValidationError(
+                {"interval": ["One of interval or crontab must be set."]})
+        if self.interval and self.crontab:
+            raise ValidationError(
+                {"crontab": ["Only one of interval or crontab must be set"]})
 
     def save(self, *args, **kwargs):
         self.exchange = self.exchange or None

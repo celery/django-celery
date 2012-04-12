@@ -20,4 +20,4 @@ def setup_loader():
 setup_loader()
 
 
-from celery import current_app as celery
+from celery import current_app as celery  # noqa
