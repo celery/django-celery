@@ -20,6 +20,7 @@ _Command.version = "celery %s\ndjango-celery %s" % (_Command.version,
 class Command(CeleryCommand):
     """Run the celery control utility."""
     help = "celery control utility"
+    keep_base_opts = False
 
     def run_from_argv(self, argv):
         util = celeryctl(app=app)

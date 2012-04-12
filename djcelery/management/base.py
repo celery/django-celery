@@ -68,7 +68,11 @@ class CeleryCommand(BaseCommand):
         super(CeleryCommand, self).execute(*args, **options)
 
     def set_broker(self, broker):
-        settings.BROKER_HOST = broker
+        os.environ["CELERY_BROKER_URL"] = broker
+
+    def run_from_argv(self, argv):
+        self.handle_default_options(argv[2:])
+        return super(CeleryCommand, self).run_from_argv(argv)
 
     def handle_default_options(self, argv):
         acc = []
