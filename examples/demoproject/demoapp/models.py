@@ -1,4 +1,3 @@
-# All Django apps must have a models.py.
-from django.db import models  # noqa
+from django.db import models
 
 # Create your models here.

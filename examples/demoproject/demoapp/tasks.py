@@ -1,18 +1,18 @@
-from celery.task import task
+from djcelery import celery
 
 
-@task
+@celery.task
 def add(x, y):
     return x + y
 
 
-@task
+@celery.task
 def sleeptask(i):
     from time import sleep
     sleep(i)
     return i
 
 
-@task
+@celery.task
 def raisetask():
     raise KeyError("foo")

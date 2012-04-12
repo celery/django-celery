@@ -18,3 +18,6 @@ def setup_loader():
 
 # Importing this module enables the Celery Django loader.
 setup_loader()
+
+
+from celery import current_app as celery

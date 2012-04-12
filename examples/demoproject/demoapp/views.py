@@ -1,7 +1,8 @@
 # Create your views here.
 
-from demoapp import tasks
 from django.http import HttpResponse
+
+from demoapp import tasks
 
 
 def foo(request):

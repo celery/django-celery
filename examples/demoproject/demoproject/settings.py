@@ -1,11 +1,36 @@
-# Django settings for clickcounter project.
+# Django settings for demoproject project.
 
+# -- Celery related configuration
 import djcelery
 djcelery.setup_loader()
 
-import os
-import sys
-sys.path.append(os.getcwd())
+
+BROKER_URL = "amqp://guest:guest@localhost:5672//"
+CELERY_RESULT_BACKEND = "database"
+
+# -- other necessary settings.
+
+DATABASES = {"default": {"NAME": "testdb.sqlite",
+                         "ENGINE": "django.db.backends.sqlite3",
+                         "USER": '',
+                         "PASSWORD": '',
+                         "HOST": '',
+                         "PORT": ''}}
+
+
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'djcelery',
+    'demoapp',
+)
+
+# -- rest is from Django 1.4 template
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -15,17 +40,6 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test.db',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
-}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -47,8 +61,11 @@ SITE_ID = 1
 USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale
+# calendars according to the current locale.
 USE_L10N = True
+
+# If you set this to False, Django will not use timezone-aware datetimes.
+USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -85,7 +102,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '(up^8#vyl9fj+x4_o!5!-h-u-ydixwxb!pih)%5j#jsj2btir9'
+SECRET_KEY = 'utpl%umodw@pb=t3v8e6c8+)f&amp;ra41gon9l&amp;5+3566nr88%b3y'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -104,24 +121,15 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'clickcounter.urls'
+ROOT_URLCONF = 'demoproject.urls'
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'demoproject.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-)
-
-INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'djcelery',
-
-    'clickmuncher',
 )
 
 # A sample logging configuration. The only tangible logging
