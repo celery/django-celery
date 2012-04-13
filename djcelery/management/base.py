@@ -3,7 +3,6 @@ from __future__ import absolute_import
 import os
 import sys
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
 import celery
