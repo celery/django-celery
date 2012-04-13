@@ -12,7 +12,45 @@ except ImportError:
     from setuptools import setup, Command  # noqa
 from distutils.command.install import INSTALL_SCHEMES
 
-import djcelery as distmeta
+# -*- Distribution Meta -*-
+NAME = "django-celery"
+
+import re
+re_meta = re.compile(r'__(\w+?)__\s*=\s*(.*)')
+re_vers = re.compile(r'VERSION\s*=\s*\((.*?)\)')
+re_doc = re.compile(r'^"""(.+?)"""')
+rq = lambda s: s.strip("\"'")
+
+def add_default(m):
+    attr_name, attr_value = m.groups()
+    return ((attr_name, rq(attr_value)), )
+
+
+def add_version(m):
+    v = list(map(rq, m.groups()[0].split(", ")))
+    return (("VERSION", ".".join(v[0:3]) + "".join(v[3:])), )
+
+
+def add_doc(m):
+    return (("doc", m.groups()[0]), )
+
+pats = {re_meta: add_default,
+        re_vers: add_version,
+        re_doc: add_doc}
+here = os.path.abspath(os.path.dirname(__file__))
+meta_fh = open(os.path.join(here, "djcelery/__init__.py"))
+try:
+    meta = {}
+    for line in meta_fh:
+        if line.strip() == '# -eof meta-':
+            break
+        for pattern, handler in pats.items():
+            m = pattern.match(line.strip())
+            if m:
+                meta.update(handler(m))
+finally:
+    meta_fh.close()
+
 
 packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
@@ -122,12 +160,12 @@ else:
 
 
 setup(
-    name='django-celery',
-    version=distmeta.__version__,
-    description=distmeta.__doc__,
-    author=distmeta.__author__,
-    author_email=distmeta.__contact__,
-    url=distmeta.__homepage__,
+    name=NAME,
+    version=meta["VERSION"],
+    description=meta["doc"],
+    author=meta["author"],
+    author_email=meta["contact"],
+    url=meta["homepage"],
     platforms=["any"],
     license="BSD",
     packages=packages,

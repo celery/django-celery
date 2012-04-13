@@ -5,11 +5,23 @@
 .. contents::
     :local:
 
+.. _version-2.5.3:
+
+2.5.3
+=====
+:release-date: 2012-04-13 06:16 P.M GMT
+:by: Ask Solem
+
+* 2.5.2 release broke installation because of an import in the package.
+
+    Fixed by not having setup.py import the djcelery module anymore,
+    but rather parsing the package file for metadata.
+
 .. _version-2.5.2:
 
 2.5.2
 =====
-:release-date: 2012-04-12 05:00 P.M GMT
+:release-date: 2012-04-13 05:00 P.M GMT
 :by: Ask Solem
 
 .. _v251-news:
