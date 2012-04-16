@@ -35,7 +35,7 @@ class DjangoLoader(BaseLoader):
         # any embedded celerybeat process forks.
         signals.beat_embedded_init.connect(self.close_database)
 
-    def now(self):
+    def now(self, **kwargs):
         return now()
 
     def read_configuration(self):
