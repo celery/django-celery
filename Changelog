@@ -5,11 +5,22 @@
 .. contents::
     :local:
 
+.. _version-2.5.4:
+
+2.5.4
+=====
+:release-date: 2012-04-16 06:31 P.M BST
+
+* Compatibility with celery 2.5.3
+
+* Database scheduler now imports ``exchange``, ``routing_key`` and ``queue``
+  options from ``CELERYBEAT_SCHEDULE``.
+
 .. _version-2.5.3:
 
 2.5.3
 =====
-:release-date: 2012-04-13 06:16 P.M GMT
+:release-date: 2012-04-13 06:16 P.M BST
 :by: Ask Solem
 
 * 2.5.2 release broke installation because of an import in the package.
@@ -21,7 +32,7 @@
 
 2.5.2
 =====
-:release-date: 2012-04-13 05:00 P.M GMT
+:release-date: 2012-04-13 05:00 P.M BST
 :by: Ask Solem
 
 .. _v251-news:
