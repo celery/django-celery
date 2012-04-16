@@ -83,6 +83,7 @@ class ModelEntry(ScheduleEntry):
 
     @classmethod
     def from_entry(cls, name, skip_fields=("relative", "options"), **entry):
+        options = entry.get("options") or {}
         fields = dict(entry)
         for skip_field in skip_fields:
             fields.pop(skip_field, None)
@@ -91,6 +92,9 @@ class ModelEntry(ScheduleEntry):
         fields[model_field] = model_schedule
         fields["args"] = serialize(fields.get("args") or [])
         fields["kwargs"] = serialize(fields.get("kwargs") or {})
+        fields["queue"] = options.get("queue")
+        fields["exchange"] = options.get("exchange")
+        fields["routing_key"] = options.get("routing_key")
         return cls(PeriodicTask._default_manager.update_or_create(name=name,
                                                             defaults=fields))
 

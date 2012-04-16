@@ -110,7 +110,6 @@ class DjangoLoader(BaseLoader):
 
         self.close_database()
         self.close_cache()
-        self.import_default_modules()
 
     def import_default_modules(self):
         super(DjangoLoader, self).import_default_modules()
