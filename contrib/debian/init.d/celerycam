@@ -1,0 +1,182 @@
+#!/bin/sh -e
+# ======================================================
+#  celerycam - Starts the Celery activity monitor daemon
+# ======================================================
+#
+# See celeryd for reference; reuses the same config file where possible
+#
+# :Usage: /etc/init.d/celerycam {start|stop|force-reload|restart|try-restart|status}
+#
+# :Configuration file: /etc/default/celeryd
+#
+# Additional configuration options:
+#
+#   * CELERYCAM
+#       Required, path to celerycam command - for example:
+#           `/opt/myproject/bin/django-admin.py celerycam`
+#
+#   * CELERYCAM_USER
+#       Optional, identical and defaults to to CELERYD_USER
+#
+#   * CELERYCAM_GROUP
+#       Optional, identical and defaults to to CELERYD_GROUP
+
+
+### BEGIN INIT INFO
+# Provides:          celerycam
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $network $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: celery activity monitor
+### END INIT INFO
+
+set -e
+
+DEFAULT_CELERYCAM=/usr/bin/celerycam
+
+if test -f /etc/default/celeryd; then
+    . /etc/default/celeryd
+fi
+
+CELERYCAM_LOG_FILE=${CELERYCAM_LOG_FILE:-${CELERYCAM_LOGFILE:-"/var/log/celerycam.log"}}
+CELERYCAM_PID_FILE=${CELERYCAM_PID_FILE:-${CELERYCAM_PIDFILE:-"/var/run/celerycam.pid"}}
+CELERYCAM_LOG_LEVEL=${CELERYCAM_LOG_LEVEL:-${CELERYCAM_LOGLEVEL:-"INFO"}}
+
+CELERYCAM=${CELERYCAM:-$DEFAULT_CELERYCAM}
+
+CELERYCAM_USER=${CELERYCAM_USER:-$CELERYD_USER}
+CELERYCAM_GROUP=${CELERYCAM_GROUP:-$CELERYD_GROUP}
+
+export CELERY_LOADER
+
+. /lib/lsb/init-functions
+
+CELERYCAM_OPTS="$CELERYCAM_OPTS -f $CELERYCAM_LOG_FILE -l $CELERYCAM_LOG_LEVEL"
+
+if [ -n "$2" ]; then
+    CELERYCAM_OPTS="$CELERYCAM_OPTS $2"
+fi
+
+# Extra start-stop-daemon options, like user/group.
+if [ -n "$CELERYCAM_USER" ]; then
+    DAEMON_OPTS="$DAEMON_OPTS --chuid $CELERYCAM_USER"
+fi
+if [ -n "$CELERYCAM_GROUP" ]; then
+    DAEMON_OPTS="$DAEMON_OPTS --group $CELERYCAM_GROUP"
+fi
+
+if [ -n "$CELERYCAM_CHDIR" ]; then
+    DAEMON_OPTS="$DAEMON_OPTS --chdir $CELERYCAM_CHDIR"
+fi
+
+
+# Are we running from init?
+run_by_init() {
+    ([ "$previous" ] && [ "$runlevel" ]) || [ "$runlevel" = S ]
+}
+
+
+check_dev_null() {
+    if [ ! -c /dev/null ]; then
+    if [ "$1" = log_end_msg ]; then
+        log_end_msg 1 || true
+    fi
+    if ! run_by_init; then
+        log_action_msg "/dev/null is not a character device!"
+    fi
+    exit 1
+    fi
+}
+
+
+export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
+
+
+stop_worker () {
+    cmd="start-stop-daemon --stop \
+                           --quiet \
+                           $* \
+                           --pidfile $CELERYCAM_PID_FILE"
+    if $cmd; then
+        log_end_msg 0
+    else
+        log_end_msg 1
+    fi
+}
+
+start_worker () {
+    cmd="start-stop-daemon --start $DAEMON_OPTS \
+                           --quiet \
+                           --oknodo \
+                           --background \
+                           --make-pidfile \
+                           $* \
+                           --pidfile $CELERYCAM_PID_FILE
+                           --exec $CELERYCAM -- $CELERYCAM_OPTS"
+    if $cmd; then
+        log_end_msg 0
+    else
+        log_end_msg 1
+    fi
+}
+
+
+
+case "$1" in
+  start)
+    check_dev_null
+    log_daemon_msg "Starting celery activity monitor" "celerycam"
+    start_worker
+    ;;
+  stop)
+    log_daemon_msg "Stopping celery activity monitor" "celerycam"
+    stop_worker --oknodo
+    ;;
+
+  reload|force-reload)
+    echo "Use start+stop"
+    ;;
+
+  restart)
+    log_daemon_msg "Restarting celery activity monitor" "celerycam"
+    stop_worker --oknodo --retry 30
+    check_dev_null log_end_msg
+    start_worker
+    ;;
+
+  try-restart)
+    log_daemon_msg "Restarting celery activity monitor" "celerycam"
+    set +e
+    stop_worker --retry 30
+    RET="$?"
+    set -e
+    case $RET in
+        0)
+        # old daemon stopped
+        check_dev_null log_end_msg
+        start_worker
+        ;;
+        1)
+        # daemon not running
+        log_progress_msg "(not running)"
+        log_end_msg 0
+        ;;
+        *)
+        # failed to stop
+        log_progress_msg "(failed to stop)"
+        log_end_msg 1
+        ;;
+    esac
+    ;;
+
+  status)
+    status_of_proc -p $CELERYCAM_PID_FILE $CELERYCAM celerycam && exit 0 || exit $?
+    ;;
+
+  *)
+    log_action_msg "Usage: /etc/init.d/celerycam {start|stop|force-reload|restart|try-restart|status}"
+    exit 1
+esac
+
+exit 0
