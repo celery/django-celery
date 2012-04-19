@@ -15,11 +15,11 @@ __license__ = "BSD (3 clause)"
 
 # -eof meta-
 
+
 def setup_loader():
     os.environ.setdefault("CELERY_LOADER", "djcelery.loaders.DjangoLoader")
 
 # Importing this module enables the Celery Django loader.
 setup_loader()
-
 
 from celery import current_app as celery  # noqa
