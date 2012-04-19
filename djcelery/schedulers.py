@@ -17,6 +17,11 @@ from .models import (PeriodicTask, PeriodicTasks,
                      CrontabSchedule, IntervalSchedule)
 from .utils import DATABASE_ERRORS, now
 
+# This scheduler must wake up more frequently than the
+# regular of 5 minutes because it needs to take external
+# changes to the schedule into account.
+DEFAULT_MAX_INTERVAL = 5  # seconds
+
 
 class ModelEntry(ScheduleEntry):
     model_schedules = ((schedules.crontab, CrontabSchedule, "crontab"),
@@ -113,11 +118,13 @@ class DatabaseScheduler(Scheduler):
     _schedule = None
     _last_timestamp = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, max_interval=0, **kwargs):
         self._dirty = set()
         self._finalize = Finalize(self, self.sync, exitpriority=5)
-        Scheduler.__init__(self, *args, **kwargs)
-        self.max_interval = 5
+        max_interval = (max_interval
+                           or self.app.conf.CELERYBEAT_MAX_LOOP_INTERVAL
+                           or DEFAULT_MAX_INTERVAL)
+        Scheduler.__init__(self, *args, max_interval=max_interval, **kwargs)
 
     def setup_schedule(self):
         self.install_default_entries(self.schedule)
