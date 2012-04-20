@@ -4,6 +4,11 @@ from pprint import pformat
 
 from django.utils.html import escape
 
+FIXEDWIDTH_STYLE = '''\
+<span title="%s", style="font-size: %spt; \
+font-family: Menlo, Courier; ">%s</span> \
+'''
+
 
 def attrs(**kwargs):
     def _inner(fun):
@@ -38,7 +43,7 @@ def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
 
         if len(shortval) > maxlen:
             shortval = shortval[:maxlen] + "..."
-        return """<span title="%s", style="font-size: %spt;\
-                        font-family: Menlo, Courier; ">%s</span>""" % (
-            escape(val[:255]), pt, escape(shortval)).replace("|br/|", "<br/>")
+        styled = FIXEDWIDTH_STYLE % (escape(val[:255]), pt,
+                                     escape(shortval))
+        return styled.replace("|br/|", "<br/>")
     return f
