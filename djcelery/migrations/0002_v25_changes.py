@@ -74,7 +74,7 @@ class Migration(SchemaMigration):
             'date_done': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'hidden': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'result': ('picklefield.fields.PickledObjectField', [], {'default': 'None', 'null': 'True'}),
+            'result': ('djcelery.picklefield.PickledObjectField', [], {'default': 'None', 'null': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'PENDING'", 'max_length': '50'}),
             'task_id': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
             'traceback': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
@@ -84,7 +84,7 @@ class Migration(SchemaMigration):
             'date_done': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'hidden': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'result': ('picklefield.fields.PickledObjectField', [], {}),
+            'result': ('djcelery.picklefield.PickledObjectField', [], {}),
             'taskset_id': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})
         },
         'djcelery.taskstate': {

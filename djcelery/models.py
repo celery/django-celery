@@ -11,13 +11,12 @@ from django.db import models
 from django.db.models import signals
 from django.utils.translation import ugettext_lazy as _
 
-from picklefield.fields import PickledObjectField
-
 from celery import schedules
 from celery import states
 from celery.utils.timeutils import timedelta_seconds
 
 from . import managers
+from .picklefield import PickledObjectField
 from .utils import now
 
 HEARTBEAT_EXPIRE = 150      # 2 minutes, 30 seconds
