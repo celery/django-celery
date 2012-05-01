@@ -107,6 +107,7 @@ class DjangoLoader(BaseLoader):
         if settings.DEBUG:
             warnings.warn("Using settings.DEBUG leads to a memory leak, never "
                           "use this setting in production environments!")
+        self.import_default_modules()
 
         self.close_database()
         self.close_cache()
