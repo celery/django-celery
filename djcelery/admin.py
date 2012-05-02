@@ -16,7 +16,7 @@ from celery import current_app
 from celery import states
 from celery import registry
 from celery.task.control import broadcast, revoke, rate_limit
-from celery.utils import abbrtask
+from celery.utils.text import abbrtask
 
 from . import loaders
 from .admin_utils import action, display_field, fixedwidth
