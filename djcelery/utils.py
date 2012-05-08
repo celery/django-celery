@@ -10,22 +10,30 @@ from django.conf import settings
 from django.db import DatabaseError
 try:
     import MySQLdb as mysql
-    _my_database_errors = (mysql.DatabaseError, )
+    _my_database_errors = (mysql.DatabaseError,
+                           mysql.InterfaceError,
+                           mysql.OperationalError)
 except ImportError:
     _my_database_errors = ()      # noqa
 try:
     import psycopg2 as pg
-    _pg_database_errors = (pg.DatabaseError, )
+    _pg_database_errors = (pg.DatabaseError,
+                           pg.InterfaceError,
+                           pg.OperationalError)
 except ImportError:
     _pg_database_errors = ()      # noqa
 try:
     import sqlite3
-    _lite_database_errors = (sqlite3.DatabaseError, )
+    _lite_database_errors = (sqlite3.DatabaseError,
+                             sqlite3.InterfaceError,
+                             sqlite3.OperationalError)
 except ImportError:
     _lite_database_errors = ()    # noqa
 try:
     import cx_Oracle as oracle
-    _oracle_database_errors = (oracle.DatabaseError, )
+    _oracle_database_errors = (oracle.DatabaseError,
+                               oracle.InterfaceError,
+                               oracle.OperationalError)
 except ImportError:
     _oracle_database_errors = ()  # noqa
 
