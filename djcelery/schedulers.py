@@ -164,18 +164,25 @@ class DatabaseScheduler(Scheduler):
     @transaction.commit_manually
     def sync(self):
         self.logger.debug("Writing dirty entries...")
+        _tried = set()
         try:
-            while self._dirty:
-                try:
-                    name = self._dirty.pop()
-                    self.schedule[name].save()
-                except (KeyError, ObjectDoesNotExist):
-                    pass
-        except:
-            transaction.rollback()
-            raise
-        else:
-            transaction.commit()
+            try:
+                while self._dirty:
+                    try:
+                        name = self._dirty.pop()
+                        _tried.add(name)
+                        self.schedule[name].save()
+                    except (KeyError, ObjectDoesNotExist):
+                        pass
+            except:
+                transaction.rollback()
+                raise
+            else:
+                transaction.commit()
+        except DATABASE_ERRORS, exc:
+            # retry later
+            self._dirty |= _tried
+            warn(RuntimeWarning("Database error while sync: %r" % (exc, )))
 
     def update_from_dict(self, dict_):
         s = {}
