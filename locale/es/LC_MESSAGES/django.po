@@ -171,7 +171,7 @@ msgstr "dias"
 #: djcelery/humanize.py:23
 #, python-format
 msgid "%(number)d %(type)s ago"
-msgstr "hace %(number)d "
+msgstr "hace %(number)d %(type)s"
 
 #: djcelery/models.py:28 djcelery/models.py:57
 msgid "task id"
