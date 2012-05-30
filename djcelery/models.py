@@ -224,7 +224,7 @@ class PeriodicTask(models.Model):
         self.exchange = self.exchange or None
         self.routing_key = self.routing_key or None
         self.queue = self.queue or None
-        if self.disabled:
+        if not self.enabled:
             self.last_run_at = None
         super(PeriodicTask, self).save(*args, **kwargs)
 
