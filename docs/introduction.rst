@@ -17,9 +17,6 @@ django-celery provides Celery integration for Django; Using the Django ORM
 and cache backend for storing results, autodiscovery of task modules
 for applications listed in ``INSTALLED_APPS``, and more.
 
-.. contents::
-    :local:
-
 Using django-celery
 ===================
 
@@ -133,10 +130,9 @@ please join the `celery-users`_ mailing list.
 IRC
 ---
 
-Come chat with us on IRC. The `#celery`_ channel is located at the `Freenode`_
+Come chat with us on IRC. The **#celery** channel is located at the `Freenode`_
 network.
 
-.. _`#celery`: irc://irc.freenode.net/celery
 .. _`Freenode`: http://freenode.net
 
 
