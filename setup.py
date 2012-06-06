@@ -156,7 +156,7 @@ class CIRunTests(RunTests):
 if os.path.exists("README.rst"):
     long_description = codecs.open("README.rst", "r", "utf-8").read()
 else:
-    long_description = "See http://github.com/ask/django-celery"
+    long_description = "See http://github.com/celery/django-celery"
 
 
 setup(

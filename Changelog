@@ -457,7 +457,7 @@ Important Notes
 
 This release depends on Celery version 2.1.0.
 Be sure to read the Celery changelog before you upgrade:
-http://ask.github.com/celery/changelog.html#version-2-1-0
+http://celery.github.com/celery/changelog.html#version-2-1-0
 
 News
 ----
@@ -502,12 +502,12 @@ Fixes
 * database backend: Now shows warning if polling results with transaction isolation level
   repeatable-read on MySQL.
 
-    See http://github.com/ask/django-celery/issues/issue/6
+    See http://github.com/celery/django-celery/issues/issue/6
 
 * database backend: get result does no longer store the default result to
   database.
 
-    See http://github.com/ask/django-celery/issues/issue/6
+    See http://github.com/celery/django-celery/issues/issue/6
 
 2.0.2
 =====

@@ -7,7 +7,7 @@
 :Version: 2.5.5
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
-:Source: http://github.com/ask/django-celery/
+:Source: http://github.com/celery/django-celery/
 :Keywords: celery, task queue, job queue, asynchronous, rabbitmq, amqp, redis,
   python, django, webhooks, queue, distributed
 
@@ -117,7 +117,7 @@ Using the development version
 
 You can clone the git repository by doing the following::
 
-    $ git clone git://github.com/ask/django-celery.git
+    $ git clone git://github.com/celery/django-celery.git
 
 Getting Help
 ============
@@ -144,18 +144,18 @@ Bug tracker
 ===========
 
 If you have any suggestions, bug reports or annoyances please report them
-to our issue tracker at http://github.com/ask/django-celery/issues/
+to our issue tracker at http://github.com/celery/django-celery/issues/
 
 Wiki
 ====
 
-http://wiki.github.com/ask/celery/
+http://wiki.github.com/celery/celery/
 
 Contributing
 ============
 
 Development of ``django-celery`` happens at Github:
-http://github.com/ask/django-celery
+http://github.com/celery/django-celery
 
 You are highly encouraged to participate in the development.
 If you don't like Github (for some reason) you're welcome
