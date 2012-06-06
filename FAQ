@@ -46,7 +46,7 @@ test suite is failing in that context, then follow the steps below. If the
 celery tests are failing in another context, please report an issue to our
 issue tracker at GitHub:
 
-    http://github.com/ask/celery/issues/
+    http://github.com/celery/celery/issues/
 
 That Django is running tests for all applications in ``INSTALLED_APPS``
 by default is a pet peeve for many. You should use a test runner that either
@@ -57,7 +57,7 @@ by default is a pet peeve for many. You should use a test runner that either
 
 For example the test runner that celery is using:
 
-    http://github.com/ask/celery/blob/f90491fe0194aa472b5aecdefe5cc83289e65e69/celery/tests/runners.py
+    http://github.com/celery/celery/blob/f90491fe0194aa472b5aecdefe5cc83289e65e69/celery/tests/runners.py
 
 To use this test runner, add the following to your ``settings.py``:
 

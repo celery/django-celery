@@ -78,5 +78,5 @@ html_sidebars = {
 
 ### Issuetracker
 issuetracker = "github"
-issuetracker_project = "ask/django-celery"
+issuetracker_project = "celery/django-celery"
 issuetracker_issue_pattern = r'[Ii]ssue #(\d+)'
