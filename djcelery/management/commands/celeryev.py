@@ -27,7 +27,7 @@ class Command(CeleryCommand):
     options = (CeleryCommand.options
              + ev.get_options()
              + ev.preload_options)
-    help = 'curses celery event viewer'
+    help = "Old alias to the 'celery events command'"
 
     def handle(self, *args, **options):
         """Handle the management command."""
