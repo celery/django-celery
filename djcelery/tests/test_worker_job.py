@@ -6,7 +6,7 @@ from django.core import cache
 from celery.utils import gen_unique_id
 from celery.task import task as task_dec
 
-from celery.tests.test_worker.test_worker_job import jail
+from celery.tests.worker.test_request import jail
 
 from djcelery.tests.utils import unittest
 
