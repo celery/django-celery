@@ -65,12 +65,12 @@ def upload_docs(options):
 
 @task
 def autodoc(options):
-    sh("contrib/release/doc4allmods djcelery")
+    sh("extra/release/doc4allmods djcelery")
 
 
 @task
 def verifyindex(options):
-    sh("contrib/release/verify-reference-index.sh")
+    sh("extra/release/verify-reference-index.sh")
 
 
 @task
@@ -95,7 +95,7 @@ def flake8(options):
 ])
 def flakeplus(options):
     noerror = getattr(options, "noerror", False)
-    sh("python contrib/release/flakeplus.py djcelery",
+    sh("python extra/release/flakeplus.py djcelery",
        ignore_error=noerror)
 
 
@@ -117,7 +117,7 @@ def clean_readme(options):
 @task
 @needs("clean_readme")
 def readme(options):
-    sh("%s contrib/release/sphinx-to-rst.py docs/introduction.rst \
+    sh("%s extra/release/sphinx-to-rst.py docs/introduction.rst \
             > README.rst" % (sys.executable, ))
     sh("ln -sf README.rst README")
 
