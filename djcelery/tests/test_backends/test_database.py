@@ -66,20 +66,20 @@ class TestDatabaseBackend(unittest.TestCase):
         x.forget()
         self.assertIsNone(x.result)
 
-    def test_taskset_store(self):
+    def test_group_store(self):
         b = DatabaseBackend()
         tid = gen_unique_id()
 
-        self.assertIsNone(b.restore_taskset(tid))
+        self.assertIsNone(b.restore_group(tid))
 
         result = {"foo": "baz", "bar": SomeClass(12345)}
-        b.save_taskset(tid, result)
-        rindb = b.restore_taskset(tid)
+        b.save_group(tid, result)
+        rindb = b.restore_group(tid)
         self.assertIsNotNone(rindb)
         self.assertEqual(rindb.get("foo"), "baz")
         self.assertEqual(rindb.get("bar").data, 12345)
-        b.delete_taskset(tid)
-        self.assertIsNone(b.restore_taskset(tid))
+        b.delete_group(tid)
+        self.assertIsNone(b.restore_group(tid))
 
     def test_cleanup(self):
         b = DatabaseBackend()

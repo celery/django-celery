@@ -21,7 +21,7 @@ class TestDjangoLoader(unittest.TestCase):
 
     def test_on_worker_init(self):
         from django.conf import settings
-        old_imports = getattr(settings, "CELERY_IMPORTS", None)
+        old_imports = getattr(settings, "CELERY_IMPORTS", ())
         settings.CELERY_IMPORTS = ("xxx.does.not.exist", )
         try:
             self.assertRaises(ImportError, self.loader.import_default_modules)

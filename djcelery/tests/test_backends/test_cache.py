@@ -45,19 +45,19 @@ class test_CacheBackend(unittest.TestCase):
         self.assertNotIn(tid, b._cache)
         self.assertIsNone(b.get_result(tid))
 
-    def test_save_restore_delete_taskset(self):
+    def test_save_restore_delete_group(self):
         backend = CacheBackend()
-        taskset_id = gen_unique_id()
+        group_id = gen_unique_id()
         subtask_ids = [gen_unique_id() for i in range(10)]
         subtasks = map(result.AsyncResult, subtask_ids)
-        res = result.TaskSetResult(taskset_id, subtasks)
+        res = result.GroupResult(group_id, subtasks)
         res.save(backend=backend)
-        saved = result.TaskSetResult.restore(taskset_id, backend=backend)
+        saved = result.GroupResult.restore(group_id, backend=backend)
         self.assertListEqual(saved.subtasks, subtasks)
-        self.assertEqual(saved.taskset_id, taskset_id)
+        self.assertEqual(saved.id, group_id)
         saved.delete(backend=backend)
-        self.assertIsNone(result.TaskSetResult.restore(taskset_id,
-                                                       backend=backend))
+        self.assertIsNone(result.GroupResult.restore(group_id,
+                                                     backend=backend))
 
     def test_is_pickled(self):
         cb = CacheBackend()
