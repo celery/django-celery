@@ -211,7 +211,8 @@ class DatabaseScheduler(Scheduler):
                     "options": {"expires": 12 * 3600}})
         self.update_from_dict(entries)
 
-    def get_schedule(self):
+    @property
+    def schedule(self):
         if self.schedule_changed():
             self.sync()
             self.logger.debug("DatabaseScheduler: Schedule changed.")

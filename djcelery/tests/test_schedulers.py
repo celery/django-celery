@@ -126,6 +126,7 @@ class test_DatabaseScheduler(unittest.TestCase):
 
     def test_all_as_schedule(self):
         sched = self.s.schedule
+        print("SCHED: %r" % (sched, ))
         self.assertTrue(sched)
         self.assertEqual(len(sched), 4)
         self.assertIn("celery.backend_cleanup", sched)
