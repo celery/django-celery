@@ -97,4 +97,4 @@ except ImportError:
     pass
 else:
     add_introspection_rules([],
-            ['r"^djcelery\.picklefield\.PickledObjectField'])
+            [r'^djcelery\.picklefield\.PickledObjectField'])
