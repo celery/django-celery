@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/ask/celery/celery_128.png
 
-:Version: 2.5.5
+:Version: 2.6.0rc5
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/celery/django-celery/
