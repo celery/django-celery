@@ -22,6 +22,11 @@ Important Notes
     It's important that you read the What's New document for the 2.6 series:
     http://docs.celeryproject.org/en/latest/whatsnew-2.6.html
 
+- No longer depends on :mod:`django-picklefield`
+
+    And as such the result backend will no longer deepcopy return
+    values or exceptions.
+
 - Celery 2.6 is the last release to require django-celery
 
     Starting with Celery 2.7 the django-celery package will no longer be
@@ -65,6 +70,36 @@ Important Notes
 - The django-celery source code repository has moved
 
     The new location is at http://github.com/celery/django-celery
+
+.. _v260-news:
+
+News
+----
+
+- New Spanish translation.
+
+    Contributed by Diego Andres Sanabria Martin.
+
+- The Django database transport is now available from the djcelery namespace.
+
+    Instead of ``kombu.transport.django`` you can now add
+    ``djcelery.transport`` to ``INSTALLED_APPS``::
+
+        INSTALLED_APPS = ('djcelery.transport', )
+
+.. _v260-fixes:
+
+Fixes
+-----
+
+- Fixes an UTC bug when ``CELERY_ENABLE_UTC`` was enabled (Issue #131).
+
+- Database Periodic Task Scheduler: Disabling a periodic task now also
+  resets its last_run_at field. So that the schedule will restart from
+  scratch if re-enabled (Issue #370).
+
+- Database Periodic Task Scheduler: Now retries the sync operation
+  if database errors occur.
 
 .. _version-2.5.5:
 
