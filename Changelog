@@ -5,6 +5,67 @@
 .. contents::
     :local:
 
+.. _version-2.6.0:
+
+2.6.0
+=====
+:release-date: TBA
+:by: Ask Solem
+
+.. _v260-important:
+
+Important Notes
+---------------
+
+- Now depends on Celery 2.6
+
+    It's important that you read the What's New document for the 2.6 series:
+    http://docs.celeryproject.org/en/latest/whatsnew-2.6.html
+
+- Celery 2.6 is the last release to require django-celery
+
+    Starting with Celery 2.7 the django-celery package will no longer be
+    required and Celery will support Django out of the box.
+
+    The django-celery package may still exist for some time to provide
+    additional utilities like the django-admin monitor.
+
+- django-celery 2.6 is the last series to support Python 2.5.
+
+    Celery will no longer support Python 2.5 starting with version 2.7.
+
+- New :program:`manage.py celery` umbrella command replaces older commands.
+
+    All commands except for :program:`manage.py celeryevcam` can
+    now be started using the new umbrella command::
+
+        $ manage.py celery worker -l info           # <<< NEW
+        $ manage.py celeryd -l info                 # <-- OLD
+
+        $ manage.py celery status                   # <<< NEW
+        $ manage.py celeryctl status                # <-- OLD
+
+        $ manage.py celery beat -l info             # <<< NEW
+        $ manage.py celerybeat -l info              # <-- OLD
+
+        $ manage.py celery multi start ...          # <<< NEW
+        $ manage.py celeryd_multi start ...         # <-- OLD
+
+        $ manage.py celery amqp queue.delete celery # <<< NEW
+        $ manage.py camqadm queue.delete celery     # <-- OLD
+
+    See ``manage.py celery help`` for a complete list of supported commands.
+
+    The old commands will still work, but you are encouraged to start
+    using the new umbrella command.
+
+- The distribution :file:`contrib/` directory is now renamed to
+  :file:`extra/`.
+
+- The django-celery source code repository has moved
+
+    The new location is at http://github.com/celery/django-celery
+
 .. _version-2.5.5:
 
 2.5.5
