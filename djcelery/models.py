@@ -124,6 +124,12 @@ class CrontabSchedule(models.Model):
     day_of_week = models.CharField(_(u"day of week"),
                         max_length=64,
                         default="*")
+    day_of_month = models.CharField(_(u"day of month"),
+                        max_length=64,
+                        default="*")
+    month_of_year = models.CharField(_(u"month of year"),
+                        max_length=64,
+                        default="*")
 
     class Meta:
         verbose_name = _(u"crontab")
@@ -131,22 +137,28 @@ class CrontabSchedule(models.Model):
 
     def __unicode__(self):
         rfield = lambda f: f and str(f).replace(" ", "") or "*"
-        return u"%s %s %s (m/h/d)" % (rfield(self.minute),
-                                      rfield(self.hour),
-                                      rfield(self.day_of_week))
+        return u"%s %s %s %s %s (m/h/d/dM/MY)" % (rfield(self.minute),
+                                                  rfield(self.hour),
+                                                  rfield(self.day_of_week),
+                                                  rfield(self.day_of_month),
+                                                  rfield(self.month_of_year))
 
     @property
     def schedule(self):
         return schedules.crontab(minute=self.minute,
                                 hour=self.hour,
                                 day_of_week=self.day_of_week,
+                                day_of_month=self.day_of_month,
+                                month_of_year=self.month_of_year,
                                 nowfun=now)
 
     @classmethod
     def from_schedule(cls, schedule):
         return cls(minute=schedule._orig_minute,
                    hour=schedule._orig_hour,
-                   day_of_week=schedule._orig_day_of_week)
+                   day_of_week=schedule._orig_day_of_week,
+                   day_of_month=schedule._orig_day_of_month,
+                   month_of_year=schedule._orig_month_of_year)
 
 
 class PeriodicTasks(models.Model):

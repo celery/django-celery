@@ -226,11 +226,13 @@ class test_models(unittest.TestCase):
         self.assertEqual(unicode(CrontabSchedule(minute=3,
                                                  hour=3,
                                                  day_of_week=None)),
-                         "3 3 * (m/h/d)")
+                         "3 3 * * * (m/h/d/dM/MY)")
         self.assertEqual(unicode(CrontabSchedule(minute=3,
                                                  hour=3,
-                                                 day_of_week=None)),
-                         "3 3 * (m/h/d)")
+                                                 day_of_week="tue",
+                                                 day_of_month="*/2",
+                                                 month_of_year="4,6")),
+                         "3 3 tue */2 4,6 (m/h/d/dM/MY)")
 
     def test_PeriodicTask_unicode_interval(self):
         p = create_model_interval(schedule(timedelta(seconds=10)))
@@ -241,29 +243,37 @@ class test_models(unittest.TestCase):
         p = create_model_crontab(crontab(hour="4, 5", day_of_week="4, 5",
                                  nowfun=now))
         self.assertEqual(unicode(p),
-                        "%s: * 4,5 4,5 (m/h/d)" % p.name)
+                        "%s: * 4,5 4,5 * * (m/h/d/dM/MY)" % p.name)
 
     def test_PeriodicTask_schedule_property(self):
         p1 = create_model_interval(schedule(timedelta(seconds=10)))
         s1 = p1.schedule
         self.assertEqual(timedelta_seconds(s1.run_every), 10)
 
-        p2 = create_model_crontab(crontab(hour="4, 5", minute="10,20,30",
+        p2 = create_model_crontab(crontab(hour="4, 5",
+                                          minute="10,20,30",
+                                          day_of_month="1-7",
+                                          month_of_year="*/3",
                                           nowfun=now))
         s2 = p2.schedule
         self.assertSetEqual(s2.hour, set([4, 5]))
         self.assertSetEqual(s2.minute, set([10, 20, 30]))
         self.assertSetEqual(s2.day_of_week, set([0, 1, 2, 3, 4, 5, 6]))
+        self.assertSetEqual(s2.day_of_month, set([1, 2, 3, 4, 5, 6, 7]))
+        self.assertSetEqual(s2.month_of_year, set([1, 4, 7, 10]))
 
     def test_PeriodicTask_unicode_no_schedule(self):
         p = create_model()
         self.assertEqual(unicode(p), "%s: {no schedule}" % p.name)
 
     def test_CrontabSchedule_schedule(self):
-        s = CrontabSchedule(minute="3, 7", hour="3, 4", day_of_week="*")
+        s = CrontabSchedule(minute="3, 7", hour="3, 4", day_of_week="*",
+                            day_of_month="1, 16", month_of_year="1, 7")
         self.assertEqual(s.schedule.minute, set([3, 7]))
         self.assertEqual(s.schedule.hour, set([3, 4]))
         self.assertEqual(s.schedule.day_of_week, set([0, 1, 2, 3, 4, 5, 6]))
+        self.assertEqual(s.schedule.day_of_month, set([1, 16]))
+        self.assertEqual(s.schedule.month_of_year, set([1, 7]))
 
 
 class test_model_PeriodicTasks(unittest.TestCase):
