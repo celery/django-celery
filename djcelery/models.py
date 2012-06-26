@@ -13,22 +13,22 @@ from django.utils.translation import ugettext_lazy as _
 
 from celery import schedules
 from celery import states
+from celery.events.state import heartbeat_expires
 from celery.utils.timeutils import timedelta_seconds
 
 from . import managers
 from .picklefield import PickledObjectField
 from .utils import now
 
-HEARTBEAT_EXPIRE = 150      # 2 minutes, 30 seconds
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
 
 
 class TaskMeta(models.Model):
     """Task result/status."""
     task_id = models.CharField(_(u"task id"), max_length=255, unique=True)
-    status = models.CharField(_(u"task status"), max_length=50,
+    status = models.CharField(_(u"state"), max_length=50,
             default=states.PENDING, choices=TASK_STATE_CHOICES)
-    result = PickledObjectField(null=True, default=None)
+    result = PickledObjectField(null=True, default=None, editable=False)
     date_done = models.DateTimeField(_(u"done at"), auto_now=True)
     traceback = models.TextField(_(u"traceback"), blank=True, null=True)
     hidden = models.BooleanField(editable=False, default=False, db_index=True)
@@ -36,9 +36,8 @@ class TaskMeta(models.Model):
     objects = managers.TaskManager()
 
     class Meta:
-        """Model meta-data."""
-        verbose_name = _(u"task meta")
-        verbose_name_plural = _(u"task meta")
+        verbose_name = _(u"task state")
+        verbose_name_plural = _(u"task states")
         db_table = "celery_taskmeta"
 
     def to_dict(self):
@@ -49,22 +48,22 @@ class TaskMeta(models.Model):
                 "traceback": self.traceback}
 
     def __unicode__(self):
-        return u"<Task: %s state->%s>" % (self.task_id, self.status)
+        return u"<Task: %s state=%s>" % (self.task_id, self.status)
 
 
 class TaskSetMeta(models.Model):
     """TaskSet result"""
-    taskset_id = models.CharField(_(u"task id"), max_length=255, unique=True)
+    taskset_id = models.CharField(_(u"group id"), max_length=255, unique=True)
     result = PickledObjectField()
-    date_done = models.DateTimeField(_(u"done at"), auto_now=True)
+    date_done = models.DateTimeField(_(u"created at"), auto_now=True)
     hidden = models.BooleanField(editable=False, default=False, db_index=True)
 
     objects = managers.TaskSetManager()
 
     class Meta:
         """Model meta-data."""
-        verbose_name = _(u"taskset meta")
-        verbose_name_plural = _(u"taskset meta")
+        verbose_name = _(u"saved group result")
+        verbose_name_plural = _(u"saved group results")
         db_table = "celery_tasksetmeta"
 
     def to_dict(self):
@@ -280,7 +279,7 @@ class WorkerState(models.Model):
 
     def is_alive(self):
         if self.last_heartbeat:
-            return time() < self.heartbeat_timestamp + HEARTBEAT_EXPIRE
+            return time() < heartbeat_expires(self.heartbeat_timestamp)
         return False
 
     @property
