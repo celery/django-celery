@@ -24,7 +24,7 @@ class DatabaseBackend(BaseDictBackend):
     def _store_result(self, task_id, result, status, traceback=None):
         """Store return value and status of an executed task."""
         self.TaskModel._default_manager.store_result(task_id, result, status,
-                                                     traceback=traceback)
+                    traceback=traceback, children=self.current_task_children())
         return result
 
     def _save_group(self, group_id, result):

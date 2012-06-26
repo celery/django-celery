@@ -32,6 +32,8 @@ class TaskMeta(models.Model):
     date_done = models.DateTimeField(_(u"done at"), auto_now=True)
     traceback = models.TextField(_(u"traceback"), blank=True, null=True)
     hidden = models.BooleanField(editable=False, default=False, db_index=True)
+    meta = PickledObjectField(_(u"meta"), null=True, default=None,
+                              editable=False)
 
     objects = managers.TaskManager()
 
@@ -45,7 +47,8 @@ class TaskMeta(models.Model):
                 "status": self.status,
                 "result": self.result,
                 "date_done": self.date_done,
-                "traceback": self.traceback}
+                "traceback": self.traceback,
+                "children": (self.meta or {}).get("children")}
 
     def __unicode__(self):
         return u"<Task: %s state=%s>" % (self.task_id, self.status)
