@@ -7,9 +7,9 @@
     Such fields can contain any picklable objects.
 
     The implementation is taken and adopted from Django snippet #1694
-    <http://www.djangosnippets.org/snippets/1694/> by Taavi Taijala, which is in
-    turn based on Django snippet #513 <http://www.djangosnippets.org/snippets/513/>
-    by Oliver Beattie.
+    <http://www.djangosnippets.org/snippets/1694/> by Taavi Taijala,
+    which is in turn based on Django snippet #513
+    <http://www.djangosnippets.org/snippets/513/> by Oliver Beattie.
 
 """
 from __future__ import absolute_import
