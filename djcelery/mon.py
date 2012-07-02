@@ -4,7 +4,7 @@ import os
 import sys
 import types
 
-from celery.app.defaults import str_to_bool
+from celery.app.defaults import strtobool
 from celery.utils import import_from_cwd
 
 DEFAULT_APPS = ("django.contrib.auth",
@@ -23,7 +23,7 @@ DEFAULTS = {"ROOT_URLCONF": "djcelery.monproj.urls",
             "BROKER_URL": "amqp://",
             "SITE_ID": 1,
             "INSTALLED_APPS": DEFAULT_APPS,
-            "DEBUG": str_to_bool(os.environ.get("DJCELERYMON_DEBUG", "0"))}
+            "DEBUG": strtobool(os.environ.get("DJCELERYMON_DEBUG", "0"))}
 
 
 def default_settings(name="__default_settings__"):
