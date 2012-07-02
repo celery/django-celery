@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/ask/celery/celery_128.png
 
-:Version: 2.5.5
+:Version: 2.6.0rc5
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/celery/django-celery/
@@ -16,9 +16,6 @@
 django-celery provides Celery integration for Django; Using the Django ORM
 and cache backend for storing results, autodiscovery of task modules
 for applications listed in ``INSTALLED_APPS``, and more.
-
-.. contents::
-    :local:
 
 Using django-celery
 ===================
@@ -73,7 +70,7 @@ about the Django integration.
 .. _`django-celery documentation`: http://django-celery.readthedocs.org/
 .. _`Celery User Manual`: http://docs.celeryproject.org/
 .. _`Getting started with django-celery`:
-    http://django-celery.readthedocs.org/en/latest/getting-started/first-steps-with-django.html
+   http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
 
 Installation
 =============
@@ -133,10 +130,9 @@ please join the `celery-users`_ mailing list.
 IRC
 ---
 
-Come chat with us on IRC. The `#celery`_ channel is located at the `Freenode`_
+Come chat with us on IRC. The **#celery** channel is located at the `Freenode`_
 network.
 
-.. _`#celery`: irc://irc.freenode.net/celery
 .. _`Freenode`: http://freenode.net
 
 

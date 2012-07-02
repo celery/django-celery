@@ -70,7 +70,7 @@ about the Django integration.
 .. _`django-celery documentation`: http://django-celery.readthedocs.org/
 .. _`Celery User Manual`: http://docs.celeryproject.org/
 .. _`Getting started with django-celery`:
-    http://django-celery.readthedocs.org/en/latest/getting-started/first-steps-with-django.html
+   http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
 
 Installation
 =============
