@@ -5,9 +5,9 @@
 .. contents::
     :local:
 
-.. _version-2.6.0:
+.. _version-3.0.0:
 
-2.6.0
+3.0.0
 =====
 :release-date: TBA
 :by: Ask Solem
@@ -17,25 +17,25 @@
 Important Notes
 ---------------
 
-- Now depends on Celery 2.6
+- Now depends on Celery 3.0
 
-    It's important that you read the What's New document for the 2.6 series:
-    http://docs.celeryproject.org/en/latest/whatsnew-2.6.html
+    It is important that you read the What's New document for the 3.0 series:
+    http://docs.celeryproject.org/en/latest/whatsnew-3.0.html
 
 - No longer depends on :mod:`django-picklefield`
 
     And as such the result backend will no longer deepcopy return
     values or exceptions.
 
-- Celery 2.6 is the last release to require django-celery
+- Celery 3.0 is the last release to require django-celery
 
-    Starting with Celery 2.7 the django-celery package will no longer be
+    Starting with Celery 3.1 the django-celery package will no longer be
     required and Celery will support Django out of the box.
 
     The django-celery package may still exist for some time to provide
     additional utilities like the django-admin monitor.
 
-- django-celery 2.6 is the last series to support Python 2.5.
+- django-celery 3.0 is the last series to support Python 2.5.
 
     Celery will no longer support Python 2.5 starting with version 2.7.
 
