@@ -173,7 +173,7 @@ setup(
     scripts=["bin/djcelerymon"],
     zip_safe=False,
     install_requires=[
-        "celery>=2.5.2",
+        "celery>=3.0.0",
     ],
     cmdclass={"test": RunTests,
               "quicktest": QuickRunTests,
