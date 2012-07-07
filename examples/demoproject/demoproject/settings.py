@@ -28,6 +28,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'djcelery',
     'demoapp',
+    'south',
 )
 
 # -- rest is from Django 1.4 template
