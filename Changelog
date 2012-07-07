@@ -9,10 +9,10 @@
 
 3.0.0
 =====
-:release-date: TBA
+:release-date: 2012-07-07 01:00 P.M BST
 :by: Ask Solem
 
-.. _v260-important:
+.. _v300-important:
 
 Important Notes
 ---------------
@@ -87,7 +87,7 @@ News
 
         INSTALLED_APPS = ('djcelery.transport', )
 
-.. _v260-fixes:
+.. _v300-fixes:
 
 Fixes
 -----
