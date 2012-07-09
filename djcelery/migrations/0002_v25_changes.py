@@ -19,6 +19,7 @@ def ignore_exists(fun, *args, **kwargs):
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        db.start_transaction()
         # Adding model 'TaskMeta'
         if ignore_exists(db.create_table, 'celery_taskmeta', (
                     ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -29,13 +30,14 @@ class Migration(SchemaMigration):
                     ('traceback', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),)):
             db.send_create_signal('djcelery', ['TaskMeta'])
 
-        # Adding model 'TaskSetMeta'
-        if ignore_exists(db.create_table, 'celery_tasksetmeta', (
-                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-                ('taskset_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
-                ('result', self.gf('djcelery.picklefield.PickledObjectField')()),
-                ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),)):
-            db.send_create_signal('djcelery', ['TaskSetMeta'])
+            # Adding model 'TaskSetMeta'
+            if ignore_exists(db.create_table, 'celery_tasksetmeta', (
+                    ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                    ('taskset_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
+                    ('result', self.gf('djcelery.picklefield.PickledObjectField')()),
+                    ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),)):
+                db.send_create_signal('djcelery', ['TaskSetMeta'])
+        db.commit_transaction()
 
         # Adding field 'PeriodicTask.description'
         db.add_column('djcelery_periodictask', 'description', self.gf('django.db.models.fields.TextField')(default='', blank=True), keep_default=False)
