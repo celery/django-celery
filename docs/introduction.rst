@@ -2,7 +2,7 @@
  django-celery - Celery Integration for Django
 ===============================================
 
-.. image:: http://cloud.github.com/downloads/ask/celery/celery_128.png
+.. image:: http://cloud.github.com/downloads/celery/celery/celery_128.png
 
 :Version: 3.0.1
 :Web: http://celeryproject.org/
