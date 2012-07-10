@@ -11,6 +11,10 @@ def ignore_exists(fun, *args, **kwargs):
         fun(*args, **kwargs)
     except DatabaseError, exc:
         if "exists" in str(exc):
+            # don't panic, everything is ok: it's just a hack
+            if db.has_ddl_transactions:
+                db.rollback_transaction()
+                db.start_transaction()
             return False
         raise
     return True
