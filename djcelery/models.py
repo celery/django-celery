@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from time import time, mktime
 
 import django
@@ -306,6 +306,11 @@ class TaskState(models.Model):
         verbose_name_plural = _(u"tasks")
         get_latest_by = "tstamp"
         ordering = ["-tstamp"]
+
+    def save(self, *args, **kwargs):
+        if self.eta is not None:
+            self.eta = datetime.utcfromtimestamp(mktime(self.eta.timetuple()))
+        super(TaskState, self).save(*args, **kwargs)
 
     def __unicode__(self):
         name = self.name or "UNKNOWN"
