@@ -12,6 +12,31 @@
 :release-date: 2012-07-10 06:00 P.M BST
 :by: Ask Solem
 
+Important Notes
+---------------
+
+The 3.0 changelog forgot to mention that two of the database
+tables has been altered, so you must either use South to migrate
+the tables or alter the tables manually::
+
+        ALTER TABLE celery_taskmeta
+            ADD meta TEXT NULL DEFAULT "";
+
+        ALTER TABLE djcelery_crontabschedule
+            ADD day_of_month VARCHAR(64) NOT NULL DEFAULT "*";
+
+        ALTER TABLE djcelery_crontabschedule
+            ADD month_of_year VARCHAR(64) NOT NULL DEFAULT "*";
+Fixes
+-----
+
+- Fixes problems with South migrations (Issue #149)
+
+    Fix contributed by Roman Imankulov.
+
+- Task monitor must store task eta in UTC (Issue #139).
+
+    Fix contributed by Mike Ivanov.
 
 .. _version-3.0.0:
 
