@@ -30,6 +30,8 @@ the tables or alter the tables manually::
 Fixes
 -----
 
+- Now depends on Celery 3.0.1
+
 - Fixes problems with South migrations (Issue #149)
 
     Fix contributed by Roman Imankulov.
