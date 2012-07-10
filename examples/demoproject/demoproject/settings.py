@@ -1,9 +1,6 @@
 # Django settings for demoproject project.
 
 # -- Celery related configuration
-import djcelery
-djcelery.setup_loader()
-
 
 BROKER_URL = "amqp://guest:guest@localhost:5672//"
 CELERY_RESULT_BACKEND = "database"
@@ -28,7 +25,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'djcelery',
     'demoapp',
-    'south',
 )
 
 # -- rest is from Django 1.4 template
