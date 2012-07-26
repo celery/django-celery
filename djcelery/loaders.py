@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import django
 import imp
 import importlib
 import warnings
@@ -18,6 +19,7 @@ from django.core.mail import mail_admins
 from .utils import DATABASE_ERRORS, now
 
 _RACE_PROTECTION = False
+NO_TZ = django.VERSION < (1, 4)
 
 
 class DjangoLoader(BaseLoader):
@@ -49,6 +51,10 @@ class DjangoLoader(BaseLoader):
                     getattr(settings, "CELERY_BACKEND", None)
         if not backend:
             settings.CELERY_RESULT_BACKEND = "database"
+        if NO_TZ:
+            if getattr(settings, "CELERY_ENABLE_UTC", None):
+                warnings.warn("CELERY_ENABLE_UTC requires Django 1.4+")
+            settings.CELERY_ENABLE_UTC = False
         return DictAttribute(settings)
 
     def _close_database(self):
