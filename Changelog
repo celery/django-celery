@@ -5,6 +5,56 @@
 .. contents::
     :local:
 
+.. _version-3.0.4:
+
+3.0.4
+=====
+:release-date: 2012-07-26 07:00 P.M BST
+:by: Ask Solem
+
+- Now depends on celery 3.0.4
+
+- ``CELERY_ENABLE_UTC`` is now disabled for Django versions
+  before 1.4 (Issue #158).
+
+- celerycam: No longer overwrites name, args, kwargs and eta if the
+  received event is missing (Issue #148 + Issue #155).
+
+    Fix contributed by Kirill Panshin.
+
+- Fixed problem with migrations when running the tests.
+
+    Fix contributed by Roger Barnes.
+
+- New utilities:
+
+    - :func:`djcelery.common.respect_language`
+
+        Context manager for the with statement that changes the language used.
+        For example::
+
+            from celery import task
+            from djcelery.common import respect_language
+
+            @task
+            def my_task(language=None):
+                with respect_language(language):
+                    ...
+
+    - :func:`djcelery.common.respects_language`
+
+        Decorator version of the above that adds a ``language`` keyword
+        argument to any function that it decorates::
+
+            @task
+            @respects_language
+            def my_task():
+                pass
+
+            my_task.delay(language=translation.get_language())
+
+    Contributed by @ramusus
+
 .. _version-3.0.1:
 
 3.0.1

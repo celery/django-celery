@@ -9,6 +9,7 @@
     :maxdepth: 2
 
     djcelery.app
+    djcelery.common
     djcelery.views
     djcelery.urls
     djcelery.models
