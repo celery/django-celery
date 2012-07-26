@@ -77,6 +77,7 @@ the tables or alter the tables manually::
 
         ALTER TABLE djcelery_crontabschedule
             ADD month_of_year VARCHAR(64) NOT NULL DEFAULT "*";
+
 Fixes
 -----
 
@@ -224,13 +225,19 @@ Fixes
 :release-date: 2012-04-13 05:00 P.M BST
 :by: Ask Solem
 
-.. _v251-news:
+.. _v252-news:
+
+News
+----
 
 * PeriodicTask admin now lists the enabled field in the list view
 
     Contributed by Gabe Jackson.
 
-.. _v251-fixes:
+.. _v252-fixes:
+
+Fixes
+-----
 
 * Fixed a compatibility issue with Django < 1.3
 
