@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-import django
+import os
 import imp
 import importlib
 import warnings
@@ -11,6 +11,7 @@ from celery import signals
 from celery.loaders.base import BaseLoader
 from celery.datastructures import DictAttribute
 
+import django
 from django import db
 from django.conf import settings
 from django.core import cache
@@ -111,14 +112,33 @@ class DjangoLoader(BaseLoader):
         listed in ``INSTALLED_APPS``.
 
         """
+        # calling db.close() on some DB connections will cause
+        # the inherited DB conn to also get broken in the parent
+        # process so we need to remove it without triggering any
+        # network IO that close() might cause.
+        try:
+            for c in db.connections.all():
+                if c and c.connection:
+                    try:
+                        os.close(c.connection.fileno())
+                    except OSError:
+                        pass
+        except AttributeError, exc:
+            if db.connection and db.connection.connection:
+                try:
+                    os.close(db.connection.connection.fileno())
+                except OSError:
+                    pass
 
+        # use the _ version to avoid DB_REUSE preventing the conn.close() call
+        self._close_database()
+        self.close_cache()
+        
         if settings.DEBUG:
             warnings.warn("Using settings.DEBUG leads to a memory leak, never "
                           "use this setting in production environments!")
         self.import_default_modules()
 
-        self.close_database()
-        self.close_cache()
 
     def import_default_modules(self):
         super(DjangoLoader, self).import_default_modules()
