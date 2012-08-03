@@ -112,6 +112,27 @@ class DjangoLoader(BaseLoader):
         listed in ``INSTALLED_APPS``.
 
         """
+        
+        
+        if settings.DEBUG:
+            warnings.warn("Using settings.DEBUG leads to a memory leak, never "
+                          "use this setting in production environments!")
+        self.import_default_modules()
+
+        self.close_database()
+        self.close_cache()
+
+    def import_default_modules(self):
+        super(DjangoLoader, self).import_default_modules()
+        self.autodiscover()
+
+    def autodiscover(self):
+        self.task_modules.update(mod.__name__ for mod in autodiscover() or ())
+
+    def on_worker_process_init(self):
+        # the parent process may have established these,
+        # so need to close them.
+
         # calling db.close() on some DB connections will cause
         # the inherited DB conn to also get broken in the parent
         # process so we need to remove it without triggering any
@@ -132,25 +153,6 @@ class DjangoLoader(BaseLoader):
 
         # use the _ version to avoid DB_REUSE preventing the conn.close() call
         self._close_database()
-        self.close_cache()
-        
-        if settings.DEBUG:
-            warnings.warn("Using settings.DEBUG leads to a memory leak, never "
-                          "use this setting in production environments!")
-        self.import_default_modules()
-
-
-    def import_default_modules(self):
-        super(DjangoLoader, self).import_default_modules()
-        self.autodiscover()
-
-    def autodiscover(self):
-        self.task_modules.update(mod.__name__ for mod in autodiscover() or ())
-
-    def on_worker_process_init(self):
-        # the parent process may have established these,
-        # so need to close them.
-        self.close_database()
         self.close_cache()
 
     def mail_admins(self, subject, body, fail_silently=False, **kwargs):
