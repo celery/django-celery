@@ -1,45 +1,44 @@
 # encoding: utf-8
 from __future__ import absolute_import
-import datetime
 from south.db import db
 from south.v2 import SchemaMigration
-from django.db import models
-
-def ignore_exists(fun, *args, **kwargs):
-    try:
-        fun(*args, **kwargs)
-    except Exception, exc:
-        if "exists" in str(exc):
-            # don't panic, everything is ok: it's just a hack
-            if db.has_ddl_transactions:
-                db.rollback_transaction()
-                db.start_transaction()
-            return False
-        raise
-    return True
+from django.db import connections
 
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        conn = connections[db.db_alias]
+        table_list = conn.introspection.get_table_list(conn.cursor())
+        if 'celery_taskmeta' not in table_list:
+            self.create_celery_taskmeta()
+        if 'celery_tasksetmeta' not in table_list:
+            self.create_celery_tasksetmeta()
+        self.apply_current_migration()
+
+    def create_celery_taskmeta(self):
         # Adding model 'TaskMeta'
-        if ignore_exists(db.create_table, 'celery_taskmeta', (
+        db.create_table('celery_taskmeta', (
                     ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
                     ('task_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
                     ('status', self.gf('django.db.models.fields.CharField')(default='PENDING', max_length=50)),
                     ('result', self.gf('djcelery.picklefield.PickledObjectField')(default=None, null=True)),
                     ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-                    ('traceback', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),)):
-            db.send_create_signal('djcelery', ['TaskMeta'])
+                    ('traceback', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+        ))
+        db.send_create_signal('djcelery', ['TaskMeta'])
 
+    def create_celery_tasksetmeta(self):
         # Adding model 'TaskSetMeta'
-        if ignore_exists(db.create_table, 'celery_tasksetmeta', (
+        db.create_table('celery_tasksetmeta', (
                 ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
                 ('taskset_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
                 ('result', self.gf('djcelery.picklefield.PickledObjectField')()),
-                ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),)):
-            db.send_create_signal('djcelery', ['TaskSetMeta'])
+                ('date_done', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+        ))
+        db.send_create_signal('djcelery', ['TaskSetMeta'])
 
+    def apply_current_migration(self):
         # Adding field 'PeriodicTask.description'
         db.add_column('djcelery_periodictask', 'description', self.gf('django.db.models.fields.TextField')(default='', blank=True), keep_default=False)
 
@@ -51,7 +50,7 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        
+
         # Deleting field 'PeriodicTask.description'
         db.delete_column('djcelery_periodictask', 'description')
 
