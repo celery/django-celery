@@ -13,7 +13,10 @@ URLs defined for celery.
 """
 from __future__ import absolute_import
 
-from django.conf.urls.defaults import patterns, url
+try:
+    from django.conf.urls import patterns, url
+except ImportError:
+    from django.conf.urls.defaults import patterns, url
 
 from . import views
 
