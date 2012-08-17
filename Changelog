@@ -5,6 +5,30 @@
 .. contents::
     :local:
 
+.. _version-3.0.6:
+
+3.0.6
+=====
+:release-date: 2012-08-17 11:00 P.M BST
+
+- Naive datetimes received by Celery are now assumed to be UTC.
+
+- The example demoproject no longer used ``djcelery.setup_loader``.
+
+- Fixed south migration warning (Issue #149).
+
+    Fix contributed by Roman Imankulov.
+
+- No longer uses deprecated urls module.
+
+    Fix contributed by Simon Charette.
+
+- Databases are no longer closed after fork, instead we close
+  the underlying file descriptors, so parent process can continue
+  to use the connection (Issue #161).
+
+    Fix contributed by Alex Stapleton.
+
 .. _version-3.0.4:
 
 3.0.4
