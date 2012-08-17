@@ -112,8 +112,6 @@ class DjangoLoader(BaseLoader):
         listed in ``INSTALLED_APPS``.
 
         """
-        
-        
         if settings.DEBUG:
             warnings.warn("Using settings.DEBUG leads to a memory leak, never "
                           "use this setting in production environments!")
@@ -144,7 +142,7 @@ class DjangoLoader(BaseLoader):
                         os.close(c.connection.fileno())
                     except OSError:
                         pass
-        except AttributeError, exc:
+        except AttributeError:
             if db.connection and db.connection.connection:
                 try:
                     os.close(db.connection.connection.fileno())
