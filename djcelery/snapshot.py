@@ -14,7 +14,7 @@ from celery.events.snapshot import Polaroid
 from celery.utils.timeutils import maybe_iso8601
 
 from .models import WorkerState, TaskState
-from .utils import make_aware
+from .utils import make_aware, maybe_make_aware
 
 
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
@@ -71,8 +71,8 @@ class Camera(Polaroid):
         defaults = {"name": task.name,
                 "args": task.args,
                 "kwargs": task.kwargs,
-                "eta": maybe_iso8601(task.eta),
-                "expires": maybe_iso8601(task.expires),
+                "eta": maybe_make_aware(maybe_iso8601(task.eta)),
+                "expires": maybe_make_aware(maybe_iso8601(task.expires)),
                 "state": task.state,
                 "tstamp": make_aware(datetime.fromtimestamp(
                                      task.timestamp)),
