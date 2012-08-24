@@ -5,7 +5,7 @@ from pprint import pformat
 from django.utils.html import escape
 
 FIXEDWIDTH_STYLE = '''\
-<span title="%s", style="font-size: %spt; \
+<span title="%s" style="font-size: %spt; \
 font-family: Menlo, Courier; ">%s</span> \
 '''
 
