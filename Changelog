@@ -5,6 +5,21 @@
 .. contents::
     :local:
 
+.. _version-3.0.7:
+
+3.0.7
+=====
+:release-date: 2012-08-25 06:00 P.M BST
+
+- Now depends on Celery 3.0.7
+
+    See the celery changelog for more information.
+
+- Fixes Oracle compatibility issue for closing an already
+  closed connection.
+
+    Fix contributed by Dan LaMotte.
+
 .. _version-3.0.6:
 
 3.0.6
