@@ -23,6 +23,13 @@ _RACE_PROTECTION = False
 NO_TZ = django.VERSION < (1, 4)
 
 
+def _maybe_close_fd(fh):
+    try:
+        os.close(fh.fileno())
+    except (AttributeError, OSError):
+        pass
+
+
 class DjangoLoader(BaseLoader):
     """The Django loader."""
     _db_reuse = 0
@@ -139,16 +146,10 @@ class DjangoLoader(BaseLoader):
         try:
             for c in db.connections.all():
                 if c and c.connection:
-                    try:
-                        os.close(c.connection.fileno())
-                    except OSError:
-                        pass
+                    _maybe_close_fd(c.connection)
         except AttributeError:
             if db.connection and db.connection.connection:
-                try:
-                    os.close(db.connection.connection.fileno())
-                except OSError:
-                    pass
+                _maybe_close_fd(db.connection.connection)
 
         # use the _ version to avoid DB_REUSE preventing the conn.close() call
         self._close_database()
