@@ -5,15 +5,15 @@
 .. contents::
     :local:
 
-.. _version-3.0.8:
+.. _version-3.0.9:
 
-3.0.8
+3.0.9
 =====
-:release-date: 2012-08-30 xx:00 P.M BST
+:release-date: 2012-08-31 06:00 P.M BST
 
-Important notice:
+Important note:
 
-Celery 3.0.8 fixes an issue with periodic tasks and timezones.
+Celery 3.0.9 fixes an issue with periodic tasks and timezones.
 
 If you are using the database periodic task scheduler
 then you have to reset the `last_run_at` fields
@@ -25,20 +25,23 @@ to ensure that no invalid timezones are stored:
     >>> from djcelery.models import PeriodicTask
     >>> PeriodicTask.objects.update(last_run_at=None)
 
-.. _version-3.0.7:
+- Now depends on Celery 3.0.9
 
-3.0.7
-=====
-:release-date: 2012-08-25 06:00 P.M BST
+    See the Celery changelog for more information:
 
-- Now depends on Celery 3.0.7
+        http://docs.celeryproject.org/en/latest/changelog.html
 
-    See the celery changelog for more information.
+- Don't close fds for database connections without a fileno.
 
 - Fixes Oracle compatibility issue for closing an already
   closed connection.
 
     Fix contributed by Dan LaMotte.
+
+- New test suite runner that stores results in the database:
+  :class:`djcelery.contrib.test_runner.CeleryTestSuiteRunnerStoringResult`.
+
+    Contributed by Kirill Panshin.
 
 .. _version-3.0.6:
 
