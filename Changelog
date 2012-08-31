@@ -227,13 +227,6 @@ News
 
     Contributed by Diego Andres Sanabria Martin.
 
-- The Django database transport is now available from the djcelery namespace.
-
-    Instead of ``kombu.transport.django`` you can now add
-    ``djcelery.transport`` to ``INSTALLED_APPS``::
-
-        INSTALLED_APPS = ('djcelery.transport', )
-
 .. _v300-fixes:
 
 Fixes
