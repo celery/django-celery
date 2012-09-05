@@ -16,7 +16,7 @@ def respect_language(language):
     Can e.g. be used inside tasks like this::
 
         from celery import task
-        from djcelery.common import respect_to_language
+        from djcelery.common import respect_language
 
         @task
         def my_task(language=None):
