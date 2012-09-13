@@ -46,6 +46,7 @@ class DjangoLoader(BaseLoader):
         # Need to close any open database connection after
         # any embedded celerybeat process forks.
         signals.beat_embedded_init.connect(self.close_database)
+        signals.worker_ready.connect(self.warn_if_debug)
 
     def now(self, utc=False):
         return datetime.utcnow() if utc else now()
@@ -120,13 +121,15 @@ class DjangoLoader(BaseLoader):
         listed in ``INSTALLED_APPS``.
 
         """
-        if settings.DEBUG:
-            warnings.warn("Using settings.DEBUG leads to a memory leak, never "
-                          "use this setting in production environments!")
         self.import_default_modules()
 
         self.close_database()
         self.close_cache()
+
+    def warn_if_debug(self, **kwargs):
+        if settings.DEBUG:
+            warnings.warn("Using settings.DEBUG leads to a memory leak, never "
+                          "use this setting in production environments!")
 
     def import_default_modules(self):
         super(DjangoLoader, self).import_default_modules()
