@@ -5,6 +5,19 @@
 .. contents::
     :local:
 
+.. _version-3.0.10:
+
+3.0.10
+======
+:release-date: TBA
+
+- Fixed timezone issues when using the Database periodic task scheduler.
+
+- Admin: Periodic task form now adds tasks imported using ``CELERY_IMPORTS``,
+  and ``CELERY_INCLUDE``.
+
+- Memory leak warning is now only output once.
+
 .. _version-3.0.9:
 
 3.0.9
