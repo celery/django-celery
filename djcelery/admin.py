@@ -14,11 +14,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from celery import current_app
 from celery import states
-from celery import registry
 from celery.task.control import broadcast, revoke, rate_limit
 from celery.utils.text import abbrtask
 
-from . import loaders
 from .admin_utils import action, display_field, fixedwidth
 from .models import (TaskState, WorkerState,
                      PeriodicTask, IntervalSchedule, CrontabSchedule)
@@ -230,8 +228,8 @@ class LaxChoiceField(forms.ChoiceField):
 
 
 def periodic_task_form():
-    loaders.autodiscover()
-    tasks = list(sorted(registry.tasks.regular().keys()))
+    current_app.loader.import_default_modules()
+    tasks = list(sorted(current_app.tasks))
     choices = (("", ""), ) + tuple(zip(tasks, tasks))
 
     class PeriodicTaskForm(forms.ModelForm):
