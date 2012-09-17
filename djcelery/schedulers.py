@@ -5,6 +5,7 @@ import logging
 from warnings import warn
 
 from anyjson import deserialize, serialize
+from celery import current_app
 from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
 from celery.utils.encoding import safe_str, safe_repr
@@ -15,7 +16,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from .models import (PeriodicTask, PeriodicTasks,
                      CrontabSchedule, IntervalSchedule)
-from .utils import DATABASE_ERRORS, now
+from .utils import DATABASE_ERRORS
 
 # This scheduler must wake up more frequently than the
 # regular of 5 minutes because it needs to take external
@@ -29,6 +30,7 @@ class ModelEntry(ScheduleEntry):
     save_fields = ["last_run_at", "total_run_count", "no_changes"]
 
     def __init__(self, model):
+        self.app = current_app._get_current_object()
         self.name = model.name
         self.task = model.task
         self.schedule = model.schedule
@@ -59,10 +61,10 @@ class ModelEntry(ScheduleEntry):
         return self.schedule.is_due(self.last_run_at)
 
     def _default_now(self):
-        return now()
+        return self.app.now()
 
     def next(self):
-        self.model.last_run_at = now()
+        self.model.last_run_at = self.app.now()
         self.model.total_run_count += 1
         self.model.no_changes = True
         return self.__class__(self.model)
@@ -158,7 +160,7 @@ class DatabaseScheduler(Scheduler):
             except DATABASE_ERRORS, exc:
                 warn(RuntimeWarning("Database gave error: %r" % (exc, )))
                 return False
-        self._last_timestamp = now()
+        self._last_timestamp = self.app.now()
         return True
 
     def reserve(self, entry):
@@ -207,7 +209,7 @@ class DatabaseScheduler(Scheduler):
         if self.app.conf.CELERY_TASK_RESULT_EXPIRES:
             entries.setdefault("celery.backend_cleanup", {
                     "task": "celery.backend_cleanup",
-                    "schedule": schedules.crontab("0", "4", "*", nowfun=now),
+                    "schedule": schedules.crontab("0", "4", "*"),
                     "options": {"expires": 12 * 3600}})
         self.update_from_dict(entries)
 

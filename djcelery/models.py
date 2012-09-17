@@ -148,8 +148,7 @@ class CrontabSchedule(models.Model):
                                 hour=self.hour,
                                 day_of_week=self.day_of_week,
                                 day_of_month=self.day_of_month,
-                                month_of_year=self.month_of_year,
-                                nowfun=now)
+                                month_of_year=self.month_of_year)
 
     @classmethod
     def from_schedule(cls, schedule):
