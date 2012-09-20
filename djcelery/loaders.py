@@ -26,7 +26,8 @@ NO_TZ = django.VERSION < (1, 4)
 def _maybe_close_fd(fh):
     try:
         os.close(fh.fileno())
-    except (AttributeError, OSError):
+    except (AttributeError, OSError, TypeError):
+        # TypeError added for celery#962
         pass
 
 
