@@ -229,7 +229,8 @@ class LaxChoiceField(forms.ChoiceField):
 
 def periodic_task_form():
     current_app.loader.import_default_modules()
-    tasks = list(sorted(current_app.tasks))
+    tasks = list(sorted(name for name in current_app.tasks
+                            if not name.startswith('celery.')))
     choices = (("", ""), ) + tuple(zip(tasks, tasks))
 
     class PeriodicTaskForm(forms.ModelForm):
