@@ -8,10 +8,9 @@ from celery.schedules import schedule, crontab
 from celery.utils.timeutils import timedelta_seconds
 
 from djcelery import schedulers
-from djcelery.app import app
+from djcelery import celery
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
-from djcelery.utils import now
 from djcelery.tests.utils import unittest
 
 
@@ -86,7 +85,7 @@ class test_ModelEntry(unittest.TestCase):
                                        "exchange": "foo",
                                        "routing_key": "cpu"}, e.options)
 
-        right_now = now()
+        right_now = celery.now()
         m2 = create_model_interval(schedule(timedelta(seconds=10)),
                                    last_run_at=right_now)
         self.assertTrue(m2.last_run_at)
@@ -103,11 +102,11 @@ class test_DatabaseScheduler(unittest.TestCase):
 
     def setUp(self):
         PeriodicTask.objects.all().delete()
-        self.prev_schedule = app.conf.CELERYBEAT_SCHEDULE
-        app.conf.CELERYBEAT_SCHEDULE = {}
+        self.prev_schedule = celery.conf.CELERYBEAT_SCHEDULE
+        celery.conf.CELERYBEAT_SCHEDULE = {}
         m1 = create_model_interval(schedule(timedelta(seconds=10)))
         m2 = create_model_interval(schedule(timedelta(minutes=20)))
-        m3 = create_model_crontab(crontab(minute="2,4,5", nowfun=now))
+        m3 = create_model_crontab(crontab(minute="2,4,5"))
         for obj in m1, m2, m3:
             obj.save()
         self.s = self.Scheduler()
@@ -116,7 +115,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.m3 = PeriodicTask.objects.get(name=m3.name)
 
     def tearDown(self):
-        app.conf.CELERYBEAT_SCHEDULE = self.prev_schedule
+        celery.conf.CELERYBEAT_SCHEDULE = self.prev_schedule
         PeriodicTask.objects.all().delete()
 
     def test_constructor(self):
@@ -158,11 +157,11 @@ class test_DatabaseScheduler(unittest.TestCase):
     def test_reserve(self):
         e1 = self.s.schedule[self.m1.name]
         self.s.schedule[self.m1.name] = self.s.reserve(e1)
-        self.assertEqual(self.s.flushed, 2)
+        self.assertEqual(self.s.flushed, 1)
 
         e2 = self.s.schedule[self.m2.name]
         self.s.schedule[self.m2.name] = self.s.reserve(e2)
-        self.assertEqual(self.s.flushed, 2)
+        self.assertEqual(self.s.flushed, 1)
         self.assertIn(self.m2.name, self.s._dirty)
 
     def test_sync_saves_last_run_at(self):
@@ -177,14 +176,13 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.assertEqual(e2.last_run_at, last_run2)
 
     def test_sync_syncs_before_save(self):
-
         # Get the entry for m2
         e1 = self.s.schedule[self.m2.name]
 
         # Increment the entry (but make sure it doesn't sync)
         self.s._last_sync = time()
         e2 = self.s.schedule[e1.name] = self.s.reserve(e1)
-        self.assertEqual(self.s.flushed, 2)
+        self.assertEqual(self.s.flushed, 1)
 
         # Fetch the raw object from db, change the args
         # and save the changes.
@@ -195,7 +193,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         # get_schedule should now see the schedule has changed.
         # and also sync the dirty objects.
         e3 = self.s.schedule[self.m2.name]
-        self.assertEqual(self.s.flushed, 3)
+        self.assertEqual(self.s.flushed, 2)
         self.assertEqual(e3.last_run_at, e2.last_run_at)
         self.assertListEqual(e3.args, [16, 16])
 
@@ -208,7 +206,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.s.sync()
 
     def test_sync_rollback_on_save_error(self):
-        self.s.schedule[self.m1.name] = EntrySaveRaises(self.m1)
+        x = self.s.schedule[self.m1.name] = EntrySaveRaises(self.m1)
         self.s._dirty.add(self.m1.name)
         self.assertRaises(RuntimeError, self.s.sync)
 
@@ -239,8 +237,7 @@ class test_models(unittest.TestCase):
                         "%s: every 10.0 seconds" % p.name)
 
     def test_PeriodicTask_unicode_crontab(self):
-        p = create_model_crontab(crontab(hour="4, 5", day_of_week="4, 5",
-                                 nowfun=now))
+        p = create_model_crontab(crontab(hour="4, 5", day_of_week="4, 5"))
         self.assertEqual(unicode(p),
                         "%s: * 4,5 4,5 * * (m/h/d/dM/MY)" % p.name)
 
@@ -252,8 +249,7 @@ class test_models(unittest.TestCase):
         p2 = create_model_crontab(crontab(hour="4, 5",
                                           minute="10,20,30",
                                           day_of_month="1-7",
-                                          month_of_year="*/3",
-                                          nowfun=now))
+                                          month_of_year="*/3"))
         s2 = p2.schedule
         self.assertSetEqual(s2.hour, set([4, 5]))
         self.assertSetEqual(s2.minute, set([10, 20, 30]))

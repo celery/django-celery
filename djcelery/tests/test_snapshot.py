@@ -8,9 +8,10 @@ from celery.events import Event
 from celery.events.state import State, Worker, Task
 from celery.utils import gen_unique_id
 
+from djcelery import celery
 from djcelery import snapshot
 from djcelery import models
-from djcelery.utils import now, make_aware
+from djcelery.utils import make_aware
 from djcelery.tests.utils import unittest
 
 _next_id = count(0).next
@@ -72,7 +73,7 @@ class test_Camera(unittest.TestCase):
         self.assertEqual(mt.name, task.name)
         self.assertTrue(unicode(mt))
         self.assertTrue(repr(mt))
-        mt.eta = now()
+        mt.eta = celery.now()
         self.assertIn("eta", unicode(mt))
         self.assertIn(mt, models.TaskState.objects.active())
 

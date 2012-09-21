@@ -2,13 +2,13 @@ from __future__ import absolute_import
 
 from datetime import datetime, timedelta
 
-from celery import current_app
 from celery import states
 from celery.utils import gen_unique_id
 
+from djcelery import celery
 from djcelery.models import TaskMeta, TaskSetMeta
-from djcelery.tests.utils import unittest
 from djcelery.utils import now
+from djcelery.tests.utils import unittest
 
 
 class TestModels(unittest.TestCase):
@@ -47,13 +47,13 @@ class TestModels(unittest.TestCase):
                 date_done=now() - timedelta(days=10))
 
         expired = TaskMeta.objects.get_all_expired(
-                    current_app.conf.CELERY_TASK_RESULT_EXPIRES)
+                    celery.conf.CELERY_TASK_RESULT_EXPIRES)
         self.assertIn(m1, expired)
         self.assertNotIn(m2, expired)
         self.assertNotIn(m3, expired)
 
         TaskMeta.objects.delete_expired(
-                    current_app.conf.CELERY_TASK_RESULT_EXPIRES)
+                    celery.conf.CELERY_TASK_RESULT_EXPIRES)
         self.assertNotIn(m1, TaskMeta.objects.all())
 
     def test_tasksetmeta(self):
@@ -73,13 +73,13 @@ class TestModels(unittest.TestCase):
                 date_done=now() - timedelta(days=10))
 
         expired = TaskSetMeta.objects.get_all_expired(
-                    current_app.conf.CELERY_TASK_RESULT_EXPIRES)
+                    celery.conf.CELERY_TASK_RESULT_EXPIRES)
         self.assertIn(m1, expired)
         self.assertNotIn(m2, expired)
         self.assertNotIn(m3, expired)
 
         TaskSetMeta.objects.delete_expired(
-                current_app.conf.CELERY_TASK_RESULT_EXPIRES)
+                celery.conf.CELERY_TASK_RESULT_EXPIRES)
         self.assertNotIn(m1, TaskSetMeta.objects.all())
 
         m4 = self.createTaskSetMeta()
