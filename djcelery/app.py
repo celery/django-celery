@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
-from celery.app import default_app
+from celery import current_app
 
 
 #: The Django-Celery app instance.
-app = default_app
+app = current_app._get_current_object()
