@@ -9,7 +9,9 @@
 
 3.0.10
 ======
-:release-date: TBA
+:release-date: 2012-09-21 06:39 A.M BST
+
+- Now depends on Celery 3.0.10
 
 - Fixed timezone issues when using the Database periodic task scheduler.
 
@@ -17,6 +19,8 @@
   and ``CELERY_INCLUDE``.
 
 - Memory leak warning is now only output once.
+
+- Periodic task form in Admin no longer lists the celery built-in tasks.
 
 .. _version-3.0.9:
 

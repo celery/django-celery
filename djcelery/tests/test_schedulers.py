@@ -206,7 +206,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.s.sync()
 
     def test_sync_rollback_on_save_error(self):
-        x = self.s.schedule[self.m1.name] = EntrySaveRaises(self.m1)
+        self.s.schedule[self.m1.name] = EntrySaveRaises(self.m1)
         self.s._dirty.add(self.m1.name)
         self.assertRaises(RuntimeError, self.s.sync)
 
