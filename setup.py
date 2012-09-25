@@ -173,6 +173,7 @@ setup(
     scripts=["bin/djcelerymon"],
     zip_safe=False,
     install_requires=[
+        "pytz",
         "celery>=3.0.10",
     ],
     cmdclass={"test": RunTests,

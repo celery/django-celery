@@ -1,1 +1,2 @@
+pytz
 celery>=3.0.10
