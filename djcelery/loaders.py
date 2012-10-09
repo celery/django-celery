@@ -78,7 +78,7 @@ class DjangoLoader(BaseLoader):
                 close()
             except DATABASE_ERRORS, exc:
                 str_exc = str(exc)
-                if "closed" not in str_exc and "not connected" in str_exc:
+                if "closed" not in str_exc and "not connected" not in str_exc:
                     raise
 
     def close_database(self, **kwargs):
