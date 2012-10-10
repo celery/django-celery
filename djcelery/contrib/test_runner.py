@@ -15,7 +15,15 @@ Custom test runner to allow testing of celery delayed tasks.
 """
 
 
-class CeleryTestSuiteRunner(DjangoTestSuiteRunner):
+class CeleryTestSuiteMixin(object):
+    def setup_test_environment(self, **kwargs):
+        # Tell celery run tasks synchronously
+        settings.CELERY_ALWAYS_EAGER = True
+        settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True  # Issue #75
+        super(CeleryTestSuiteMixin, self).setup_test_environment(**kwargs)
+
+
+class CeleryTestSuiteRunner(CeleryTestSuiteMixin, DjangoTestSuiteRunner):
     """Django test runner allowing testing of celery delayed tasks.
 
     All tasks are run locally, not in a worker.
@@ -25,31 +33,9 @@ class CeleryTestSuiteRunner(DjangoTestSuiteRunner):
         TEST_RUNNER = "djcelery.contrib.test_runner.CeleryTestSuiteRunner"
 
     """
-    def setup_test_environment(self, **kwargs):
-        super(CeleryTestSuiteRunner, self).setup_test_environment(**kwargs)
-        settings.CELERY_ALWAYS_EAGER = True
-        settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True  # Issue #75
 
 
-class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
-    """This custom test suite runner make some preliminary
-    monkey-patching allowing storing result of Celery task execution
-    in ``djcelery.models.TaskState`` model. Tasks run eagerly.
-
-    Exceptions is turned on. If you need to test ``on_failure``
-    behavior, you should monkey-patch in your test:
-        ``settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = False``
-
-    USAGE:
-            In ``settings.py``:
-                TEST_RUNNER = 'djcelery.contrib.test_runner.' \
-                    'CeleryTestSuiteRunnerStoringResult'
-
-            In ``tests.py``:
-                from djcelery.models import TaskState
-                TaskState.object.filter(state='SUCCESS', args__contains='test')
-
-    """
+class CeleryTestSuiteMixinStoringResult(CeleryTestSuiteMixin):
     def setup_test_environment(self, **kwargs):
         """ Setting up test environment. """
 
@@ -78,9 +64,26 @@ class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
         Task.on_failure = classmethod(on_failure_patched)
 
         # Call parent's version
-        super(CeleryTestSuiteRunnerStoringResult,
+        super(CeleryTestSuiteMixinStoringResult,
               self).setup_test_environment(**kwargs)
 
-        # Tell celery run tasks synchronously
-        settings.CELERY_ALWAYS_EAGER = True
-        settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True  # Issue #75
+
+class CeleryTestSuiteRunnerStoringResult(CeleryTestSuiteMixinStoringResult, DjangoTestSuiteRunner):
+    """This custom test suite runner make some preliminary
+    monkey-patching allowing storing result of Celery task execution
+    in ``djcelery.models.TaskState`` model. Tasks run eagerly.
+
+    Exceptions is turned on. If you need to test ``on_failure``
+    behavior, you should monkey-patch in your test:
+        ``settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = False``
+
+    USAGE:
+            In ``settings.py``:
+                TEST_RUNNER = 'djcelery.contrib.test_runner.' \
+                    'CeleryTestSuiteRunnerStoringResult'
+
+            In ``tests.py``:
+                from djcelery.models import TaskState
+                TaskState.object.filter(state='SUCCESS', args__contains='test')
+
+    """
