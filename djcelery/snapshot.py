@@ -11,10 +11,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from celery import states
 from celery.events.state import Task
 from celery.events.snapshot import Polaroid
-from celery.utils.timeutils import maybe_iso8601
+from celery.utils.timeutils import maybe_iso8601, timezone
 
 from .models import WorkerState, TaskState
-from .utils import make_aware, maybe_make_aware
+from .utils import maybe_make_aware
 
 
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
@@ -27,6 +27,12 @@ EXPIRE_ERROR = getattr(settings, "CELERYCAM_EXPIRE_ERROR",
                        timedelta(days=3))
 EXPIRE_PENDING = getattr(settings, "CELERYCAM_EXPIRE_PENDING",
                          timedelta(days=5))
+NOT_SAVED_ATTRIBUTES = frozenset(['name', 'args', 'kwargs', 'eta'])
+
+
+def aware_tstamp(secs):
+    """Event timestamps uses the local timezone."""
+    return timezone.to_local_fallback(datetime.fromtimestamp(secs))
 
 
 class Camera(Polaroid):
@@ -50,7 +56,7 @@ class Camera(Polaroid):
             heartbeat = worker.heartbeats[-1]
         except IndexError:
             return
-        return make_aware(datetime.fromtimestamp(heartbeat))
+        return aware_tstamp(heartbeat)
 
     def handle_worker(self, (hostname, worker)):
         last_write, obj = self._last_worker_write[hostname]
@@ -67,15 +73,13 @@ class Camera(Polaroid):
         if task.worker and task.worker.hostname:
             worker = self.handle_worker((task.worker.hostname, task.worker))
 
-        NOT_SAVED_ATTRIBUTES = ('name', 'args', 'kwargs', 'eta')
         defaults = {"name": task.name,
                 "args": task.args,
                 "kwargs": task.kwargs,
                 "eta": maybe_make_aware(maybe_iso8601(task.eta)),
                 "expires": maybe_make_aware(maybe_iso8601(task.expires)),
                 "state": task.state,
-                "tstamp": make_aware(datetime.fromtimestamp(
-                                     task.timestamp)),
+                "tstamp": aware_tstamp(task.timestamp),
                 "result": task.result or task.exception,
                 "traceback": task.traceback,
                 "runtime": task.runtime,
@@ -83,8 +87,8 @@ class Camera(Polaroid):
         # If RECEIVED event is lost, some data is lost as it is stored
         # only in RECEIVED event for efficiency. In this case we just
         # do not overwrite this fields in TaskState instance row
-        [defaults.pop(attr) for attr in NOT_SAVED_ATTRIBUTES
-                                                 if defaults[attr] is None]
+        [defaults.pop(attr, None) for attr in NOT_SAVED_ATTRIBUTES
+                                    if defaults[attr] is None]
         return self.update_task(task.state, task_id=uuid, defaults=defaults)
 
     def update_task(self, state, **kwargs):
