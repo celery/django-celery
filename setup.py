@@ -12,6 +12,13 @@ except ImportError:
     from setuptools import setup, Command  # noqa
 from distutils.command.install import INSTALL_SCHEMES
 
+extra = {}
+
+# -*- Python 3 -*-
+is_py3k = sys.version_info[0] == 3
+if is_py3k:
+    extra.update(use_2to3=True)
+
 # -*- Distribution Meta -*-
 NAME = 'django-celery'
 
@@ -204,4 +211,5 @@ setup(
         'console_scripts': ['djcelerymon = djcelery.mon:main'],
     },
     long_description=long_description,
+    **extra
 )
