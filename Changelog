@@ -7,6 +7,17 @@
 
 .. _version-3.0.10:
 
+3.0.11
+======
+:release-date: 2012-10-10 02:30 P.M BST
+
+- Now depends on :mod:`pytz`
+
+- Fixed error in database close mechanism for Oracle.
+
+    Fix contributed by Dan LaMotte.
+
+
 3.0.10
 ======
 :release-date: 2012-09-21 10:29 A.M BST
