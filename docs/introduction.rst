@@ -36,12 +36,10 @@ need to invoke the programs through ``manage.py``:
 =====================================  =====================================
 **Program**                            **Replace with**
 =====================================  =====================================
-``celeryd``                            ``python manage.py celeryd``
-``celeryctl``                          ``python manage.py celeryctl``
-``celerybeat``                         ``python manage.py celerybeat``
-``camqadm``                            ``python manage.py camqadm``
-``celeryev``                           ``python manage.py celeryev``
-``celeryd-multi``                      ``python manage.py celeryd_multi``
+``celery``                             ``python manage.py celery``
+``celery worker``                      ``python manage.py celery worker``
+``celery beat``                        ``python manage.py celery beat``
+``celery ...``                         ``python manage.py celery ...``
 =====================================  =====================================
 
 The other main difference is that configuration values are stored in
