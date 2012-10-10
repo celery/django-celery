@@ -232,7 +232,7 @@ class TaskStateManager(ExtendedManager):
             return self.expired(states, expires).update(hidden=True)
 
     def purge(self):
-        meta = self.model._meta.db_table
+        meta = self.model._meta
         cursor = self.connection_for_write().cursor()
         cursor.execute(
             'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),

@@ -259,7 +259,7 @@ class test_models(unittest.TestCase):
 
     def test_PeriodicTask_unicode_no_schedule(self):
         p = create_model()
-        self.assertEqual(unicode(p), '{0}: {no schedule}'.format(p.name))
+        self.assertEqual(unicode(p), '{0}: {{no schedule}}'.format(p.name))
 
     def test_CrontabSchedule_schedule(self):
         s = CrontabSchedule(minute='3, 7', hour='3, 4', day_of_week='*',
