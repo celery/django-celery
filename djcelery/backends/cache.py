@@ -51,7 +51,7 @@ class CacheBackend(KeyValueStoreBackend):
     """Backend using the Django cache framework to store task metadata."""
 
     def __init__(self, *args, **kwargs):
-        super(CacheBackend, self).__init__(self, *args, **kwargs)
+        super(CacheBackend, self).__init__(*args, **kwargs)
         expires = kwargs.get("expires",
                              current_app.conf.CELERY_TASK_RESULT_EXPIRES)
         if isinstance(expires, timedelta):

@@ -15,6 +15,11 @@
 
 - Now depends on :mod:`pytz`
 
+- Fixed Django Admin monitor timezone problem.
+
+    Events still use timestamps that converts to the timezone of the receiving
+    node, but a proper fix is being worked on that will be part of Celery 3.1
+
 - Fixed error in database close mechanism for Oracle.
 
     Fix contributed by Dan LaMotte.
