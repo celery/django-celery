@@ -3,7 +3,7 @@
 Shortcut to the Django snapshot service.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 from celery.bin import celeryev
 
@@ -22,5 +22,5 @@ class Command(CeleryCommand):
 
     def handle(self, *args, **options):
         """Handle the management command."""
-        options["camera"] = "djcelery.snapshot.Camera"
+        options['camera'] = 'djcelery.snapshot.Camera'
         ev.run(*args, **options)

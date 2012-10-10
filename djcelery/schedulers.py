@@ -1,14 +1,11 @@
 from __future__ import absolute_import
 
-import logging
-
-from warnings import warn
-
-from anyjson import deserialize, serialize
+from anyjson import loads, dumps
 from celery import current_app
 from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
 from celery.utils.encoding import safe_str, safe_repr
+from celery.utils.log import get_logger
 from celery.utils.timeutils import is_naive
 from kombu.utils.finalize import Finalize
 
@@ -24,11 +21,18 @@ from .utils import DATABASE_ERRORS, make_aware
 # changes to the schedule into account.
 DEFAULT_MAX_INTERVAL = 5  # seconds
 
+ADD_ENTRY_ERROR = """\
+Couldn't add entry %r to database schedule: %r. Contents: %r
+"""
+
+logger = get_logger(__name__)
+debug, info, error = logger.debug, logger.info, logger.error
+
 
 class ModelEntry(ScheduleEntry):
-    model_schedules = ((schedules.crontab, CrontabSchedule, "crontab"),
-                       (schedules.schedule, IntervalSchedule, "interval"))
-    save_fields = ["last_run_at", "total_run_count", "no_changes"]
+    model_schedules = ((schedules.crontab, CrontabSchedule, 'crontab'),
+                       (schedules.schedule, IntervalSchedule, 'interval'))
+    save_fields = ['last_run_at', 'total_run_count', 'no_changes']
 
     def __init__(self, model):
         self.app = current_app._get_current_object()
@@ -36,8 +40,8 @@ class ModelEntry(ScheduleEntry):
         self.task = model.task
         self.schedule = model.schedule
         try:
-            self.args = deserialize(model.args or u"[]")
-            self.kwargs = deserialize(model.kwargs or u"{}")
+            self.args = loads(model.args or '[]')
+            self.kwargs = loads(model.kwargs or '{}')
         except ValueError:
             # disable because of error deserializing args/kwargs
             model.no_changes = True
@@ -45,10 +49,10 @@ class ModelEntry(ScheduleEntry):
             model.save()
             raise
 
-        self.options = {"queue": model.queue,
-                        "exchange": model.exchange,
-                        "routing_key": model.routing_key,
-                        "expires": model.expires}
+        self.options = {'queue': model.queue,
+                        'exchange': model.exchange,
+                        'routing_key': model.routing_key,
+                        'expires': model.expires}
         self.total_run_count = model.total_run_count
         self.model = model
 
@@ -91,31 +95,31 @@ class ModelEntry(ScheduleEntry):
                 model_schedule = model_type.from_schedule(schedule)
                 model_schedule.save()
                 return model_schedule, model_field
-        raise ValueError("Can't convert schedule type %r to model" % schedule)
+        raise ValueError(
+            'Cannot convert schedule type {0!r} to model'.format(schedule))
 
     @classmethod
-    def from_entry(cls, name, skip_fields=("relative", "options"), **entry):
-        options = entry.get("options") or {}
+    def from_entry(cls, name, skip_fields=('relative', 'options'), **entry):
+        options = entry.get('options') or {}
         fields = dict(entry)
         for skip_field in skip_fields:
             fields.pop(skip_field, None)
-        schedule = fields.pop("schedule")
+        schedule = fields.pop('schedule')
         model_schedule, model_field = cls.to_model_schedule(schedule)
         fields[model_field] = model_schedule
-        fields["args"] = serialize(fields.get("args") or [])
-        fields["kwargs"] = serialize(fields.get("kwargs") or {})
-        fields["queue"] = options.get("queue")
-        fields["exchange"] = options.get("exchange")
-        fields["routing_key"] = options.get("routing_key")
+        fields['args'] = dumps(fields.get('args') or [])
+        fields['kwargs'] = dumps(fields.get('kwargs') or {})
+        fields['queue'] = options.get('queue')
+        fields['exchange'] = options.get('exchange')
+        fields['routing_key'] = options.get('routing_key')
         return cls(PeriodicTask._default_manager.update_or_create(name=name,
                                                             defaults=fields))
 
     def __repr__(self):
-        return "<ModelEntry: %s %s(*%s, **%s) {%s}>" % (safe_str(self.name),
-                                                       self.task,
-                                                       safe_repr(self.args),
-                                                       safe_repr(self.kwargs),
-                                                       self.schedule)
+        return '<ModelEntry: {0} {1}(*{2}, **{3}) {{4}}>'.format(
+            safe_str(self.name), self.task, safe_repr(self.args),
+            safe_repr(self.kwargs), self.schedule,
+        )
 
 
 class DatabaseScheduler(Scheduler):
@@ -130,7 +134,7 @@ class DatabaseScheduler(Scheduler):
         self._dirty = set()
         self._finalize = Finalize(self, self.sync, exitpriority=5)
         Scheduler.__init__(self, *args, **kwargs)
-        self.max_interval = (kwargs.get("max_interval")
+        self.max_interval = (kwargs.get('max_interval')
                            or self.app.conf.CELERYBEAT_MAX_LOOP_INTERVAL
                            or DEFAULT_MAX_INTERVAL)
 
@@ -139,7 +143,7 @@ class DatabaseScheduler(Scheduler):
         self.update_from_dict(self.app.conf.CELERYBEAT_SCHEDULE)
 
     def all_as_schedule(self):
-        self.logger.debug("DatabaseScheduler: Fetching database schedule")
+        debug('DatabaseScheduler: Fetching database schedule')
         s = {}
         for model in self.Model.objects.enabled():
             try:
@@ -161,7 +165,7 @@ class DatabaseScheduler(Scheduler):
 
             last, ts = self._last_timestamp, self.Changes.last_change()
         except DATABASE_ERRORS, exc:
-            warn(RuntimeWarning("Database gave error: %r" % (exc, )))
+            error('Database gave error: %r', exc, exc_info=1)
             return False
         try:
             if ts and ts > (last if last else ts):
@@ -179,7 +183,7 @@ class DatabaseScheduler(Scheduler):
 
     @transaction.commit_manually
     def sync(self):
-        self.logger.info("Writing entries...")
+        info('Writing entries...')
         _tried = set()
         try:
             try:
@@ -198,7 +202,7 @@ class DatabaseScheduler(Scheduler):
         except DATABASE_ERRORS, exc:
             # retry later
             self._dirty |= _tried
-            warn(RuntimeWarning("Database error while sync: %r" % (exc, )))
+            error('Database error while sync: %r', exc, exc_info=1)
 
     def update_from_dict(self, dict_):
         s = {}
@@ -206,37 +210,33 @@ class DatabaseScheduler(Scheduler):
             try:
                 s[name] = self.Entry.from_entry(name, **entry)
             except Exception, exc:
-                self.logger.error(
-                    "Couldn't add entry %r to database schedule: %r. "
-                    "Contents: %r" % (name, exc, entry))
+                error(ADD_ENTRY_ERROR, name, exc, entry)
         self.schedule.update(s)
 
     def install_default_entries(self, data):
         entries = {}
         if self.app.conf.CELERY_TASK_RESULT_EXPIRES:
-            entries.setdefault("celery.backend_cleanup", {
-                    "task": "celery.backend_cleanup",
-                    "schedule": schedules.crontab("0", "4", "*"),
-                    "options": {"expires": 12 * 3600}})
+            entries.setdefault('celery.backend_cleanup', {
+                    'task': 'celery.backend_cleanup',
+                    'schedule': schedules.crontab('0', '4', '*'),
+                    'options': {'expires': 12 * 3600}})
         self.update_from_dict(entries)
 
     @property
     def schedule(self):
         update = False
         if not self._initial_read:
-            self.logger.debug('DatabaseScheduler: intial read')
+            debug('DatabaseScheduler: intial read')
             update = True
             self._initial_read = True
         elif self.schedule_changed():
-            self.logger.info("DatabaseScheduler: Schedule changed.")
+            info('DatabaseScheduler: Schedule changed.')
             update = True
 
         if update:
             self.sync()
             self._schedule = self.all_as_schedule()
-            if self.logger.isEnabledFor(logging.DEBUG):
-                self.logger.debug(
-                        "Current schedule:\n" +
-                        "\n".join(repr(entry)
-                                    for entry in self._schedule.values()))
+            debug('Current schedule:\n%s',
+                  '\n'.join(repr(entry)
+                        for entry in self._schedule.itervalues()))
         return self._schedule

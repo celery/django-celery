@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 import sys
 import threading
@@ -15,7 +15,7 @@ ev = celeryev.EvCommand(app=app)
 
 class WebserverThread(threading.Thread):
 
-    def __init__(self, addrport="", *args, **options):
+    def __init__(self, addrport='', *args, **options):
         threading.Thread.__init__(self)
         self.addrport = addrport
         self.args = args
@@ -43,6 +43,6 @@ class Command(CeleryCommand):
         """Handle the management command."""
         server = WebserverThread(addrport, *args, **options)
         server.start()
-        options["camera"] = "djcelery.snapshot.Camera"
-        options["prog_name"] = "djcelerymon"
+        options['camera'] = 'djcelery.snapshot.Camera'
+        options['prog_name'] = 'djcelerymon'
         ev.run(*args, **options)

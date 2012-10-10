@@ -1,5 +1,5 @@
 """celery.backends.cache"""
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 from datetime import timedelta
 
@@ -52,7 +52,7 @@ class CacheBackend(KeyValueStoreBackend):
 
     def __init__(self, *args, **kwargs):
         super(CacheBackend, self).__init__(*args, **kwargs)
-        expires = kwargs.get("expires",
+        expires = kwargs.get('expires',
                              current_app.conf.CELERY_TASK_RESULT_EXPIRES)
         if isinstance(expires, timedelta):
             expires = int(timedelta_seconds(expires))

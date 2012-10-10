@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime, timedelta
 
@@ -27,7 +27,7 @@ class TestModels(unittest.TestCase):
         m1 = self.createTaskMeta()
         m2 = self.createTaskMeta()
         m3 = self.createTaskMeta()
-        self.assertTrue(unicode(m1).startswith("<Task:"))
+        self.assertTrue(unicode(m1).startswith('<Task:'))
         self.assertTrue(m1.task_id)
         self.assertIsInstance(m1.date_done, datetime)
 
@@ -60,7 +60,7 @@ class TestModels(unittest.TestCase):
         m1 = self.createTaskSetMeta()
         m2 = self.createTaskSetMeta()
         m3 = self.createTaskSetMeta()
-        self.assertTrue(unicode(m1).startswith("<TaskSet:"))
+        self.assertTrue(unicode(m1).startswith('<TaskSet:'))
         self.assertTrue(m1.taskset_id)
         self.assertIsInstance(m1.date_done, datetime)
 

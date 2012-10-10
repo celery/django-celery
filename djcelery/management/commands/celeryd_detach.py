@@ -3,7 +3,7 @@
 Start detached worker node from the Django management utility.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 import os
 import sys
@@ -22,5 +22,5 @@ class Command(CeleryCommand):
     def run_from_argv(self, argv):
 
         class detached(celeryd_detach.detached_celeryd):
-            execv_argv = [os.path.abspath(sys.argv[0]), "celeryd"]
+            execv_argv = [os.path.abspath(sys.argv[0]), 'celeryd']
         detached().execute_from_commandline(argv)

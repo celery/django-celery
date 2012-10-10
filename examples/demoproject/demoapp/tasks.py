@@ -15,4 +15,4 @@ def sleeptask(i):
 
 @celery.task
 def raisetask():
-    raise KeyError("foo")
+    raise KeyError('foo')

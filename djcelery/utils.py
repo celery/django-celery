@@ -1,6 +1,6 @@
 # -- XXX This module must not use translation as that causes
 # -- a recursive loader import!
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
 
@@ -47,7 +47,7 @@ try:
     from django.utils import timezone
 
     def make_aware(value):
-        if getattr(settings, "USE_TZ", False):
+        if getattr(settings, 'USE_TZ', False):
             # naive datetimes are assumed to be in UTC.
             value = timezone.make_aware(value, timezone.utc)
             # then convert to the Django configured timezone.
@@ -56,7 +56,7 @@ try:
         return value
 
     def make_naive(value):
-        if getattr(settings, "USE_TZ", False):
+        if getattr(settings, 'USE_TZ', False):
             default_tz = timezone.get_default_timezone()
             value = timezone.make_naive(value, default_tz)
         return value

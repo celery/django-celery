@@ -11,7 +11,7 @@ URLs defined for celery.
     URL  to :func:`~celery.views.task_status`.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 try:
     from django.conf.urls import patterns, url
@@ -22,10 +22,10 @@ from . import views
 
 task_pattern = r'(?P<task_id>[\w\d\-\.]+)'
 
-urlpatterns = patterns("",
-    url(r'^%s/done/?$' % task_pattern, views.is_task_successful,
-        name="celery-is_task_successful"),
-    url(r'^%s/status/?$' % task_pattern, views.task_status,
-        name="celery-task_status"),
+urlpatterns = patterns('',
+    url(r'^{0}/done/?$'.format(task_pattern), views.is_task_successful,
+        name='celery-is_task_successful'),
+    url(r'^{0}/status/?$'.format(task_pattern), views.task_status,
+        name='celery-task_status'),
     url(r'^tasks/?$', views.registered_tasks, name='celery-tasks'),
 )

@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 import warnings
 
@@ -35,7 +35,7 @@ def transaction_retry(max_retries=1):
 
         @wraps(fun)
         def _inner(*args, **kwargs):
-            _max_retries = kwargs.pop("exception_retry_count", max_retries)
+            _max_retries = kwargs.pop('exception_retry_count', max_retries)
             for retries in count(0):
                 try:
                     return fun(*args, **kwargs)
@@ -67,7 +67,7 @@ class ExtendedQuerySet(QuerySet):
         obj, created = self.get_or_create(**kwargs)
 
         if not created:
-            fields = dict(kwargs.pop("defaults", {}))
+            fields = dict(kwargs.pop('defaults', {}))
             fields.update(kwargs)
             update_model_with_dict(obj, fields)
 
@@ -94,7 +94,7 @@ class ExtendedManager(models.Manager):
 
     def current_engine(self):
         try:
-            return settings.DATABASES[self.db]["ENGINE"]
+            return settings.DATABASES[self.db]['ENGINE']
         except AttributeError:
             return settings.DATABASE_ENGINE
 
@@ -107,10 +107,13 @@ class ResultManager(ExtendedManager):
 
     def delete_expired(self, expires):
         """Delete all expired taskset results."""
+        meta = self.model._meta
         self.get_all_expired(expires).update(hidden=True)
         cursor = self.connection_for_write().cursor()
-        cursor.execute("DELETE FROM %s WHERE hidden=%%s" % (
-                        self.model._meta.db_table, ), (True, ))
+        cursor.execute(
+            'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),
+            (True, ),
+        )
         transaction.commit_unless_managed()
 
 
@@ -168,22 +171,22 @@ class TaskManager(ResultManager):
 
         """
         return self.update_or_create(task_id=task_id,
-                                     defaults={"status": status,
-                                               "result": result,
-                                               "traceback": traceback,
-                                               "meta": {"children": children}})
+                                     defaults={'status': status,
+                                               'result': result,
+                                               'traceback': traceback,
+                                               'meta': {'children': children}})
 
     def warn_if_repeatable_read(self):
-        if "mysql" in self.current_engine().lower():
+        if 'mysql' in self.current_engine().lower():
             cursor = self.connection_for_read().cursor()
-            if cursor.execute("SELECT @@tx_isolation"):
+            if cursor.execute('SELECT @@tx_isolation'):
                 isolation = cursor.fetchone()[0]
                 if isolation == 'REPEATABLE-READ':
                     warnings.warn(TxIsolationWarning(
-                        "Polling results with transaction isolation level "
-                        "repeatable-read within the same transaction "
-                        "may give outdated results. Be sure to commit the "
-                        "transaction for each poll iteration."))
+                        'Polling results with transaction isolation level '
+                        'repeatable-read within the same transaction '
+                        'may give outdated results. Be sure to commit the '
+                        'transaction for each poll iteration.'))
 
 
 class TaskSetManager(ResultManager):
@@ -212,7 +215,7 @@ class TaskSetManager(ResultManager):
 
         """
         return self.update_or_create(taskset_id=taskset_id,
-                                     defaults={"result": result})
+                                     defaults={'result': result})
 
 
 class TaskStateManager(ExtendedManager):
@@ -229,7 +232,10 @@ class TaskStateManager(ExtendedManager):
             return self.expired(states, expires).update(hidden=True)
 
     def purge(self):
+        meta = self.model._meta.db_table
         cursor = self.connection_for_write().cursor()
-        cursor.execute("DELETE FROM %s WHERE hidden=%%s" % (
-                        self.model._meta.db_table, ), (True, ))
+        cursor.execute(
+            'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),
+            (True, ),
+        )
         transaction.commit_unless_managed()

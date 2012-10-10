@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -11,23 +11,26 @@ from django.core.exceptions import ObjectDoesNotExist
 from celery import states
 from celery.events.state import Task
 from celery.events.snapshot import Polaroid
+from celery.utils.log import get_logger
 from celery.utils.timeutils import maybe_iso8601, timezone
 
 from .models import WorkerState, TaskState
 from .utils import maybe_make_aware
 
-
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
 SUCCESS_STATES = frozenset([states.SUCCESS])
 
 # Expiry can be timedelta or None for never expire.
-EXPIRE_SUCCESS = getattr(settings, "CELERYCAM_EXPIRE_SUCCESS",
+EXPIRE_SUCCESS = getattr(settings, 'CELERYCAM_EXPIRE_SUCCESS',
                          timedelta(days=1))
-EXPIRE_ERROR = getattr(settings, "CELERYCAM_EXPIRE_ERROR",
+EXPIRE_ERROR = getattr(settings, 'CELERYCAM_EXPIRE_ERROR',
                        timedelta(days=3))
-EXPIRE_PENDING = getattr(settings, "CELERYCAM_EXPIRE_PENDING",
+EXPIRE_PENDING = getattr(settings, 'CELERYCAM_EXPIRE_PENDING',
                          timedelta(days=5))
 NOT_SAVED_ATTRIBUTES = frozenset(['name', 'args', 'kwargs', 'eta'])
+
+logger = get_logger(__name__)
+debug = logger.debug
 
 
 def aware_tstamp(secs):
@@ -63,7 +66,7 @@ class Camera(Polaroid):
         if not last_write or time() - last_write > self.worker_update_freq:
             obj = self.WorkerState.objects.update_or_create(
                         hostname=hostname,
-                        defaults={"last_heartbeat":
+                        defaults={'last_heartbeat':
                             self.get_heartbeat(worker)})
             self._last_worker_write[hostname] = (time(), obj)
         return obj
@@ -73,17 +76,17 @@ class Camera(Polaroid):
         if task.worker and task.worker.hostname:
             worker = self.handle_worker((task.worker.hostname, task.worker))
 
-        defaults = {"name": task.name,
-                "args": task.args,
-                "kwargs": task.kwargs,
-                "eta": maybe_make_aware(maybe_iso8601(task.eta)),
-                "expires": maybe_make_aware(maybe_iso8601(task.expires)),
-                "state": task.state,
-                "tstamp": aware_tstamp(task.timestamp),
-                "result": task.result or task.exception,
-                "traceback": task.traceback,
-                "runtime": task.runtime,
-                "worker": worker}
+        defaults = {'name': task.name,
+                'args': task.args,
+                'kwargs': task.kwargs,
+                'eta': maybe_make_aware(maybe_iso8601(task.eta)),
+                'expires': maybe_make_aware(maybe_iso8601(task.expires)),
+                'state': task.state,
+                'tstamp': aware_tstamp(task.timestamp),
+                'result': task.result or task.exception,
+                'traceback': task.traceback,
+                'runtime': task.runtime,
+                'worker': worker}
         # If RECEIVED event is lost, some data is lost as it is stored
         # only in RECEIVED event for efficiency. In this case we just
         # do not overwrite this fields in TaskState instance row
@@ -93,11 +96,11 @@ class Camera(Polaroid):
 
     def update_task(self, state, **kwargs):
         objects = self.TaskState.objects
-        defaults = kwargs.pop("defaults", None) or {}
+        defaults = kwargs.pop('defaults', None) or {}
         try:
             obj = objects.get(**kwargs)
         except ObjectDoesNotExist:
-            if not defaults.get("name"):
+            if not defaults.get('name'):
                 return
             obj, created = objects.get_or_create(defaults=defaults, **kwargs)
             return obj
@@ -146,9 +149,8 @@ class Camera(Polaroid):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)
                         for states, expires in self.expire_states.items())
         if dirty:
-            self.logger.debug(
-                    "Cleanup: Marked %s objects as dirty." % (dirty, ))
+            debug('Cleanup: Marked %s objects as dirty.', dirty)
             self.TaskState.objects.purge()
-            self.logger.debug("Cleanup: %s objects purged." % (dirty, ))
+            debug('Cleanup: %s objects purged.', dirty)
             return dirty
         return 0

@@ -3,7 +3,7 @@
 Start the celery clock service from the Django management command.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 from celery.bin import celerybeat
 
@@ -18,7 +18,7 @@ class Command(CeleryCommand):
     options = (CeleryCommand.options
              + beat.get_options()
              + beat.preload_options)
-    help = "Old alias to the 'celery beat' command."
+    help = 'Old alias to the "celery beat" command.'
 
     def handle(self, *args, **options):
         beat.run(*args, **options)

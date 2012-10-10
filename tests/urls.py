@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
-    url(r"^apply/(?P<task_name>.+?)/", apply, name="celery-apply"),
-    url(r"^celery/", include("djcelery.urls")),
+    url(r'^apply/(?P<task_name>.+?)/', apply, name='celery-apply'),
+    url(r'^celery/', include('djcelery.urls')),
 
 )
