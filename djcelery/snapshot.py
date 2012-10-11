@@ -58,7 +58,10 @@ class Camera(Polaroid):
             heartbeat = worker.heartbeats[-1]
         except IndexError:
             return
-        return aware_tstamp(heartbeat)
+        # Check for timezone settings
+        if getattr(settings, "USE_TZ", False):
+            return aware_tstamp(heartbeat)
+        return datetime.fromtimestamp(heartbeat)
 
     def handle_worker(self, hostname_worker):
         (hostname, worker) = hostname_worker
