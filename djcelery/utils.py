@@ -80,7 +80,7 @@ try:
 
 except ImportError:
     now = datetime.now
-    make_aware = make_naive = lambda x: x
+    make_aware = make_naive = fix_timestamp = lambda x: x
 
 
 def maybe_make_aware(value):
