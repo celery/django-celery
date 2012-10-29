@@ -45,6 +45,8 @@ DATABASE_ERRORS = ((DatabaseError, ) +
 
 try:
     from django.utils import timezone
+    from django.db import models
+    from time import mktime
 
     def make_aware(value):
         if getattr(settings, 'USE_TZ', False):
@@ -64,9 +66,21 @@ try:
     def now():
         return timezone.localtime(timezone.now())
 
+    def fix_timestamp(cls):
+        if not getattr(settings, "USE_TZ", False):
+            cls.original_save = cls.save
+            def save(self, *args, **kwargs):
+                for field in self._meta.fields:
+                    if field.get_internal_type() == 'DateTimeField':
+                         if self.__dict__[field.name] is not None:
+                             self.__dict__[field.name] = datetime.fromtimestamp(mktime(self.__dict__[field.name].timetuple()))
+                self.original_save(*args,**kwargs)
+            cls.save = save
+        return cls 
+
 except ImportError:
     now = datetime.now
-    make_aware = make_naive = lambda x: x
+    make_aware = make_naive = fix_timestamp = lambda x: x
 
 
 def maybe_make_aware(value):
