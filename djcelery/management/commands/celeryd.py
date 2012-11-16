@@ -5,12 +5,12 @@ Start the celery daemon from the Django management command.
 """
 from __future__ import absolute_import, unicode_literals
 
-from celery.bin import celeryd
+from celery.bin import worker
 
 from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-worker = celeryd.WorkerCommand(app=app)
+worker = worker.WorkerCommand(app=app)
 
 
 class Command(CeleryCommand):

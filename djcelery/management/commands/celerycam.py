@@ -5,12 +5,12 @@ Shortcut to the Django snapshot service.
 """
 from __future__ import absolute_import, unicode_literals
 
-from celery.bin import celeryev
+from celery.bin import events
 
 from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-ev = celeryev.EvCommand(app=app)
+ev = events.EvCommand(app=app)
 
 
 class Command(CeleryCommand):

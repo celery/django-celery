@@ -22,5 +22,5 @@ class Command(CeleryCommand):
     def run_from_argv(self, argv):
 
         class detached(celeryd_detach.detached_celeryd):
-            execv_argv = [os.path.abspath(sys.argv[0]), 'celeryd']
+            execv_argv = [os.path.abspath(sys.argv[0]), 'celery', 'worker']
         detached().execute_from_commandline(argv)
