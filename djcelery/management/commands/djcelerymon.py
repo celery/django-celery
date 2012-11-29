@@ -10,7 +10,7 @@ from django.core.management.commands import runserver
 from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-ev = events.EvCommand(app=app)
+ev = events.events(app=app)
 
 
 class WebserverThread(threading.Thread):

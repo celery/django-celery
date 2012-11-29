@@ -10,7 +10,7 @@ from celery.bin import worker
 from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-worker = worker.WorkerCommand(app=app)
+worker = worker.worker(app=app)
 
 
 class Command(CeleryCommand):

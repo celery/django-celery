@@ -10,7 +10,7 @@ from celery.bin import events
 from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-ev = events.EvCommand(app=app)
+ev = events.events(app=app)
 
 
 class Command(CeleryCommand):

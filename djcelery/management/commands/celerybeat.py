@@ -10,7 +10,7 @@ from celery.bin import beat
 from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-beat = beat.BeatCommand(app=app)
+beat = beat.beat(app=app)
 
 
 class Command(CeleryCommand):
