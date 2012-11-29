@@ -45,6 +45,7 @@ DATABASE_ERRORS = ((DatabaseError, ) +
 
 try:
     from django.utils import timezone
+    is_aware = timezone.is_aware
 
     def make_aware(value):
         if getattr(settings, "USE_TZ", False):
@@ -67,9 +68,12 @@ try:
 except ImportError:
     now = datetime.now
     make_aware = make_naive = lambda x: x
+    is_aware = lambda x : False
 
 
 def maybe_make_aware(value):
+    if isinstance(value, datetime) and is_aware(value):
+        return value
     if value:
         return make_aware(value)
     return value
