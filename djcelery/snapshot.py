@@ -110,6 +110,9 @@ class Camera(Polaroid):
 
         for k, v in defaults.items():
             setattr(obj, k, v)
+        for datefield in ('eta', 'expires', 'tstamp'):
+            # Brute force trying to fix #183
+            setattr(obj, datefield, maybe_make_aware(getattr(obj, datefield)))
         obj.save()
 
         return obj
