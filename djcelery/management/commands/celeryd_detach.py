@@ -16,7 +16,7 @@ from djcelery.management.base import CeleryCommand
 class Command(CeleryCommand):
     """Run the celery daemon."""
     help = 'Runs a detached Celery worker node.'
-    requires_model_validation = True
+    requires_model_validation = False
     options = celeryd_detach.OPTION_LIST
 
     def run_from_argv(self, argv):
