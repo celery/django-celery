@@ -38,7 +38,7 @@ class Command(CeleryCommand):
     help = 'Starts Django Admin instance and celerycam in the same process.'
     # see http://code.djangoproject.com/changeset/13319.
     stdout, stderr = sys.stdout, sys.stderr
-
+    requires_model_validation = False
     def handle(self, addrport="", *args, **options):
         """Handle the management command."""
         server = WebserverThread(addrport, *args, **options)
