@@ -71,25 +71,30 @@ class Camera(Polaroid):
     def handle_task(self, (uuid, task), worker=None):
         """Handle snapshotted event."""
         if task.worker and task.worker.hostname:
-            worker = self.handle_worker((task.worker.hostname, task.worker))
+            worker = self.handle_worker(
+                (task.worker.hostname, task.worker),
+            )
 
-        defaults = {"name": task.name,
-                "args": task.args,
-                "kwargs": task.kwargs,
-                "eta": maybe_make_aware(maybe_iso8601(task.eta)),
-                "expires": maybe_make_aware(maybe_iso8601(task.expires)),
-                "state": task.state,
-                "tstamp": aware_tstamp(task.timestamp),
-                "result": task.result or task.exception,
-                "traceback": task.traceback,
-                "runtime": task.runtime,
-                "worker": worker}
-        # If RECEIVED event is lost, some data is lost as it is stored
-        # only in RECEIVED event for efficiency. In this case we just
-        # do not overwrite this fields in TaskState instance row
+        defaults = {
+            "name": task.name,
+            "args": task.args,
+            "kwargs": task.kwargs,
+            "eta": maybe_make_aware(maybe_iso8601(task.eta)),
+            "expires": maybe_make_aware(maybe_iso8601(task.expires)),
+            "state": task.state,
+            "tstamp": aware_tstamp(task.timestamp),
+            "result": task.result or task.exception,
+            "traceback": task.traceback,
+            "runtime": task.runtime,
+            "worker": worker
+        }
+        # Some fields are only stored in the RECEIVED event,
+        # so we should remove these from default values,
+        # so that they are not overwritten by subsequent states.
         [defaults.pop(attr, None) for attr in NOT_SAVED_ATTRIBUTES
                                     if defaults[attr] is None]
-        return self.update_task(task.state, task_id=uuid, defaults=defaults)
+        return self.update_task(task.state,
+                                task_id=uuid, defaults=defaults)
 
     def update_task(self, state, **kwargs):
         objects = self.TaskState.objects
