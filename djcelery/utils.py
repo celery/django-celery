@@ -43,9 +43,14 @@ DATABASE_ERRORS = ((DatabaseError, ) +
                    _lite_database_errors +
                    _oracle_database_errors)
 
+
 try:
     from django.utils import timezone
     is_aware = timezone.is_aware
+
+    # see Issue #222
+    now_localtime = getattr(timezone, 'template_localtime', timezone.localtime)
+
 
     def make_aware(value):
         if getattr(settings, "USE_TZ", False):
@@ -63,7 +68,7 @@ try:
         return value
 
     def now():
-        return timezone.localtime(timezone.now())
+        return now_localtime(timezone.now())
 
 except ImportError:
     now = datetime.now
