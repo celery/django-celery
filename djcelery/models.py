@@ -241,7 +241,7 @@ class PeriodicTask(models.Model):
         self.queue = self.queue or None
         if not self.enabled:
             self.last_run_at = None
-        if times_of_excution and self.total_run_count >= times_of_excution:
+        if self.times_of_excution and self.total_run_count >= self.times_of_excution:
             self.expires = datetime.now()
         super(PeriodicTask, self).save(*args, **kwargs)
 
