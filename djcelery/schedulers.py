@@ -39,11 +39,12 @@ class ModelEntry(ScheduleEntry):
             self.args = deserialize(model.args or u"[]")
             self.kwargs = deserialize(model.kwargs or u"{}")
         except ValueError:
-            # disable because of error deserializing args/kwargs
+            logging.exception(exc)
+            logging.error('Failed to serialize arguments for %s.', self.name)
+            logging.warning('Disabling %s', self.name)
             model.no_changes = True
             model.enabled = False
             model.save()
-            raise
 
         self.options = {"queue": model.queue,
                         "exchange": model.exchange,
