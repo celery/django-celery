@@ -326,8 +326,6 @@ class TaskState(models.Model):
         ordering = ["-tstamp"]
 
     def save(self, *args, **kwargs):
-        if self.eta is not None:
-            self.eta = datetime.utcfromtimestamp(mktime(self.eta.timetuple()))
         super(TaskState, self).save(*args, **kwargs)
 
     def __unicode__(self):
