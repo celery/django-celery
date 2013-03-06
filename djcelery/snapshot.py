@@ -99,12 +99,10 @@ class Camera(Polaroid):
     def update_task(self, state, **kwargs):
         objects = self.TaskState.objects
         defaults = kwargs.pop("defaults", None) or {}
-        try:
-            obj = objects.get(**kwargs)
-        except ObjectDoesNotExist:
-            if not defaults.get("name"):
-                return
-            obj, created = objects.get_or_create(defaults=defaults, **kwargs)
+        if not defaults.get("name"):
+            return
+        obj, created = objects.get_or_create(defaults=defaults, **kwargs)
+        if created:
             return obj
         else:
             if states.state(state) < states.state(obj.state):
