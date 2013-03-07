@@ -62,7 +62,10 @@ try:
         return value
 
     def now():
-        return timezone.localtime(timezone.now())
+        if getattr(settings, 'USE_TZ', False):
+            return timezone.localtime(timezone.now())
+        else:
+            return timezone.now()
 
 except ImportError:
     now = datetime.now
