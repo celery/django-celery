@@ -11,7 +11,7 @@ base = celery.CeleryCommand(app=app)
 class Command(CeleryCommand):
     """The celery command."""
     help = 'celery commands, see celery help'
-    requires_model_validation = True
+    requires_model_validation = False
     options = (CeleryCommand.options
              + base.get_options()
              + base.preload_options)

@@ -19,7 +19,7 @@ class Command(CeleryCommand):
              + ev.get_options()
              + ev.preload_options)
     help = 'Takes snapshots of the clusters state to the database.'
-
+    requires_model_validation = False
     def handle(self, *args, **options):
         """Handle the management command."""
         options['camera'] = 'djcelery.snapshot.Camera'

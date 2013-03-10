@@ -33,7 +33,7 @@ class Command(CeleryCommand):
     options = (CeleryCommand.options
                + (mon and mon.get_options() + mon.preload_options or ()))
     help = 'Run the celery monitor'
-
+    requires_model_validation = False
     def handle(self, *args, **options):
         """Handle the management command."""
         if mon is None:

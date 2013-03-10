@@ -14,7 +14,7 @@ class Command(CeleryCommand):
     """Run the celery daemon."""
     args = '[name1, [name2, [...]> [worker options]'
     help = 'Manage multiple Celery worker nodes.'
-    requires_model_validation = True
+    requires_model_validation = False
     options = ()
     keep_base_opts = True
 
