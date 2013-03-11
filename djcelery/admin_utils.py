@@ -38,12 +38,12 @@ def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
             val = pformat(val, width=width)
         if val.startswith("u'") or val.startswith('u"'):
             val = val[2:-1]
-        shortval = val.replace(",", ",\n")
-        shortval = shortval.replace("\n", "|br/|")
+        shortval = val.replace(',', ',\n')
+        shortval = shortval.replace('\n', '|br/|')
 
         if len(shortval) > maxlen:
-            shortval = shortval[:maxlen] + "..."
+            shortval = shortval[:maxlen] + '...'
         styled = FIXEDWIDTH_STYLE % (escape(val[:255]), pt,
                                      escape(shortval))
-        return styled.replace("|br/|", "<br/>")
+        return styled.replace('|br/|', '<br/>')
     return f

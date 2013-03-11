@@ -39,8 +39,8 @@ class test_CacheBackend(unittest.TestCase):
     def test_forget(self):
         b = CacheBackend()
         tid = gen_unique_id()
-        b.mark_as_done(tid, {"foo": "bar"})
-        self.assertEqual(b.get_result(tid).get("foo"), "bar")
+        b.mark_as_done(tid, {'foo': 'bar'})
+        self.assertEqual(b.get_result(tid).get('foo'), 'bar')
         b.forget(tid)
         self.assertNotIn(tid, b._cache)
         self.assertIsNone(b.get_result(tid))
@@ -63,12 +63,12 @@ class test_CacheBackend(unittest.TestCase):
         cb = CacheBackend()
 
         tid2 = gen_unique_id()
-        result = {"foo": "baz", "bar": SomeClass(12345)}
+        result = {'foo': 'baz', 'bar': SomeClass(12345)}
         cb.mark_as_done(tid2, result)
         # is serialized properly.
         rindb = cb.get_result(tid2)
-        self.assertEqual(rindb.get("foo"), "baz")
-        self.assertEqual(rindb.get("bar").data, 12345)
+        self.assertEqual(rindb.get('foo'), 'baz')
+        self.assertEqual(rindb.get('bar').data, 12345)
 
     def test_mark_as_failure(self):
         cb = CacheBackend()
@@ -76,7 +76,7 @@ class test_CacheBackend(unittest.TestCase):
         einfo = None
         tid3 = gen_unique_id()
         try:
-            raise KeyError("foo")
+            raise KeyError('foo')
         except KeyError, exception:
             einfo = ExceptionInfo(sys.exc_info())
             pass
@@ -101,18 +101,18 @@ class test_custom_CacheBackend(unittest.TestCase):
     def test_custom_cache_backend(self):
         from celery import current_app
         prev_backend = current_app.conf.CELERY_CACHE_BACKEND
-        prev_module = sys.modules["djcelery.backends.cache"]
-        current_app.conf.CELERY_CACHE_BACKEND = "dummy://"
-        sys.modules.pop("djcelery.backends.cache")
+        prev_module = sys.modules['djcelery.backends.cache']
+        current_app.conf.CELERY_CACHE_BACKEND = 'dummy://'
+        sys.modules.pop('djcelery.backends.cache')
         try:
             from djcelery.backends.cache import cache
             from django.core.cache import cache as django_cache
             self.assertEqual(cache.__class__.__module__,
-                              "django.core.cache.backends.dummy")
+                             'django.core.cache.backends.dummy')
             self.assertIsNot(cache, django_cache)
         finally:
             current_app.conf.CELERY_CACHE_BACKEND = prev_backend
-            sys.modules["djcelery.backends.cache"] = prev_module
+            sys.modules['djcelery.backends.cache'] = prev_module
 
 
 class test_MemcacheWrapper(unittest.TestCase):
@@ -124,21 +124,20 @@ class test_MemcacheWrapper(unittest.TestCase):
             from django.core.cache.backends import locmem
         except InvalidCacheBackendError:
             sys.stderr.write(
-                "\n* Memcache library is not installed. Skipping test.\n")
+                '\n* Memcache library is not installed. Skipping test.\n')
             return
         prev_cache_cls = memcached.CacheClass
         memcached.CacheClass = locmem.CacheClass
-        prev_backend_module = sys.modules.pop("djcelery.backends.cache")
+        prev_backend_module = sys.modules.pop('djcelery.backends.cache')
         try:
             from djcelery.backends.cache import cache
-            key = "cu.test_memcache_wrapper"
-            val = "The quick brown fox."
-            default = "The lazy dog."
+            key = 'cu.test_memcache_wrapper'
+            val = 'The quick brown fox.'
+            default = 'The lazy dog.'
 
             self.assertEqual(cache.get(key, default=default), default)
             cache.set(key, val)
-            self.assertEqual(cache.get(key, default=default),
-                              val)
+            self.assertEqual(cache.get(key, default=default), val)
         finally:
             memcached.CacheClass = prev_cache_cls
-            sys.modules["djcelery.backends.cache"] = prev_backend_module
+            sys.modules['djcelery.backends.cache'] = prev_backend_module

@@ -15,7 +15,7 @@ ev = celeryev.EvCommand(app=app)
 
 class WebserverThread(threading.Thread):
 
-    def __init__(self, addrport="", *args, **options):
+    def __init__(self, addrport='', *args, **options):
         threading.Thread.__init__(self)
         self.addrport = addrport
         self.args = args
@@ -39,10 +39,10 @@ class Command(CeleryCommand):
     # see http://code.djangoproject.com/changeset/13319.
     stdout, stderr = sys.stdout, sys.stderr
 
-    def handle(self, addrport="", *args, **options):
+    def handle(self, addrport='', *args, **options):
         """Handle the management command."""
         server = WebserverThread(addrport, *args, **options)
         server.start()
-        options["camera"] = "djcelery.snapshot.Camera"
-        options["prog_name"] = "djcelerymon"
+        options['camera'] = 'djcelery.snapshot.Camera'
+        options['prog_name'] = 'djcelerymon'
         ev.run(*args, **options)

@@ -6,7 +6,6 @@ from time import time
 
 from django.db import transaction
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 
 from celery import states
 from celery.events.state import Task
@@ -21,11 +20,11 @@ WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
 SUCCESS_STATES = frozenset([states.SUCCESS])
 
 # Expiry can be timedelta or None for never expire.
-EXPIRE_SUCCESS = getattr(settings, "CELERYCAM_EXPIRE_SUCCESS",
+EXPIRE_SUCCESS = getattr(settings, 'CELERYCAM_EXPIRE_SUCCESS',
                          timedelta(days=1))
-EXPIRE_ERROR = getattr(settings, "CELERYCAM_EXPIRE_ERROR",
+EXPIRE_ERROR = getattr(settings, 'CELERYCAM_EXPIRE_ERROR',
                        timedelta(days=3))
-EXPIRE_PENDING = getattr(settings, "CELERYCAM_EXPIRE_PENDING",
+EXPIRE_PENDING = getattr(settings, 'CELERYCAM_EXPIRE_PENDING',
                          timedelta(days=5))
 NOT_SAVED_ATTRIBUTES = frozenset(['name', 'args', 'kwargs', 'eta'])
 
@@ -42,9 +41,9 @@ class Camera(Polaroid):
     clear_after = True
     worker_update_freq = WORKER_UPDATE_FREQ
     expire_states = {
-            SUCCESS_STATES: EXPIRE_SUCCESS,
-            states.EXCEPTION_STATES: EXPIRE_ERROR,
-            states.UNREADY_STATES: EXPIRE_PENDING,
+        SUCCESS_STATES: EXPIRE_SUCCESS,
+        states.EXCEPTION_STATES: EXPIRE_ERROR,
+        states.UNREADY_STATES: EXPIRE_PENDING,
     }
 
     def __init__(self, *args, **kwargs):
@@ -62,9 +61,9 @@ class Camera(Polaroid):
         last_write, obj = self._last_worker_write[hostname]
         if not last_write or time() - last_write > self.worker_update_freq:
             obj = self.WorkerState.objects.update_or_create(
-                        hostname=hostname,
-                        defaults={"last_heartbeat":
-                            self.get_heartbeat(worker)})
+                hostname=hostname,
+                defaults={'last_heartbeat': self.get_heartbeat(worker)},
+            )
             self._last_worker_write[hostname] = (time(), obj)
         return obj
 
@@ -76,30 +75,30 @@ class Camera(Polaroid):
             )
 
         defaults = {
-            "name": task.name,
-            "args": task.args,
-            "kwargs": task.kwargs,
-            "eta": maybe_make_aware(maybe_iso8601(task.eta)),
-            "expires": maybe_make_aware(maybe_iso8601(task.expires)),
-            "state": task.state,
-            "tstamp": aware_tstamp(task.timestamp),
-            "result": task.result or task.exception,
-            "traceback": task.traceback,
-            "runtime": task.runtime,
-            "worker": worker
+            'name': task.name,
+            'args': task.args,
+            'kwargs': task.kwargs,
+            'eta': maybe_make_aware(maybe_iso8601(task.eta)),
+            'expires': maybe_make_aware(maybe_iso8601(task.expires)),
+            'state': task.state,
+            'tstamp': aware_tstamp(task.timestamp),
+            'result': task.result or task.exception,
+            'traceback': task.traceback,
+            'runtime': task.runtime,
+            'worker': worker
         }
         # Some fields are only stored in the RECEIVED event,
         # so we should remove these from default values,
         # so that they are not overwritten by subsequent states.
         [defaults.pop(attr, None) for attr in NOT_SAVED_ATTRIBUTES
-                                    if defaults[attr] is None]
+         if defaults[attr] is None]
         return self.update_task(task.state,
                                 task_id=uuid, defaults=defaults)
 
     def update_task(self, state, **kwargs):
         objects = self.TaskState.objects
-        defaults = kwargs.pop("defaults", None) or {}
-        if not defaults.get("name"):
+        defaults = kwargs.pop('defaults', None) or {}
+        if not defaults.get('name'):
             return
         obj, created = objects.get_or_create(defaults=defaults, **kwargs)
         if created:
@@ -107,9 +106,10 @@ class Camera(Polaroid):
         else:
             if states.state(state) < states.state(obj.state):
                 keep = Task.merge_rules[states.RECEIVED]
-                defaults = dict((k, v)
-                                    for k, v in defaults.items()
-                                        if k not in keep)
+                defaults = dict(
+                    (k, v) for k, v in defaults.items()
+                    if k not in keep
+                )
 
         for k, v in defaults.items():
             setattr(obj, k, v)
@@ -150,11 +150,12 @@ class Camera(Polaroid):
 
     def on_cleanup(self):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)
-                        for states, expires in self.expire_states.items())
+                    for states, expires in self.expire_states.items())
         if dirty:
             self.logger.debug(
-                    "Cleanup: Marked %s objects as dirty." % (dirty, ))
+                'Cleanup: Marked %s objects as dirty.' % (dirty, ),
+            )
             self.TaskState.objects.purge()
-            self.logger.debug("Cleanup: %s objects purged." % (dirty, ))
+            self.logger.debug('Cleanup: %s objects purged.' % (dirty, ))
             return dirty
         return 0

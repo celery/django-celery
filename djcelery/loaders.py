@@ -36,8 +36,8 @@ class DjangoLoader(BaseLoader):
     _db_reuse = 0
 
     override_backends = {
-            "database": "djcelery.backends.database.DatabaseBackend",
-            "cache": "djcelery.backends.cache.CacheBackend"}
+            'database': 'djcelery.backends.database.DatabaseBackend',
+            'cache': 'djcelery.backends.cache.CacheBackend'}
 
     def __init__(self, *args, **kwargs):
         super(DjangoLoader, self).__init__(*args, **kwargs)
@@ -57,13 +57,13 @@ class DjangoLoader(BaseLoader):
         self.configured = True
         # Default backend needs to be the database backend for backward
         # compatibility.
-        backend = getattr(settings, "CELERY_RESULT_BACKEND", None) or \
-                    getattr(settings, "CELERY_BACKEND", None)
+        backend = getattr(settings, 'CELERY_RESULT_BACKEND', None) or \
+                    getattr(settings, 'CELERY_BACKEND', None)
         if not backend:
-            settings.CELERY_RESULT_BACKEND = "database"
+            settings.CELERY_RESULT_BACKEND = 'database'
         if NO_TZ:
-            if getattr(settings, "CELERY_ENABLE_UTC", None):
-                warnings.warn("CELERY_ENABLE_UTC requires Django 1.4+")
+            if getattr(settings, 'CELERY_ENABLE_UTC', None):
+                warnings.warn('CELERY_ENABLE_UTC requires Django 1.4+')
             settings.CELERY_ENABLE_UTC = False
         return DictAttribute(settings)
 
@@ -78,11 +78,11 @@ class DjangoLoader(BaseLoader):
                 close()
             except DATABASE_ERRORS, exc:
                 str_exc = str(exc)
-                if "closed" not in str_exc and "not connected" not in str_exc:
+                if 'closed' not in str_exc and 'not connected' not in str_exc:
                     raise
 
     def close_database(self, **kwargs):
-        db_reuse_max = self.conf.get("CELERY_DB_REUSE_MAX", None)
+        db_reuse_max = self.conf.get('CELERY_DB_REUSE_MAX', None)
         if not db_reuse_max:
             return self._close_database()
         if self._db_reuse >= db_reuse_max * 2:
@@ -129,8 +129,8 @@ class DjangoLoader(BaseLoader):
 
     def warn_if_debug(self, **kwargs):
         if settings.DEBUG:
-            warnings.warn("Using settings.DEBUG leads to a memory leak, never "
-                          "use this setting in production environments!")
+            warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+                          'use this setting in production environments!')
 
     def import_default_modules(self):
         super(DjangoLoader, self).import_default_modules()
@@ -171,7 +171,7 @@ def autodiscover():
         return
     _RACE_PROTECTION = True
     try:
-        return filter(None, [find_related_module(app, "tasks")
+        return filter(None, [find_related_module(app, 'tasks')
                                 for app in settings.INSTALLED_APPS])
     finally:
         _RACE_PROTECTION = False
@@ -191,4 +191,4 @@ def find_related_module(app, related_name):
     except ImportError:
         return
 
-    return importlib.import_module("%s.%s" % (app, related_name))
+    return importlib.import_module('%s.%s' % (app, related_name))

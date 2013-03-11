@@ -13,7 +13,7 @@ except ImportError:
 from distutils.command.install import INSTALL_SCHEMES
 
 # -*- Distribution Meta -*-
-NAME = "django-celery"
+NAME = 'django-celery'
 
 import re
 re_meta = re.compile(r'__(\w+?)__\s*=\s*(.*)')
@@ -27,18 +27,18 @@ def add_default(m):
 
 
 def add_version(m):
-    v = list(map(rq, m.groups()[0].split(", ")))
-    return (("VERSION", ".".join(v[0:3]) + "".join(v[3:])), )
+    v = list(map(rq, m.groups()[0].split(', ')))
+    return (('VERSION', '.'.join(v[0:3]) + ''.join(v[3:])), )
 
 
 def add_doc(m):
-    return (("doc", m.groups()[0]), )
+    return (('doc', m.groups()[0]), )
 
 pats = {re_meta: add_default,
         re_vers: add_version,
         re_doc: add_doc}
 here = os.path.abspath(os.path.dirname(__file__))
-meta_fh = open(os.path.join(here, "djcelery/__init__.py"))
+meta_fh = open(os.path.join(here, 'djcelery/__init__.py'))
 try:
     meta = {}
     for line in meta_fh:
@@ -56,7 +56,7 @@ packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
-src_dir = "djcelery"
+src_dir = 'djcelery'
 
 
 def fullsplit(path, result=None):
@@ -73,7 +73,7 @@ def fullsplit(path, result=None):
 for scheme in INSTALL_SCHEMES.values():
     scheme['data'] = scheme['purelib']
 
-SKIP_EXTENSIONS = [".pyc", ".pyo", ".swp", ".swo"]
+SKIP_EXTENSIONS = ['.pyc', '.pyo', '.swp', '.swo']
 
 
 def is_unwanted_file(filename):
@@ -85,10 +85,10 @@ def is_unwanted_file(filename):
 for dirpath, dirnames, filenames in os.walk(src_dir):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
-        if dirname.startswith("."):
+        if dirname.startswith('.'):
             del dirnames[i]
     for filename in filenames:
-        if filename.endswith(".py"):
+        if filename.endswith('.py'):
             packages.append('.'.join(fullsplit(dirpath)))
         elif is_unwanted_file(filename):
             pass
@@ -98,7 +98,7 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
 
 
 class RunTests(Command):
-    description = "Run the django test suite from the tests dir."
+    description = 'Run the django test suite from the tests dir.'
     user_options = []
     extra_env = {}
     extra_args = []
@@ -108,17 +108,17 @@ class RunTests(Command):
             os.environ[env_name] = str(env_value)
 
         this_dir = os.getcwd()
-        testproj_dir = os.path.join(this_dir, "tests")
+        testproj_dir = os.path.join(this_dir, 'tests')
         os.chdir(testproj_dir)
         sys.path.append(testproj_dir)
         from django.core.management import execute_manager
-        os.environ["DJANGO_SETTINGS_MODULE"] = os.environ.get(
-                        "DJANGO_SETTINGS_MODULE", "settings")
-        settings_file = os.environ["DJANGO_SETTINGS_MODULE"]
+        os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get(
+                        'DJANGO_SETTINGS_MODULE', 'settings')
+        settings_file = os.environ['DJANGO_SETTINGS_MODULE']
         settings_mod = __import__(settings_file, {}, {}, [''])
         prev_argv = list(sys.argv)
         try:
-            sys.argv = [__file__, "test"] + self.extra_args
+            sys.argv = [__file__, 'test'] + self.extra_args
             execute_manager(settings_mod, argv=sys.argv)
         finally:
             sys.argv = prev_argv
@@ -138,61 +138,61 @@ class CIRunTests(RunTests):
 
     @property
     def extra_args(self):
-        toxinidir = os.environ.get("TOXINIDIR", "")
+        toxinidir = os.environ.get('TOXINIDIR', '')
         return [
-            "--with-coverage3",
-            "--cover3-xml",
-            "--cover3-xml-file=%s" % (
-                os.path.join(toxinidir, "coverage.xml"), ),
-            "--with-xunit",
-            "--xunit-file=%s" % (
-                os.path.join(toxinidir, "nosetests.xml"), ),
-            "--cover3-html",
-            "--cover3-html-dir=%s" % (
-                os.path.join(toxinidir, "cover"), ),
+            '--with-coverage3',
+            '--cover3-xml',
+            '--cover3-xml-file=%s' % (
+                os.path.join(toxinidir, 'coverage.xml'), ),
+            '--with-xunit',
+            '--xunit-file=%s' % (
+                os.path.join(toxinidir, 'nosetests.xml'), ),
+            '--cover3-html',
+            '--cover3-html-dir=%s' % (
+                os.path.join(toxinidir, 'cover'), ),
         ]
 
 
-if os.path.exists("README.rst"):
-    long_description = codecs.open("README.rst", "r", "utf-8").read()
+if os.path.exists('README.rst'):
+    long_description = codecs.open('README.rst', 'r', 'utf-8').read()
 else:
-    long_description = "See http://github.com/celery/django-celery"
+    long_description = 'See http://github.com/celery/django-celery'
 
 
 setup(
     name=NAME,
-    version=meta["VERSION"],
-    description=meta["doc"],
-    author=meta["author"],
-    author_email=meta["contact"],
-    url=meta["homepage"],
-    platforms=["any"],
-    license="BSD",
+    version=meta['VERSION'],
+    description=meta['doc'],
+    author=meta['author'],
+    author_email=meta['contact'],
+    url=meta['homepage'],
+    platforms=['any'],
+    license='BSD',
     packages=packages,
     data_files=data_files,
-    scripts=["bin/djcelerymon"],
+    scripts=['bin/djcelerymon'],
     zip_safe=False,
     install_requires=[
-        "pytz",
-        "celery>=3.0.11",
+        'pytz',
+        'celery>=3.0.11',
     ],
-    cmdclass={"test": RunTests,
-              "quicktest": QuickRunTests,
-              "citest": CIRunTests},
+    cmdclass={'test': RunTests,
+              'quicktest': QuickRunTests,
+              'citest': CIRunTests},
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Framework :: Django",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: BSD License",
-        "Operating System :: POSIX",
-        "Topic :: Communications",
-        "Topic :: System :: Distributed Computing",
-        "Topic :: Software Development :: Libraries :: Python Modules",
+        'Development Status :: 5 - Production/Stable',
+        'Framework :: Django',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: POSIX',
+        'Topic :: Communications',
+        'Topic :: System :: Distributed Computing',
+        'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     entry_points={
-        "console_scripts": ["djcelerymon = djcelery.mon:main"],
+        'console_scripts': ['djcelerymon = djcelery.mon:main'],
     },
     long_description=long_description,
 )

@@ -22,5 +22,5 @@ class Command(CeleryCommand):
 
     def handle(self, *args, **options):
         """Handle the management command."""
-        options["camera"] = "djcelery.snapshot.Camera"
+        options['camera'] = 'djcelery.snapshot.Camera'
         ev.run(*args, **options)

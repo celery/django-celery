@@ -20,7 +20,7 @@ class SomeClass(object):
 
 
 class MyPeriodicTask(PeriodicTask):
-    name = "c.u.my-periodic-task-244"
+    name = 'c.u.my-periodic-task-244'
     run_every = timedelta(seconds=1)
 
     def run(self, **kwargs):
@@ -41,16 +41,16 @@ class TestDatabaseBackend(unittest.TestCase):
         self.assertEqual(b.get_result(tid), 42)
 
         tid2 = gen_unique_id()
-        result = {"foo": "baz", "bar": SomeClass(12345)}
+        result = {'foo': 'baz', 'bar': SomeClass(12345)}
         b.mark_as_done(tid2, result)
         # is serialized properly.
         rindb = b.get_result(tid2)
-        self.assertEqual(rindb.get("foo"), "baz")
-        self.assertEqual(rindb.get("bar").data, 12345)
+        self.assertEqual(rindb.get('foo'), 'baz')
+        self.assertEqual(rindb.get('bar').data, 12345)
 
         tid3 = gen_unique_id()
         try:
-            raise KeyError("foo")
+            raise KeyError('foo')
         except KeyError, exception:
             pass
         b.mark_as_failure(tid3, exception)
@@ -60,9 +60,9 @@ class TestDatabaseBackend(unittest.TestCase):
     def test_forget(self):
         b = DatabaseBackend()
         tid = gen_unique_id()
-        b.mark_as_done(tid, {"foo": "bar"})
+        b.mark_as_done(tid, {'foo': 'bar'})
         x = AsyncResult(tid)
-        self.assertEqual(x.result.get("foo"), "bar")
+        self.assertEqual(x.result.get('foo'), 'bar')
         x.forget()
         self.assertIsNone(x.result)
 
@@ -72,12 +72,12 @@ class TestDatabaseBackend(unittest.TestCase):
 
         self.assertIsNone(b.restore_group(tid))
 
-        result = {"foo": "baz", "bar": SomeClass(12345)}
+        result = {'foo': 'baz', 'bar': SomeClass(12345)}
         b.save_group(tid, result)
         rindb = b.restore_group(tid)
         self.assertIsNotNone(rindb)
-        self.assertEqual(rindb.get("foo"), "baz")
-        self.assertEqual(rindb.get("bar").data, 12345)
+        self.assertEqual(rindb.get('foo'), 'baz')
+        self.assertEqual(rindb.get('bar').data, 12345)
         b.delete_group(tid)
         self.assertIsNone(b.restore_group(tid))
 

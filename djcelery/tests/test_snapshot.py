@@ -19,7 +19,7 @@ _next_id = count(0).next
 
 def create_task(worker, **kwargs):
     d = dict(uuid=gen_unique_id(),
-             name="djcelery.unittest.task%s" % (_next_id(), ),
+             name='djcelery.unittest.task%s' % (_next_id(), ),
              worker=worker)
     return Task(**dict(d, **kwargs))
 
@@ -39,7 +39,7 @@ class test_Camera(unittest.TestCase):
         self.assertTrue(cam.logger)
 
     def test_get_heartbeat(self):
-        worker = Worker(hostname="fuzzie")
+        worker = Worker(hostname='fuzzie')
         self.assertIsNone(self.cam.get_heartbeat(worker))
         t1 = time()
         t2 = time()
@@ -47,10 +47,10 @@ class test_Camera(unittest.TestCase):
         for t in t1, t2, t3:
             worker.on_heartbeat(timestamp=t)
         self.assertEqual(self.cam.get_heartbeat(worker),
-                        make_aware(datetime.fromtimestamp(t3)))
+                         make_aware(datetime.fromtimestamp(t3)))
 
     def test_handle_worker(self):
-        worker = Worker(hostname="fuzzie")
+        worker = Worker(hostname='fuzzie')
         worker.on_online(timestamp=time())
         self.cam._last_worker_write.clear()
         m = self.cam.handle_worker((worker.hostname, worker))
@@ -62,23 +62,23 @@ class test_Camera(unittest.TestCase):
         self.assertTrue(repr(m))
 
     def test_handle_task_received(self):
-        worker = Worker(hostname="fuzzie")
+        worker = Worker(hostname='fuzzie')
         worker.on_online(timestamp=time())
         self.cam.handle_worker((worker.hostname, worker))
 
         task = create_task(worker)
         task.on_received(timestamp=time())
-        self.assertEqual(task.state, "RECEIVED")
+        self.assertEqual(task.state, 'RECEIVED')
         mt = self.cam.handle_task((task.uuid, task))
         self.assertEqual(mt.name, task.name)
         self.assertTrue(unicode(mt))
         self.assertTrue(repr(mt))
         mt.eta = celery.now()
-        self.assertIn("eta", unicode(mt))
+        self.assertIn('eta', unicode(mt))
         self.assertIn(mt, models.TaskState.objects.active())
 
     def test_handle_task(self):
-        worker1 = Worker(hostname="fuzzie")
+        worker1 = Worker(hostname='fuzzie')
         worker1.on_online(timestamp=time())
         mw = self.cam.handle_worker((worker1.hostname, worker1))
         task1 = create_task(worker1)
@@ -103,7 +103,7 @@ class test_Camera(unittest.TestCase):
         self.assertIsNone(mt)
 
     def assertExpires(self, dec, expired, tasks=10):
-        worker = Worker(hostname="fuzzie")
+        worker = Worker(hostname='fuzzie')
         worker.on_online(timestamp=time())
         for total in xrange(tasks):
             task = create_task(worker)
@@ -123,20 +123,20 @@ class test_Camera(unittest.TestCase):
         state = self.state
         cam = self.cam
 
-        ws = ["worker1.ex.com", "worker2.ex.com", "worker3.ex.com"]
+        ws = ['worker1.ex.com', 'worker2.ex.com', 'worker3.ex.com']
         uus = [gen_unique_id() for i in xrange(50)]
 
-        events = [Event("worker-online", hostname=ws[0]),
-                  Event("worker-online", hostname=ws[1]),
-                  Event("worker-online", hostname=ws[2]),
-                  Event("task-received", uuid=uus[0], name="A",
-                                         hostname=ws[0]),
-                  Event("task-started", uuid=uus[0], name="A",
-                                        hostname=ws[0]),
-                  Event("task-received", uuid=uus[1], name="B",
-                                         hostname=ws[1]),
-                  Event("task-revoked", uuid=uus[2], name="C",
-                                        hostname=ws[2])]
+        events = [Event('worker-online', hostname=ws[0]),
+                  Event('worker-online', hostname=ws[1]),
+                  Event('worker-online', hostname=ws[2]),
+                  Event('task-received',
+                        uuid=uus[0], name='A', hostname=ws[0]),
+                  Event('task-started',
+                        uuid=uus[0], name='A', hostname=ws[0]),
+                  Event('task-received',
+                        uuid=uus[1], name='B', hostname=ws[1]),
+                  Event('task-revoked',
+                        uuid=uus[2], name='C', hostname=ws[2])]
         map(state.event, events)
         cam.on_shutter(state)
 
@@ -145,20 +145,19 @@ class test_Camera(unittest.TestCase):
             self.assertTrue(worker.is_alive())
 
         t1 = models.TaskState.objects.get(task_id=uus[0])
-        self.assertEqual(t1.state, "STARTED")
-        self.assertEqual(t1.name, "A")
+        self.assertEqual(t1.state, 'STARTED')
+        self.assertEqual(t1.name, 'A')
         t2 = models.TaskState.objects.get(task_id=uus[1])
-        self.assertEqual(t2.state, "RECEIVED")
+        self.assertEqual(t2.state, 'RECEIVED')
         t3 = models.TaskState.objects.get(task_id=uus[2])
-        self.assertEqual(t3.state, "REVOKED")
+        self.assertEqual(t3.state, 'REVOKED')
 
-        events = [Event("task-succeeded", uuid=uus[0],
-                                          hostname=ws[0],
-                                          result=42),
-                 Event("task-failed", uuid=uus[1],
-                                      exception="KeyError('foo')",
-                                      hostname=ws[1]),
-                 Event("worker-offline", hostname=ws[0])]
+        events = [Event('task-succeeded',
+                        uuid=uus[0], hostname=ws[0], result=42),
+                  Event('task-failed',
+                        uuid=uus[1], exception="KeyError('foo')",
+                        hostname=ws[1]),
+                  Event('worker-offline', hostname=ws[0])]
         map(state.event, events)
         cam._last_worker_write.clear()
         cam.on_shutter(state)
@@ -167,12 +166,12 @@ class test_Camera(unittest.TestCase):
         self.assertFalse(w1.is_alive())
 
         t1 = models.TaskState.objects.get(task_id=uus[0])
-        self.assertEqual(t1.state, "SUCCESS")
+        self.assertEqual(t1.state, 'SUCCESS')
         self.assertEqual(t1.result, u'42')
         self.assertEqual(t1.worker, w1)
 
         t2 = models.TaskState.objects.get(task_id=uus[1])
-        self.assertEqual(t2.state, "FAILURE")
+        self.assertEqual(t2.state, 'FAILURE')
         self.assertEqual(t2.result, u"KeyError('foo')")
         self.assertEqual(t2.worker.hostname, ws[1])
 

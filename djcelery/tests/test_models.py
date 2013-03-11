@@ -27,12 +27,14 @@ class TestModels(unittest.TestCase):
         m1 = self.createTaskMeta()
         m2 = self.createTaskMeta()
         m3 = self.createTaskMeta()
-        self.assertTrue(unicode(m1).startswith("<Task:"))
+        self.assertTrue(unicode(m1).startswith('<Task:'))
         self.assertTrue(m1.task_id)
         self.assertIsInstance(m1.date_done, datetime)
 
-        self.assertEqual(TaskMeta.objects.get_task(m1.task_id).task_id,
-                m1.task_id)
+        self.assertEqual(
+            TaskMeta.objects.get_task(m1.task_id).task_id,
+            m1.task_id,
+        )
         self.assertNotEqual(TaskMeta.objects.get_task(m1.task_id).status,
                             states.SUCCESS)
         TaskMeta.objects.store_result(m1.task_id, True, status=states.SUCCESS)
@@ -43,49 +45,57 @@ class TestModels(unittest.TestCase):
                          states.SUCCESS)
 
         # Have to avoid save() because it applies the auto_now=True.
-        TaskMeta.objects.filter(task_id=m1.task_id).update(
-                date_done=now() - timedelta(days=10))
+        TaskMeta.objects.filter(
+            task_id=m1.task_id
+        ).update(date_done=now() - timedelta(days=10))
 
         expired = TaskMeta.objects.get_all_expired(
-                    celery.conf.CELERY_TASK_RESULT_EXPIRES)
+            celery.conf.CELERY_TASK_RESULT_EXPIRES,
+        )
         self.assertIn(m1, expired)
         self.assertNotIn(m2, expired)
         self.assertNotIn(m3, expired)
 
         TaskMeta.objects.delete_expired(
-                    celery.conf.CELERY_TASK_RESULT_EXPIRES)
+            celery.conf.CELERY_TASK_RESULT_EXPIRES,
+        )
         self.assertNotIn(m1, TaskMeta.objects.all())
 
     def test_tasksetmeta(self):
         m1 = self.createTaskSetMeta()
         m2 = self.createTaskSetMeta()
         m3 = self.createTaskSetMeta()
-        self.assertTrue(unicode(m1).startswith("<TaskSet:"))
+        self.assertTrue(unicode(m1).startswith('<TaskSet:'))
         self.assertTrue(m1.taskset_id)
         self.assertIsInstance(m1.date_done, datetime)
 
         self.assertEqual(
-                TaskSetMeta.objects.restore_taskset(m1.taskset_id).taskset_id,
-                m1.taskset_id)
+            TaskSetMeta.objects.restore_taskset(m1.taskset_id).taskset_id,
+            m1.taskset_id,
+        )
 
         # Have to avoid save() because it applies the auto_now=True.
-        TaskSetMeta.objects.filter(taskset_id=m1.taskset_id).update(
-                date_done=now() - timedelta(days=10))
+        TaskSetMeta.objects.filter(
+            taskset_id=m1.taskset_id,
+        ).update(date_done=now() - timedelta(days=10))
 
         expired = TaskSetMeta.objects.get_all_expired(
-                    celery.conf.CELERY_TASK_RESULT_EXPIRES)
+            celery.conf.CELERY_TASK_RESULT_EXPIRES,
+        )
         self.assertIn(m1, expired)
         self.assertNotIn(m2, expired)
         self.assertNotIn(m3, expired)
 
         TaskSetMeta.objects.delete_expired(
-                celery.conf.CELERY_TASK_RESULT_EXPIRES)
+            celery.conf.CELERY_TASK_RESULT_EXPIRES,
+        )
         self.assertNotIn(m1, TaskSetMeta.objects.all())
 
         m4 = self.createTaskSetMeta()
         self.assertEqual(
-                TaskSetMeta.objects.restore_taskset(m4.taskset_id).taskset_id,
-                m4.taskset_id)
+            TaskSetMeta.objects.restore_taskset(m4.taskset_id).taskset_id,
+            m4.taskset_id,
+        )
 
         TaskSetMeta.objects.delete_taskset(m4.taskset_id)
         self.assertIsNone(TaskSetMeta.objects.restore_taskset(m4.taskset_id))

@@ -52,7 +52,7 @@ class CacheBackend(KeyValueStoreBackend):
 
     def __init__(self, *args, **kwargs):
         super(CacheBackend, self).__init__(*args, **kwargs)
-        expires = kwargs.get("expires",
+        expires = kwargs.get('expires',
                              current_app.conf.CELERY_TASK_RESULT_EXPIRES)
         if isinstance(expires, timedelta):
             expires = int(timedelta_seconds(expires))

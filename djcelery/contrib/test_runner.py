@@ -22,7 +22,7 @@ class CeleryTestSuiteRunner(DjangoTestSuiteRunner):
 
     To use this runner set ``settings.TEST_RUNNER``::
 
-        TEST_RUNNER = "djcelery.contrib.test_runner.CeleryTestSuiteRunner"
+        TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
     """
     def setup_test_environment(self, **kwargs):
@@ -51,13 +51,13 @@ class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
 
     """
     def setup_test_environment(self, **kwargs):
-        """ Setting up test environment. """
+        """Setting up test environment."""
 
         # Monkey-patch Task.on_success() method
         def on_success_patched(self, retval, task_id, args, kwargs):
 
             TaskState.objects.create(task_id=uuid4().hex,
-                                     state="SUCCESS",
+                                     state='SUCCESS',
                                      name=self.name,
                                      result=retval,
                                      args=args,
@@ -69,7 +69,7 @@ class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
         def on_failure_patched(self, exc, task_id, args, kwargs, einfo):
 
             TaskState.objects.create(task_id=uuid4().hex,
-                                     state="FAILURE",
+                                     state='FAILURE',
                                      name=self.name,
                                      result=einfo,
                                      args=args,

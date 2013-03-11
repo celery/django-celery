@@ -57,7 +57,7 @@ class PickledObjectField(models.Field):
             *args, **kwargs):
         self.compress = compress
         self.protocol = protocol
-        kwargs.setdefault("editable", False)
+        kwargs.setdefault('editable', False)
         super(PickledObjectField, self).__init__(*args, **kwargs)
 
     def get_default(self):
@@ -87,7 +87,7 @@ class PickledObjectField(models.Field):
 
     def get_db_prep_lookup(self, lookup_type, value, *args, **kwargs):
         if lookup_type not in ['exact', 'in', 'isnull']:
-            raise TypeError("Lookup type %s is not supported." % lookup_type)
+            raise TypeError('Lookup type %s is not supported.' % lookup_type)
         return super(PickledObjectField, self) \
             .get_db_prep_lookup(*args, **kwargs)
 

@@ -51,9 +51,8 @@ try:
     # see Issue #222
     now_localtime = getattr(timezone, 'template_localtime', timezone.localtime)
 
-
     def make_aware(value):
-        if getattr(settings, "USE_TZ", False):
+        if getattr(settings, 'USE_TZ', False):
             # naive datetimes are assumed to be in UTC.
             value = timezone.make_aware(value, timezone.utc)
             # then convert to the Django configured timezone.
@@ -62,7 +61,7 @@ try:
         return value
 
     def make_naive(value):
-        if getattr(settings, "USE_TZ", False):
+        if getattr(settings, 'USE_TZ', False):
             default_tz = timezone.get_default_timezone()
             value = timezone.make_naive(value, default_tz)
         return value
@@ -76,8 +75,7 @@ try:
 except ImportError:
     now = datetime.now
     make_aware = make_naive = lambda x: x
-    is_aware = lambda x : False
-
+    is_aware = lambda x: False
 
 def maybe_make_aware(value):
     if isinstance(value, datetime) and is_aware(value):

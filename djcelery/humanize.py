@@ -5,22 +5,22 @@ from datetime import datetime
 from django.utils.translation import ungettext, ugettext as _
 from .utils import now
 
-JUST_NOW = _("just now")
-SECONDS_AGO = (_("%(seconds)d second ago"), _("%(seconds)d seconds ago"))
-MINUTES_AGO = (_("%(minutes)d minute ago"), _("%(minutes)d minutes ago"))
-HOURS_AGO = (_("%(hours)d hour ago"), _("%(hours)d hours ago"))
-YESTERDAY_AT = _("yesterday at %(time)s")
-OLDER_YEAR = (_("year"), _("years"))
-OLDER_MONTH = (_("month"), _("months"))
-OLDER_WEEK = (_("week"), _("weeks"))
-OLDER_DAY = (_("day"), _("days"))
+JUST_NOW = _('just now')
+SECONDS_AGO = (_('%(seconds)d second ago'), _('%(seconds)d seconds ago'))
+MINUTES_AGO = (_('%(minutes)d minute ago'), _('%(minutes)d minutes ago'))
+HOURS_AGO = (_('%(hours)d hour ago'), _('%(hours)d hours ago'))
+YESTERDAY_AT = _('yesterday at %(time)s')
+OLDER_YEAR = (_('year'), _('years'))
+OLDER_MONTH = (_('month'), _('months'))
+OLDER_WEEK = (_('week'), _('weeks'))
+OLDER_DAY = (_('day'), _('days'))
 OLDER_CHUNKS = (
     (365.0, OLDER_YEAR),
     (30.0, OLDER_MONTH),
     (7.0, OLDER_WEEK),
     (1.0, OLDER_DAY),
 )
-OLDER_AGO = _("%(number)d %(type)s ago")
+OLDER_AGO = _('%(number)d %(type)s ago')
 
 
 def _un(singular__plural, n=None):
@@ -50,14 +50,14 @@ def naturaldate(date):
     if days == 0:
         if hours == 0:
             if minutes > 0:
-                return _un(MINUTES_AGO, n=minutes) % {"minutes": minutes}
+                return _un(MINUTES_AGO, n=minutes) % {'minutes': minutes}
             else:
                 return JUST_NOW
         else:
-            return _un(HOURS_AGO, n=hours) % {"hours": hours}
+            return _un(HOURS_AGO, n=hours) % {'hours': hours}
 
     if delta_midnight.days == 0:
-        return YESTERDAY_AT % {"time": date.strftime("%H:%M")}
+        return YESTERDAY_AT % {'time': date.strftime('%H:%M')}
 
     count = 0
     for chunk, singular_plural in OLDER_CHUNKS:
@@ -66,4 +66,4 @@ def naturaldate(date):
             type_ = _un(singular_plural, n=count)
             break
 
-    return OLDER_AGO % {"number": count, "type": type_}
+    return OLDER_AGO % {'number': count, 'type': type_}

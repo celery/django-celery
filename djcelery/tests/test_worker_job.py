@@ -42,9 +42,9 @@ class TestJail(unittest.TestCase):
             connection.close = old_connection_close
 
     def test_django_cache_connection_is_closed(self):
-        old_cache_close = getattr(cache.cache, "close", None)
+        old_cache_close = getattr(cache.cache, 'close', None)
         cache._was_closed = False
-        old_cache_parse_backend = getattr(cache, "parse_backend_uri", None)
+        old_cache_parse_backend = getattr(cache, 'parse_backend_uri', None)
         if old_cache_parse_backend:     # checks to make sure attr exists
             delattr(cache, 'parse_backend_uri')
 
@@ -60,10 +60,10 @@ class TestJail(unittest.TestCase):
             cache.parse_backend_uri = old_cache_parse_backend
 
     def test_django_cache_connection_is_closed_django_1_1(self):
-        old_cache_close = getattr(cache.cache, "close", None)
+        old_cache_close = getattr(cache.cache, 'close', None)
         cache._was_closed = False
-        old_cache_parse_backend = getattr(cache, "parse_backend_uri", None)
-        cache.parse_backend_uri = lambda uri: ["libmemcached", "1", "2"]
+        old_cache_parse_backend = getattr(cache, 'parse_backend_uri', None)
+        cache.parse_backend_uri = lambda uri: ['libmemcached', '1', '2']
 
         def monkeypatched_cache_close(*args, **kwargs):
             cache._was_closed = True
