@@ -8,17 +8,20 @@ import os
 # absolute, like shown here.
 sys.path.insert(0, os.getcwd())
 import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 if django.VERSION < (1, 4):
     from django.core.management import setup_environ
-    setup_environ(__import__(os.environ["DJANGO_SETTINGS_MODULE"]))
+    setup_environ(__import__(os.environ['DJANGO_SETTINGS_MODULE']))
 import djcelery
 
 # General configuration
 # ---------------------
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage',
-             'sphinxcontrib.issuetracker']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
+    'sphinxcontrib.issuetracker',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']
@@ -38,7 +41,7 @@ copyright = u'2009-2011, Ask Solem'
 # built documents.
 #
 # The short X.Y version.
-version = ".".join(map(str, djcelery.VERSION[0:2]))
+version = '.'.join(map(str, djcelery.VERSION[0:2]))
 # The full version, including alpha/beta/rc tags.
 release = djcelery.__version__
 
@@ -64,12 +67,13 @@ html_use_modindex = True
 html_use_index = True
 
 latex_documents = [
-  ('index', 'django-celery.tex', ur'django-celery Documentation',
-   ur'Ask Solem', 'manual'),
+    ('index', 'django-celery.tex',
+     u'django-celery Documentation',
+     u'Ask Solem', 'manual'),
 ]
 
-html_theme = "celery"
-html_theme_path = ["_theme"]
+html_theme = 'celery'
+html_theme_path = ['_theme']
 html_sidebars = {
     'index': ['sidebarintro.html', 'sourcelink.html', 'searchbox.html'],
     '**': ['sidebarlogo.html', 'localtoc.html', 'relations.html',
@@ -77,6 +81,6 @@ html_sidebars = {
 }
 
 ### Issuetracker
-issuetracker = "github"
-issuetracker_project = "celery/django-celery"
+issuetracker = 'github'
+issuetracker_project = 'celery/django-celery'
 issuetracker_issue_pattern = r'[Ii]ssue #(\d+)'
