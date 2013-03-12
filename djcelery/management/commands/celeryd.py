@@ -18,8 +18,8 @@ class Command(CeleryCommand):
     help = 'Old alias to the "celery worker" command.'
     requires_model_validation = True
     options = (CeleryCommand.options
-             + worker.get_options()
-             + worker.preload_options)
+               + worker.get_options()
+               + worker.preload_options)
 
     def handle(self, *args, **options):
         worker.run(*args, **options)

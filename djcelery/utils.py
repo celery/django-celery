@@ -77,6 +77,7 @@ except ImportError:
     make_aware = make_naive = lambda x: x
     is_aware = lambda x: False
 
+
 def maybe_make_aware(value):
     if isinstance(value, datetime) and is_aware(value):
         return value

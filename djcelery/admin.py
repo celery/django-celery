@@ -104,33 +104,39 @@ class TaskMonitor(ModelMonitor):
     rate_limit_confirmation_template = 'djcelery/confirm_rate_limit.html'
     date_hierarchy = 'tstamp'
     fieldsets = (
-            (None, {
-                'fields': ('state', 'task_id', 'name', 'args', 'kwargs',
-                           'eta', 'runtime', 'worker', 'tstamp'),
-                'classes': ('extrapretty', ),
-            }),
-            ('Details', {
-                'classes': ('collapse', 'extrapretty'),
-                'fields': ('result', 'traceback', 'expires'),
-            }),
+        (None, {
+            'fields': ('state', 'task_id', 'name', 'args', 'kwargs',
+                       'eta', 'runtime', 'worker', 'tstamp'),
+            'classes': ('extrapretty', ),
+        }),
+        ('Details', {
+            'classes': ('collapse', 'extrapretty'),
+            'fields': ('result', 'traceback', 'expires'),
+        }),
     )
-    list_display = (fixedwidth('task_id', name=_('UUID'), pt=8),
-                    colored_state,
-                    name,
-                    fixedwidth('args', pretty=True),
-                    fixedwidth('kwargs', pretty=True),
-                    eta,
-                    tstamp,
-                    'worker')
-    readonly_fields = ('state', 'task_id', 'name', 'args', 'kwargs',
-                       'eta', 'runtime', 'worker', 'result', 'traceback',
-                       'expires', 'tstamp')
+    list_display = (
+        fixedwidth('task_id', name=_('UUID'), pt=8),
+        colored_state,
+        name,
+        fixedwidth('args', pretty=True),
+        fixedwidth('kwargs', pretty=True),
+        eta,
+        tstamp,
+        'worker',
+    )
+    readonly_fields = (
+        'state', 'task_id', 'name', 'args', 'kwargs',
+        'eta', 'runtime', 'worker', 'result', 'traceback',
+        'expires', 'tstamp',
+    )
     list_filter = ('state', 'name', 'tstamp', 'eta', 'worker')
     search_fields = ('name', 'task_id', 'args', 'kwargs', 'worker__hostname')
-    actions = ['revoke_tasks',
-               'terminate_tasks',
-               'kill_tasks',
-               'rate_limit_tasks']
+    actions = [
+        'revoke_tasks',
+        'terminate_tasks',
+        'kill_tasks',
+        'rate_limit_tasks',
+    ]
 
     class Media:
         css = {'all': ('djcelery/style.css',)}
@@ -175,8 +181,10 @@ class TaskMonitor(ModelMonitor):
             'app_label': app_label,
         }
 
-        return render_to_response(self.rate_limit_confirmation_template,
-                context, context_instance=RequestContext(request))
+        return render_to_response(
+            self.rate_limit_confirmation_template, context,
+            context_instance=RequestContext(request),
+        )
 
     def get_actions(self, request):
         actions = super(TaskMonitor, self).get_actions(request)
@@ -233,7 +241,7 @@ class LaxChoiceField(forms.ChoiceField):
 def periodic_task_form():
     current_app.loader.import_default_modules()
     tasks = list(sorted(name for name in current_app.tasks
-                            if not name.startswith('celery.')))
+                        if not name.startswith('celery.')))
     choices = (('', ''), ) + tuple(zip(tasks, tasks))
 
     class PeriodicTaskForm(forms.ModelForm):
@@ -264,22 +272,22 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
     form = periodic_task_form()
     list_display = ('__unicode__', 'enabled')
     fieldsets = (
-            (None, {
-                'fields': ('name', 'regtask', 'task', 'enabled'),
-                'classes': ('extrapretty', 'wide'),
-            }),
-            ('Schedule', {
-                'fields': ('interval', 'crontab'),
-                'classes': ('extrapretty', 'wide', ),
-            }),
-            ('Arguments', {
-                'fields': ('args', 'kwargs'),
-                'classes': ('extrapretty', 'wide', 'collapse'),
-            }),
-            ('Execution Options', {
-                'fields': ('expires', 'queue', 'exchange', 'routing_key'),
-                'classes': ('extrapretty', 'wide', 'collapse'),
-            }),
+        (None, {
+            'fields': ('name', 'regtask', 'task', 'enabled'),
+            'classes': ('extrapretty', 'wide'),
+        }),
+        ('Schedule', {
+            'fields': ('interval', 'crontab'),
+            'classes': ('extrapretty', 'wide', ),
+        }),
+        ('Arguments', {
+            'fields': ('args', 'kwargs'),
+            'classes': ('extrapretty', 'wide', 'collapse'),
+        }),
+        ('Execution Options', {
+            'fields': ('expires', 'queue', 'exchange', 'routing_key'),
+            'classes': ('extrapretty', 'wide', 'collapse'),
+        }),
     )
 
     def __init__(self, *args, **kwargs):

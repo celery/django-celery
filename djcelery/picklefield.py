@@ -43,7 +43,8 @@ def maybe_decompress(value, do_decompress=False):
 
 def encode(value, compress_object=False, pickle_protocol=DEFAULT_PROTOCOL):
     return b64encode(maybe_compress(
-                pickle.dumps(value, pickle_protocol), compress_object))
+        pickle.dumps(value, pickle_protocol), compress_object),
+    )
 
 
 def decode(value, compress_object=False):
@@ -54,7 +55,7 @@ class PickledObjectField(models.Field):
     __metaclass__ = models.SubfieldBase
 
     def __init__(self, compress=False, protocol=DEFAULT_PROTOCOL,
-            *args, **kwargs):
+                 *args, **kwargs):
         self.compress = compress
         self.protocol = protocol
         kwargs.setdefault('editable', False)
@@ -96,5 +97,6 @@ try:
 except ImportError:
     pass
 else:
-    add_introspection_rules([],
-            [r'^djcelery\.picklefield\.PickledObjectField'])
+    add_introspection_rules(
+        [], [r'^djcelery\.picklefield\.PickledObjectField'],
+    )

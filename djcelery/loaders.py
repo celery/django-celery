@@ -36,8 +36,9 @@ class DjangoLoader(BaseLoader):
     _db_reuse = 0
 
     override_backends = {
-            'database': 'djcelery.backends.database.DatabaseBackend',
-            'cache': 'djcelery.backends.cache.CacheBackend'}
+        'database': 'djcelery.backends.database.DatabaseBackend',
+        'cache': 'djcelery.backends.cache.CacheBackend',
+    }
 
     def __init__(self, *args, **kwargs):
         super(DjangoLoader, self).__init__(*args, **kwargs)
@@ -57,8 +58,8 @@ class DjangoLoader(BaseLoader):
         self.configured = True
         # Default backend needs to be the database backend for backward
         # compatibility.
-        backend = getattr(settings, 'CELERY_RESULT_BACKEND', None) or \
-                    getattr(settings, 'CELERY_BACKEND', None)
+        backend = (getattr(settings, 'CELERY_RESULT_BACKEND', None) or
+                   getattr(settings, 'CELERY_BACKEND', None))
         if not backend:
             settings.CELERY_RESULT_BACKEND = 'database'
         if NO_TZ:
@@ -172,7 +173,7 @@ def autodiscover():
     _RACE_PROTECTION = True
     try:
         return filter(None, [find_related_module(app, 'tasks')
-                                for app in settings.INSTALLED_APPS])
+                             for app in settings.INSTALLED_APPS])
     finally:
         _RACE_PROTECTION = False
 

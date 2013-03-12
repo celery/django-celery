@@ -110,7 +110,7 @@ class ResultManager(ExtendedManager):
         self.get_all_expired(expires).update(hidden=True)
         cursor = self.connection_for_write().cursor()
         cursor.execute('DELETE FROM %s WHERE hidden=%%s' % (
-                        self.model._meta.db_table, ), (True, ))
+                       self.model._meta.db_table, ), (True, ))
         transaction.commit_unless_managed()
 
 
@@ -142,8 +142,8 @@ class TaskManager(ResultManager):
             return self.model(task_id=task_id)
 
     @transaction_retry(max_retries=2)
-    def store_result(self, task_id, result, status, traceback=None,
-            children=None):
+    def store_result(self, task_id, result, status,
+                     traceback=None, children=None):
         """Store the result and status of a task.
 
         :param task_id: task id
@@ -231,5 +231,5 @@ class TaskStateManager(ExtendedManager):
     def purge(self):
         cursor = self.connection_for_write().cursor()
         cursor.execute('DELETE FROM %s WHERE hidden=%%s' % (
-                        self.model._meta.db_table, ), (True, ))
+                       self.model._meta.db_table, ), (True, ))
         transaction.commit_unless_managed()
