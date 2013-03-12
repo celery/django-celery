@@ -105,13 +105,19 @@ class ResultManager(ExtendedManager):
         """Get all expired task results."""
         return self.filter(date_done__lt=now() - maybe_timedelta(expires))
 
+    @transaction.commit_manually
     def delete_expired(self, expires):
         """Delete all expired taskset results."""
-        self.get_all_expired(expires).update(hidden=True)
-        cursor = self.connection_for_write().cursor()
-        cursor.execute('DELETE FROM %s WHERE hidden=%%s' % (
-                       self.model._meta.db_table, ), (True, ))
-        transaction.commit_unless_managed()
+        try:
+            self.get_all_expired(expires).update(hidden=True)
+            cursor = self.connection_for_write().cursor()
+            cursor.execute('DELETE FROM %s WHERE hidden=%%s' % (
+                        self.model._meta.db_table, ), (True, ))
+        except:
+            transaction.rollback()
+            raise
+        else:
+            transaction.commit()
 
 
 class PeriodicTaskManager(ExtendedManager):
