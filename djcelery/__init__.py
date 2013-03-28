@@ -5,7 +5,7 @@ from __future__ import absolute_import
 
 import os
 
-VERSION = (3, 0, 11)
+VERSION = (3, 0, 17)
 __version__ = '.'.join(map(str, VERSION[0:3])) + ''.join(VERSION[3:])
 __author__ = 'Ask Solem'
 __contact__ = 'ask@celeryproject.org'

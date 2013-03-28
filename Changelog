@@ -5,6 +5,45 @@
 .. contents::
     :local:
 
+.. _version-3.0.17:
+
+3.0.17
+======
+:release-date: 2013-03-28 05:00 P.M BST
+
+- Now depends on celery 3.0.17
+
+- Tests passing on Django 1.5
+
+- Fixed problem with the deprecated ``celeryd_multi`` command
+  when using the ``--workdir`` option.
+
+- Fixed current date handling when used with Django 1.5
+  and ``USE_TZ`` is disabled.
+
+    Fix contributed by Theo Spears.
+
+- Now makes sure to not attempt converting already
+  aware datetimes.
+
+    Fix contributed by Idan Zalzberg.
+
+- Admin Monitor: Fixed timezone problem (Issue #183)
+
+    Fix contributed by Scott Rubin.
+
+- Admin Monitor: Better formatting for task tracebacks.
+
+    Contributed by Vladislav Poluhin.
+
+- DatabaseScheduler: Now logs if a periodic task is automatically
+  disabled because of invalid JSON in args/kwargs.
+
+    Contributed by Gnrhxni.
+
+- celerycam: Do update and delete queries in the same transaction
+  when expiring old items.
+
 .. _version-3.0.11:
 
 3.0.11
