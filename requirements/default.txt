@@ -1,2 +1,2 @@
 pytz
-celery>=3.0.11
+celery>=3.0.17
