@@ -50,6 +50,13 @@ class TaskMeta(models.Model):
     def __unicode__(self):
         return '<Task: {0.task_id} state={0.status}>'.format(self)
 
+    def save(self, *args, **kwargs):
+        if self.date_done is not None:
+            self.date_done = datetime.utcfromtimestamp(
+                mktime(self.date_done.timetuple())
+            )
+        super(TaskMeta, self).save(*args, **kwargs)
+
 
 class TaskSetMeta(models.Model):
     """TaskSet result"""
@@ -73,6 +80,13 @@ class TaskSetMeta(models.Model):
 
     def __unicode__(self):
         return '<TaskSet: {0.taskset_id}>'.format(self)
+
+    def save(self, *args, **kwargs):
+        if self.date_done is not None:
+            self.date_done = datetime.utcfromtimestamp(
+                mktime(self.date_done.timetuple())
+            )
+        super(TaskSetMeta, self).save(*args, **kwargs)
 
 
 PERIOD_CHOICES = (('days', _('Days')),
@@ -183,6 +197,13 @@ class PeriodicTasks(models.Model):
         except cls.DoesNotExist:
             pass
 
+    def save(self, *args, **kwargs):
+        if self.last_update is not None:
+            self.last_update = datetime.utcfromtimestamp(
+                mktime(self.last_update.timetuple())
+            )
+        super(PeriodicTasks, self).save(*args, **kwargs)
+
 
 class PeriodicTask(models.Model):
     name = models.CharField(_('name'), max_length=200, unique=True,
@@ -240,6 +261,19 @@ class PeriodicTask(models.Model):
         self.queue = self.queue or None
         if not self.enabled:
             self.last_run_at = None
+
+        if self.last_run_at is not None:
+            self.last_run_at = datetime.utcfromtimestamp(
+                mktime(self.last_run_at.timetuple())
+            )
+        if self.expires is not None:
+            self.expires = datetime.utcfromtimestamp(
+                mktime(self.expires.timetuple())
+            )
+        if self.date_changed is not None:
+            self.date_changed = datetime.utcfromtimestamp(
+                mktime(self.date_changed.timetuple())
+            )
         super(PeriodicTask, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -291,6 +325,15 @@ class WorkerState(models.Model):
     def heartbeat_timestamp(self):
         return mktime(self.last_heartbeat.timetuple())
 
+    def save(self, *args, **kwargs):
+        if self.last_heartbeat is not None:
+            self.last_heartbeat = datetime.utcfromtimestamp(
+                mktime(self.last_heartbeat.timetuple())
+            )
+        super(WorkerState, self).save(*args, **kwargs)
+
+
+
 
 class TaskState(models.Model):
     state = models.CharField(_('state'),
@@ -328,6 +371,8 @@ class TaskState(models.Model):
     def save(self, *args, **kwargs):
         if self.eta is not None:
             self.eta = datetime.utcfromtimestamp(mktime(self.eta.timetuple()))
+        if self.tstamp is not None:
+            self.tstamp = datetime.utcfromtimestamp(mktime(self.tstamp.timetuple()))
         super(TaskState, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -341,3 +386,4 @@ class TaskState(models.Model):
         return '<TaskState: {0.state} {1}[{0.task_id}] ts:{0.tstamp}>'.format(
                 self, self.name or 'UNKNOWN',
         )
+
