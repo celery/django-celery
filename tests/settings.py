@@ -19,6 +19,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ROOT_URLCONF = 'tests.urls'
+SECRET_KEY = 'skskqlqlaskdsd'
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),

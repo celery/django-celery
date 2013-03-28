@@ -108,7 +108,12 @@ class test_task_apply(ViewTestCase):
                 self.client.get,
                 task_apply(kwargs={'task_name': name}) + '?x=4&y=4',
             )
-            self.assertRaises(TemplateDoesNotExist, action)
+            try:
+                res = action()
+            except TemplateDoesNotExist:
+                pass   # pre Django 1.5
+            else:
+                self.assertEqual(res.status_code, 404)
         finally:
             current_app.conf.CELERY_ALWAYS_EAGER = False
 
