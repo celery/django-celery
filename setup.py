@@ -162,6 +162,11 @@ else:
     long_description = 'See http://github.com/celery/django-celery'
 
 
+extra = {}
+if sys.version_info[0] == 3:
+    extra['use_2to3'] = True
+
+
 setup(
     name=NAME,
     version=meta['VERSION'],
@@ -198,4 +203,5 @@ setup(
         'console_scripts': ['djcelerymon = djcelery.mon:main'],
     },
     long_description=long_description,
+    **extra
 )
