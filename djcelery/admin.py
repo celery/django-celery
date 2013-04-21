@@ -179,7 +179,7 @@ class TaskMonitor(ModelMonitor):
         context = {
             'title': _('Rate limit selection'),
             'queryset': queryset,
-            'object_name': force_str(opts.verbose_name),
+            'object_name': force_text(opts.verbose_name),
             'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
             'opts': opts,
             'app_label': app_label,

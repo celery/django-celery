@@ -81,7 +81,7 @@ class PickledObjectField(models.Field):
 
     def get_db_prep_value(self, value, **kwargs):
         if value is not None and not isinstance(value, PickledObject):
-            return force_str(encode(value, self.compress, self.protocol))
+            return force_text(encode(value, self.compress, self.protocol))
         return value
 
     def value_to_string(self, obj):
