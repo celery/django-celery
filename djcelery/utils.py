@@ -45,11 +45,17 @@ DATABASE_ERRORS = ((DatabaseError, ) +
 
 try:
     from django.utils import timezone
+  
+    # see Issue #222
+    now_localtime = getattr(timezone, 'template_localtime', timezone.localtime)
 
     def make_aware(value):
         if getattr(settings, "USE_TZ", False):
+            # naive datetimes are assumed to be in UTC.
+            value = timezone.make_aware(value, timezone.utc)
+            # then convert to the Django configured timezone.
             default_tz = timezone.get_default_timezone()
-            value = timezone.make_aware(value, default_tz)
+            value = timezone.localtime(value, default_tz)
         return value
 
     def make_naive(value):
@@ -59,7 +65,7 @@ try:
         return value
 
     def now():
-        return timezone.localtime(timezone.now())
+        return now_localtime(timezone.now())
 
 except ImportError:
     now = datetime.now
