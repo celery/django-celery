@@ -13,6 +13,7 @@ recursive-include bin *
 recursive-include extra *
 recursive-include locale *
 recursive-include djcelery *.py
+recursive-include djcelery/static *
 recursive-include djcelery/templates *
 recursive-include docs *
 recursive-include examples *
