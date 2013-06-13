@@ -9,7 +9,7 @@ from datetime import datetime
 
 from celery import signals
 from celery.loaders.base import BaseLoader
-from celery.datastructures import DictAttribute
+from celery.utils.datastructures import DictAttribute
 
 import django
 from django import db

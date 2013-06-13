@@ -4,6 +4,7 @@ import sys
 
 from functools import partial
 
+from billiard.einfo import ExceptionInfo
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.test.testcases import TestCase as DjangoTestCase
@@ -13,7 +14,6 @@ from anyjson import deserialize
 
 from celery import current_app
 from celery import states
-from celery.datastructures import ExceptionInfo
 from celery.task import task
 from celery.utils import gen_unique_id, get_full_cls_name
 

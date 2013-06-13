@@ -4,12 +4,12 @@ import sys
 
 from datetime import timedelta
 
+from billiard.einfo import ExceptionInfo
 from django.core.cache.backends.base import InvalidCacheBackendError
 
 from celery import result
 from celery import states
 from celery.utils import gen_unique_id
-from celery.datastructures import ExceptionInfo
 
 from djcelery.backends.cache import CacheBackend
 from djcelery.tests.utils import unittest
