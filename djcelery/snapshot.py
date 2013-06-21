@@ -35,7 +35,7 @@ debug = logger.debug
 
 def aware_tstamp(secs):
     """Event timestamps uses the local timezone."""
-    return timezone.to_local_fallback(datetime.fromtimestamp(secs))
+    return maybe_make_aware(datetime.fromtimestamp(secs))
 
 
 class Camera(Polaroid):
