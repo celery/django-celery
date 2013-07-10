@@ -110,7 +110,7 @@ def task_webhook(fun):
     def _inner(*args, **kwargs):
         try:
             retval = fun(*args, **kwargs)
-        except Exception, exc:
+        except Exception as exc:
             response = {'status': 'failure', 'reason': safe_repr(exc)}
         else:
             response = {'status': 'success', 'retval': retval}

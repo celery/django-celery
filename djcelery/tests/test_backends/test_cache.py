@@ -77,7 +77,7 @@ class test_CacheBackend(unittest.TestCase):
         tid3 = gen_unique_id()
         try:
             raise KeyError('foo')
-        except KeyError, exception:
+        except KeyError as exception:
             einfo = ExceptionInfo(sys.exc_info())
             pass
         cb.mark_as_failure(tid3, exception, traceback=einfo.traceback)

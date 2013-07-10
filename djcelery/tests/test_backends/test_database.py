@@ -51,7 +51,7 @@ class TestDatabaseBackend(unittest.TestCase):
         tid3 = gen_unique_id()
         try:
             raise KeyError('foo')
-        except KeyError, exception:
+        except KeyError as exception:
             pass
         b.mark_as_failure(tid3, exception)
         self.assertEqual(b.get_status(tid3), states.FAILURE)

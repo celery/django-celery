@@ -76,7 +76,7 @@ class DjangoLoader(BaseLoader):
         for close in funs:
             try:
                 close()
-            except DATABASE_ERRORS, exc:
+            except DATABASE_ERRORS as  exc:
                 str_exc = str(exc)
                 if 'closed' not in str_exc and 'not connected' not in str_exc:
                     raise
