@@ -182,7 +182,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'pytz',
-        'celery>=3.0.17',
+        'celery>=3.0.21,<3.1.0',
     ],
     cmdclass={'test': RunTests,
               'quicktest': QuickRunTests,
