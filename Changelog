@@ -5,6 +5,24 @@
 .. contents::
     :local:
 
+.. _version-3.0.21:
+
+3.0.21
+======
+:release-date: 2013-08-24 03:00 P.M BST
+
+- Now depends on Celery 3.0.21
+
+- Fixed problems with time zones.
+
+    Fix contributed by Jeffrey Hu
+
+- Now compatible with Django 2.5
+
+    Fixes contributed by Jay States, AlexRiina
+
+- Experimental support for Python 3 (using 2to3).
+
 .. _version-3.0.17:
 
 3.0.17
