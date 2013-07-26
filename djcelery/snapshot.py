@@ -10,7 +10,7 @@ from django.conf import settings
 from celery import states
 from celery.events.state import Task
 from celery.events.snapshot import Polaroid
-from celery.utils.timeutils import maybe_iso8601, timezone
+from celery.utils.timeutils import maybe_iso8601
 
 from .models import WorkerState, TaskState
 from .utils import maybe_make_aware
