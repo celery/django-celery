@@ -181,7 +181,7 @@ setup(
     scripts=['bin/djcelerymon'],
     zip_safe=False,
     install_requires=[
-        'pytz',
+        'pytz>=2011b',
         'celery>=3.0.21,<3.1.0',
     ],
     cmdclass={'test': RunTests,
