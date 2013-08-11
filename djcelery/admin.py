@@ -23,6 +23,7 @@ from .models import (
     PeriodicTask, IntervalSchedule, CrontabSchedule,
 )
 from .humanize import naturaldate
+from .utils import check_scheduler
 
 try:
     from django.utils.encoding import force_text
@@ -312,8 +313,7 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         scheduler = getattr(settings, 'CELERYBEAT_SCHEDULER', None)
-        if scheduler != 'djcelery.schedulers.DatabaseScheduler':
-            extra_context['wrong_scheduler'] = True
+        extra_context['wrong_scheduler'] = check_scheduler(scheduler)
         return super(PeriodicTaskAdmin, self).changelist_view(request,
                                                               extra_context)
 
