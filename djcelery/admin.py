@@ -1,5 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
+from anyjson import loads
+
 from django import forms
 from django.conf import settings
 from django.contrib import admin
@@ -259,6 +261,20 @@ def periodic_task_form():
                 self._errors['task'] = self.error_class(exc.messages)
                 raise exc
             return data
+
+        def _clean_json(self, field):
+            value = self.cleaned_data[field]
+            try:
+                loads(value)
+            except ValueError, exc:
+                raise forms.ValidationError(_('Unable to parse JSON: %s') % exc)
+            return value
+
+        def clean_args(self):
+            return self._clean_json('args')
+
+        def clean_kwargs(self):
+            return self._clean_json('kwargs')
 
     return PeriodicTaskForm
 
