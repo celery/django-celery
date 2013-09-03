@@ -141,6 +141,9 @@ class TaskMonitor(ModelMonitor):
                'kill_tasks',
                'rate_limit_tasks']
 
+    class Media:
+        css = {'all': ('djcelery/style.css',)}
+
     @action(_('Revoke selected tasks'))
     def revoke_tasks(self, request, queryset):
         with current_app.default_connection() as connection:
