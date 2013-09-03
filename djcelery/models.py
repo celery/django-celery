@@ -28,7 +28,7 @@ class TaskMeta(models.Model):
     result = PickledObjectField(null=True, default=None, editable=False)
     date_done = models.DateTimeField(_('done at'), auto_now=True)
     traceback = models.TextField(_('traceback'), blank=True, null=True)
-    hidden = models.BooleanField(editable=False, db_index=True)
+    hidden = models.BooleanField(editable=False, default=False, db_index=True)
     meta = PickledObjectField(_('meta'), null=True, default=None,
                               editable=False)
 
@@ -56,7 +56,7 @@ class TaskSetMeta(models.Model):
     taskset_id = models.CharField(_('group id'), max_length=255, unique=True)
     result = PickledObjectField()
     date_done = models.DateTimeField(_('created at'), auto_now=True)
-    hidden = models.BooleanField(editable=False, db_index=True)
+    hidden = models.BooleanField(editable=False, default=False, db_index=True)
 
     objects = managers.TaskSetManager()
 
