@@ -22,16 +22,16 @@
 
 - DatabaseScheduler: Periodic task admin form now validates args and kwargs.
 
-    Contributed by Justin Quick
+    Contributed by Justin Quick.
 
 - DatabaseScheduler: IntervalSchedule and CrontabSchedule will now be ordered
   in a more natural way.
 
-    Contributed by @anagorny.
+    Contributed by Eugene Nagornyi.
 
 - Django Admin monitor:  Worker and Task now supports ``extra_context`.
 
-    Fix contributed by @realitycheck
+    Fix contributed by @realitycheck.
 
 - Django Admin monitor: Now properly formats task tracebacks.
 
