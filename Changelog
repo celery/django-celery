@@ -5,6 +5,36 @@
 .. contents::
     :local:
 
+.. _version-3.0.23:
+
+3.0.23
+======
+:release-date: 2013-09-03 02:00 P.M BST
+
+- ``djcelery.contrib.test_runner`` used naive datetimes
+  resulting in ``RuntimeWarning`` (Issue #242).
+
+- Cache backend now compatible with Django 1.5.
+
+    Fix contributed by Weipin Xia.
+
+- DatabaseScheduler: Periodic task admin form now validates args and kwargs.
+
+    Contributed by Justin Quick
+
+- DatabaseScheduler: IntervalSchedule and CrontabSchedule will now be ordered
+  in a more natural way.
+
+    Contributed by @anagorny.
+
+- Django Admin monitor:  Worker and Task now supports ``extra_context`.
+
+    Fix contributed by @realitycheck
+
+- Django Admin monitor: Now properly formats task tracebacks.
+
+    Fix contributed by Vladislav Poluhin.
+
 .. _version-3.0.21:
 
 3.0.21
