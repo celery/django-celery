@@ -1,2 +1,2 @@
-pytz
+pytz>dev
 celery>=3.0.11

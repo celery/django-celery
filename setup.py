@@ -179,7 +179,7 @@ setup(
     data_files=data_files,
     zip_safe=False,
     install_requires=[
-        'pytz',
+        'pytz>dev',
         'celery>=3.0.11',
     ],
     cmdclass={'test': RunTests,
