@@ -108,7 +108,7 @@ class test_custom_CacheBackend(unittest.TestCase):
             from djcelery.backends.cache import cache
             from django.core.cache import cache as django_cache
             self.assertEqual(cache.__class__.__module__,
-                              'django.core.cache.backends.dummy')
+                             'django.core.cache.backends.dummy')
             self.assertIsNot(cache, django_cache)
         finally:
             current_app.conf.CELERY_CACHE_BACKEND = prev_backend
@@ -137,8 +137,7 @@ class test_MemcacheWrapper(unittest.TestCase):
 
             self.assertEqual(cache.get(key, default=default), default)
             cache.set(key, val)
-            self.assertEqual(cache.get(key, default=default),
-                              val)
+            self.assertEqual(cache.get(key, default=default), val)
         finally:
             memcached.CacheClass = prev_cache_cls
             sys.modules['djcelery.backends.cache'] = prev_backend_module

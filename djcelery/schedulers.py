@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import logging
+
 from anyjson import loads, dumps
 from celery import current_app
 from celery import schedules
@@ -43,11 +45,12 @@ class ModelEntry(ScheduleEntry):
             self.args = loads(model.args or '[]')
             self.kwargs = loads(model.kwargs or '{}')
         except ValueError:
-            # disable because of error deserializing args/kwargs
+            logging.error('Failed to serialize arguments for %s.', self.name,
+                          exc_info=1)
+            logging.warning('Disabling %s', self.name)
             model.no_changes = True
             model.enabled = False
             model.save()
-            raise
 
         self.options = {'queue': model.queue,
                         'exchange': model.exchange,
@@ -71,12 +74,12 @@ class ModelEntry(ScheduleEntry):
     def _default_now(self):
         return self.app.now()
 
-    def next(self):
+    def __next__(self):
         self.model.last_run_at = self.app.now()
         self.model.total_run_count += 1
         self.model.no_changes = True
         return self.__class__(self.model)
-    __next__ = next  # for 2to3
+    next = __next__  # for 2to3
 
     def save(self):
         # Object may not be synchronized, so only
@@ -112,8 +115,9 @@ class ModelEntry(ScheduleEntry):
         fields['queue'] = options.get('queue')
         fields['exchange'] = options.get('exchange')
         fields['routing_key'] = options.get('routing_key')
-        return cls(PeriodicTask._default_manager.update_or_create(name=name,
-                                                            defaults=fields))
+        return cls(PeriodicTask._default_manager.update_or_create(
+            name=name, defaults=fields,
+        ))
 
     def __repr__(self):
         return '<ModelEntry: {0} {1}(*{2}, **{3}) {{4}}>'.format(
@@ -134,9 +138,10 @@ class DatabaseScheduler(Scheduler):
         self._dirty = set()
         self._finalize = Finalize(self, self.sync, exitpriority=5)
         Scheduler.__init__(self, *args, **kwargs)
-        self.max_interval = (kwargs.get('max_interval')
-                           or self.app.conf.CELERYBEAT_MAX_LOOP_INTERVAL
-                           or DEFAULT_MAX_INTERVAL)
+        self.max_interval = (
+            kwargs.get('max_interval') or
+            self.app.conf.CELERYBEAT_MAX_LOOP_INTERVAL or
+            DEFAULT_MAX_INTERVAL)
 
     def setup_schedule(self):
         self.install_default_entries(self.schedule)
@@ -216,10 +221,13 @@ class DatabaseScheduler(Scheduler):
     def install_default_entries(self, data):
         entries = {}
         if self.app.conf.CELERY_TASK_RESULT_EXPIRES:
-            entries.setdefault('celery.backend_cleanup', {
+            entries.setdefault(
+                'celery.backend_cleanup', {
                     'task': 'celery.backend_cleanup',
                     'schedule': schedules.crontab('0', '4', '*'),
-                    'options': {'expires': 12 * 3600}})
+                    'options': {'expires': 12 * 3600},
+                },
+            )
         self.update_from_dict(entries)
 
     @property
@@ -236,7 +244,8 @@ class DatabaseScheduler(Scheduler):
         if update:
             self.sync()
             self._schedule = self.all_as_schedule()
-            debug('Current schedule:\n%s',
-                  '\n'.join(repr(entry)
-                        for entry in self._schedule.itervalues()))
+            if logger.isEnabledFor(logging.DEBUG):
+                debug('Current schedule:\n%s', '\n'.join(
+                    repr(entry) for entry in self._schedule.itervalues()),
+                )
         return self._schedule

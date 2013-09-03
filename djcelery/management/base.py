@@ -37,13 +37,15 @@ def patch_thread_ident():
 
             def _validate_thread_sharing(self):
                 if (not self.allow_thread_sharing
-                    and self._thread_ident != _get_ident()):
-                        raise DatabaseError(DB_SHARED_THREAD.format(
-                                self.alias, self._thread_ident, _get_ident()))
+                        and self._thread_ident != _get_ident()):
+                    raise DatabaseError(
+                        DB_SHARED_THREAD % (
+                            self.alias, self._thread_ident, _get_ident()),
+                    )
 
             BaseDatabaseWrapper.__init__ = _init
-            BaseDatabaseWrapper.validate_thread_sharing \
-                    = _validate_thread_sharing
+            BaseDatabaseWrapper.validate_thread_sharing = \
+                _validate_thread_sharing
 
         patch_thread_ident.called = True
     except ImportError:
@@ -101,4 +103,4 @@ class CeleryCommand(BaseCommand):
     @property
     def option_list(self):
         return [x for x in self.options
-                    if x._long_opts[0] not in self.skip_opts]
+                if x._long_opts[0] not in self.skip_opts]

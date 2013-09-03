@@ -5,6 +5,95 @@
 .. contents::
     :local:
 
+.. _version-3.0.23:
+
+3.0.23
+======
+:release-date: 2013-09-03 02:00 P.M BST
+
+- Now depends on celery 3.0.23
+
+- ``djcelery.contrib.test_runner`` used naive datetimes
+  resulting in ``RuntimeWarning`` (Issue #242).
+
+- Cache backend now compatible with Django 1.5.
+
+    Fix contributed by Weipin Xia.
+
+- DatabaseScheduler: Periodic task admin form now validates args and kwargs.
+
+    Contributed by Justin Quick.
+
+- DatabaseScheduler: IntervalSchedule and CrontabSchedule will now be ordered
+  in a more natural way.
+
+    Contributed by Eugene Nagornyi.
+
+- Django Admin monitor:  Worker and Task now supports ``extra_context`.
+
+    Fix contributed by @realitycheck.
+
+- Django Admin monitor: Now properly formats task tracebacks.
+
+    Fix contributed by Vladislav Poluhin.
+
+.. _version-3.0.21:
+
+3.0.21
+======
+:release-date: 2013-08-26 04:00 P.M BST
+
+- Now depends on Celery 3.0.21
+
+- Fixed problems with time zones.
+
+    Fix contributed by Jeffrey Hu
+
+- Now compatible with Django 2.5
+
+    Fixes contributed by Jay States, AlexRiina
+
+- Experimental support for Python 3 (using 2to3).
+
+.. _version-3.0.17:
+
+3.0.17
+======
+:release-date: 2013-03-28 05:00 P.M BST
+
+- Now depends on celery 3.0.17
+
+- Tests passing on Django 1.5
+
+- Fixed problem with the deprecated ``celeryd_multi`` command
+  when using the ``--workdir`` option.
+
+- Fixed current date handling when used with Django 1.5
+  and ``USE_TZ`` is disabled.
+
+    Fix contributed by Theo Spears.
+
+- Now makes sure to not attempt converting already
+  aware datetimes.
+
+    Fix contributed by Idan Zalzberg.
+
+- Admin Monitor: Fixed timezone problem (Issue #183)
+
+    Fix contributed by Scott Rubin.
+
+- Admin Monitor: Better formatting for task tracebacks.
+
+    Contributed by Vladislav Poluhin.
+
+- DatabaseScheduler: Now logs if a periodic task is automatically
+  disabled because of invalid JSON in args/kwargs.
+
+    Contributed by Gnrhxni.
+
+- celerycam: Do update and delete queries in the same transaction
+  when expiring old items.
+
 .. _version-3.0.11:
 
 3.0.11

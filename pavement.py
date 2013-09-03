@@ -1,14 +1,12 @@
 import os
 import sys
 
-from paver.easy import *
-from paver import doctools
-from paver.setuputils import setup
+from paver.easy import path, sh, needs, task, options, Bunch, cmdopts
 
 PYCOMPILE_CACHES = ['*.pyc', '*$py.class']
 
 options(
-        sphinx=Bunch(builddir='.build'),
+    sphinx=Bunch(builddir='.build'),
 )
 
 
@@ -95,8 +93,7 @@ def flake8(options):
 ])
 def flakeplus(options):
     noerror = getattr(options, 'noerror', False)
-    sh('flakeplus --2.6 djcelery',
-       ignore_error=noerror)
+    sh('flakeplus --2.6 djcelery', ignore_error=noerror)
 
 
 @task
@@ -110,8 +107,8 @@ def flakes(options):
 
 @task
 def clean_readme(options):
-    path('README').unlink()
-    path('README.rst').unlink()
+    path('README').unlink_p()
+    path('README.rst').unlink_p()
 
 
 @task

@@ -16,8 +16,8 @@ beat = beat.beat(app=app)
 class Command(CeleryCommand):
     """Run the celery periodic task scheduler."""
     options = (CeleryCommand.options
-             + beat.get_options()
-             + beat.preload_options)
+               + beat.get_options()
+               + beat.preload_options)
     help = 'Old alias to the "celery beat" command.'
 
     def handle(self, *args, **options):

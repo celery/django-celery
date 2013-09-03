@@ -6,7 +6,6 @@ from time import time
 
 from django.db import transaction
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 
 from celery import states
 from celery.events.state import Task
@@ -45,9 +44,9 @@ class Camera(Polaroid):
     clear_after = True
     worker_update_freq = WORKER_UPDATE_FREQ
     expire_states = {
-            SUCCESS_STATES: EXPIRE_SUCCESS,
-            states.EXCEPTION_STATES: EXPIRE_ERROR,
-            states.UNREADY_STATES: EXPIRE_PENDING,
+        SUCCESS_STATES: EXPIRE_SUCCESS,
+        states.EXCEPTION_STATES: EXPIRE_ERROR,
+        states.UNREADY_STATES: EXPIRE_PENDING,
     }
 
     def __init__(self, *args, **kwargs):
@@ -65,54 +64,61 @@ class Camera(Polaroid):
         last_write, obj = self._last_worker_write[hostname]
         if not last_write or time() - last_write > self.worker_update_freq:
             obj = self.WorkerState.objects.update_or_create(
-                        hostname=hostname,
-                        defaults={'last_heartbeat':
-                            self.get_heartbeat(worker)})
+                hostname=hostname,
+                defaults={'last_heartbeat': self.get_heartbeat(worker)},
+            )
             self._last_worker_write[hostname] = (time(), obj)
         return obj
 
     def handle_task(self, (uuid, task), worker=None):
         """Handle snapshotted event."""
         if task.worker and task.worker.hostname:
-            worker = self.handle_worker((task.worker.hostname, task.worker))
+            worker = self.handle_worker(
+                (task.worker.hostname, task.worker),
+            )
 
-        defaults = {'name': task.name,
-                'args': task.args,
-                'kwargs': task.kwargs,
-                'eta': maybe_make_aware(maybe_iso8601(task.eta)),
-                'expires': maybe_make_aware(maybe_iso8601(task.expires)),
-                'state': task.state,
-                'tstamp': aware_tstamp(task.timestamp),
-                'result': task.result or task.exception,
-                'traceback': task.traceback,
-                'runtime': task.runtime,
-                'worker': worker}
-        # If RECEIVED event is lost, some data is lost as it is stored
-        # only in RECEIVED event for efficiency. In this case we just
-        # do not overwrite this fields in TaskState instance row
+        defaults = {
+            'name': task.name,
+            'args': task.args,
+            'kwargs': task.kwargs,
+            'eta': maybe_make_aware(maybe_iso8601(task.eta)),
+            'expires': maybe_make_aware(maybe_iso8601(task.expires)),
+            'state': task.state,
+            'tstamp': aware_tstamp(task.timestamp),
+            'result': task.result or task.exception,
+            'traceback': task.traceback,
+            'runtime': task.runtime,
+            'worker': worker
+        }
+        # Some fields are only stored in the RECEIVED event,
+        # so we should remove these from default values,
+        # so that they are not overwritten by subsequent states.
         [defaults.pop(attr, None) for attr in NOT_SAVED_ATTRIBUTES
-                                    if defaults[attr] is None]
-        return self.update_task(task.state, task_id=uuid, defaults=defaults)
+         if defaults[attr] is None]
+        return self.update_task(task.state,
+                                task_id=uuid, defaults=defaults)
 
     def update_task(self, state, **kwargs):
         objects = self.TaskState.objects
         defaults = kwargs.pop('defaults', None) or {}
-        try:
-            obj = objects.get(**kwargs)
-        except ObjectDoesNotExist:
-            if not defaults.get('name'):
-                return
-            obj, created = objects.get_or_create(defaults=defaults, **kwargs)
+        if not defaults.get('name'):
+            return
+        obj, created = objects.get_or_create(defaults=defaults, **kwargs)
+        if created:
             return obj
         else:
             if states.state(state) < states.state(obj.state):
                 keep = Task.merge_rules[states.RECEIVED]
-                defaults = dict((k, v)
-                                    for k, v in defaults.items()
-                                        if k not in keep)
+                defaults = dict(
+                    (k, v) for k, v in defaults.items()
+                    if k not in keep
+                )
 
         for k, v in defaults.items():
             setattr(obj, k, v)
+        for datefield in ('eta', 'expires', 'tstamp'):
+            # Brute force trying to fix #183
+            setattr(obj, datefield, maybe_make_aware(getattr(obj, datefield)))
         obj.save()
 
         return obj
@@ -147,7 +153,7 @@ class Camera(Polaroid):
 
     def on_cleanup(self):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)
-                        for states, expires in self.expire_states.items())
+                    for states, expires in self.expire_states.items())
         if dirty:
             debug('Cleanup: Marked %s objects as dirty.', dirty)
             self.TaskState.objects.purge()

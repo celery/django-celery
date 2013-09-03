@@ -18,8 +18,8 @@ def attrs(**kwargs):
     return _inner
 
 
-def display_field(short_description, admin_order_field, allow_tags=True,
-        **kwargs):
+def display_field(short_description, admin_order_field,
+                  allow_tags=True, **kwargs):
     return attrs(short_description=short_description,
                  admin_order_field=admin_order_field,
                  allow_tags=allow_tags, **kwargs)

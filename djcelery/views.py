@@ -31,7 +31,7 @@ def task_view(task):
     """
 
     def _applier(request, **options):
-        kwargs = kwdict(request.method == 'POST' and \
+        kwargs = kwdict(request.method == 'POST' and
                         request.POST or request.GET)
         # no multivalue
         kwargs = dict(((k, v) for k, v in kwargs.iteritems()), **options)
@@ -102,7 +102,7 @@ def task_webhook(fun):
 
         >>> response = add(request)
         >>> response.content
-        '{"status": "success", "retval": 100}'
+        "{'status': 'success', 'retval': 100}"
 
     """
 

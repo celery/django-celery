@@ -6,7 +6,8 @@ from djcelery.views import apply
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     # Example:
     # (r'^tests/', include('tests.foo.urls')),
 

@@ -16,8 +16,6 @@ extra = {}
 
 # -*- Python 3 -*-
 is_py3k = sys.version_info[0] == 3
-if is_py3k:
-    extra.update(use_2to3=True)
 
 # -*- Distribution Meta -*-
 NAME = 'django-celery'
@@ -27,6 +25,7 @@ re_meta = re.compile(r'__(\w+?)__\s*=\s*(.*)')
 re_vers = re.compile(r'VERSION\s*=\s*\((.*?)\)')
 re_doc = re.compile(r'^"""(.+?)"""')
 rq = lambda s: s.strip("\"'")
+
 
 def add_default(m):
     attr_name, attr_value = m.groups()
@@ -100,8 +99,9 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
         elif is_unwanted_file(filename):
             pass
         else:
-            data_files.append([dirpath, [os.path.join(dirpath, f) for f in
-                filenames]])
+            data_files.append(
+                [dirpath, [os.path.join(dirpath, f) for f in filenames]],
+            )
 
 
 class RunTests(Command):
@@ -120,7 +120,8 @@ class RunTests(Command):
         sys.path.append(testproj_dir)
         from django.core.management import execute_manager
         os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get(
-                        'DJANGO_SETTINGS_MODULE', 'settings')
+            'DJANGO_SETTINGS_MODULE', 'settings',
+        )
         settings_file = os.environ['DJANGO_SETTINGS_MODULE']
         settings_mod = __import__(settings_file, {}, {}, [''])
         prev_argv = list(sys.argv)

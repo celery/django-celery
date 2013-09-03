@@ -91,8 +91,9 @@ class test_task_apply(ViewTestCase):
     def test_apply(self):
         current_app.conf.CELERY_ALWAYS_EAGER = True
         try:
-            self.client.get(task_apply(kwargs={'task_name':
-                mytask.name}) + '?x=4&y=4')
+            self.client.get(
+                task_apply(kwargs={'task_name': mytask.name}) + '?x=4&y=4',
+            )
             self.assertEqual(scratch['result'], 16)
         finally:
             current_app.conf.CELERY_ALWAYS_EAGER = False
@@ -101,9 +102,16 @@ class test_task_apply(ViewTestCase):
         current_app.conf.CELERY_ALWAYS_EAGER = True
         try:
             name = 'xxx.does.not.exist'
-            action = partial(self.client.get, task_apply(kwargs={
-                        'task_name': name}) + '?x=4&y=4')
-            self.assertRaises(TemplateDoesNotExist, action)
+            action = partial(
+                self.client.get,
+                task_apply(kwargs={'task_name': name}) + '?x=4&y=4',
+            )
+            try:
+                res = action()
+            except TemplateDoesNotExist:
+                pass   # pre Django 1.5
+            else:
+                self.assertEqual(res.status_code, 404)
         finally:
             current_app.conf.CELERY_ALWAYS_EAGER = False
 
@@ -151,7 +159,7 @@ class test_task_status(ViewTestCase):
     def assertStatusForIs(self, status, res, traceback=None):
         uuid = gen_unique_id()
         current_app.backend.store_result(uuid, res, status,
-                                     traceback=traceback)
+                                         traceback=traceback)
         json = self.client.get(task_status(task_id=uuid))
         expect = dict(id=uuid, status=status, result=res)
         if status in current_app.backend.EXCEPTION_STATES:

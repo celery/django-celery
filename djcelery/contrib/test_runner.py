@@ -1,7 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
 from uuid import uuid4
-from datetime import datetime
 
 from django.conf import settings
 from django.test.simple import DjangoTestSuiteRunner
@@ -52,7 +51,7 @@ class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
 
     """
     def setup_test_environment(self, **kwargs):
-        """ Setting up test environment. """
+        """Setting up test environment."""
 
         # Monkey-patch Task.on_success() method
         def on_success_patched(self, retval, task_id, args, kwargs):

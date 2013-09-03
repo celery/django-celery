@@ -105,16 +105,22 @@ class ResultManager(ExtendedManager):
         """Get all expired task results."""
         return self.filter(date_done__lt=now() - maybe_timedelta(expires))
 
+    @transaction.commit_manually
     def delete_expired(self, expires):
         """Delete all expired taskset results."""
         meta = self.model._meta
-        self.get_all_expired(expires).update(hidden=True)
-        cursor = self.connection_for_write().cursor()
-        cursor.execute(
-            'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),
-            (True, ),
-        )
-        transaction.commit_unless_managed()
+        try:
+            self.get_all_expired(expires).update(hidden=True)
+            cursor = self.connection_for_write().cursor()
+            cursor.execute(
+                'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),
+                (True, ),
+            )
+        except:
+            transaction.rollback()
+            raise
+        else:
+            transaction.commit()
 
 
 class PeriodicTaskManager(ExtendedManager):
@@ -145,8 +151,8 @@ class TaskManager(ResultManager):
             return self.model(task_id=task_id)
 
     @transaction_retry(max_retries=2)
-    def store_result(self, task_id, result, status, traceback=None,
-            children=None):
+    def store_result(self, task_id, result, status,
+                     traceback=None, children=None):
         """Store the result and status of a task.
 
         :param task_id: task id

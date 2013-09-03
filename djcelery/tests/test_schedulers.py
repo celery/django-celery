@@ -234,12 +234,12 @@ class test_models(unittest.TestCase):
     def test_PeriodicTask_unicode_interval(self):
         p = create_model_interval(schedule(timedelta(seconds=10)))
         self.assertEqual(unicode(p),
-                        '{0}: every 10.0 seconds'.format(p.name))
+                         '{0}: every 10.0 seconds'.format(p.name))
 
     def test_PeriodicTask_unicode_crontab(self):
         p = create_model_crontab(crontab(hour='4, 5', day_of_week='4, 5'))
         self.assertEqual(unicode(p),
-                        '{0}: * 4,5 4,5 * * (m/h/d/dM/MY)'.format(p.name))
+                         '{0}: * 4,5 4,5 * * (m/h/d/dM/MY)'.format(p.name))
 
     def test_PeriodicTask_schedule_property(self):
         p1 = create_model_interval(schedule(timedelta(seconds=10)))

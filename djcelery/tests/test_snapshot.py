@@ -47,7 +47,7 @@ class test_Camera(unittest.TestCase):
         for t in t1, t2, t3:
             worker.on_heartbeat(timestamp=t)
         self.assertEqual(self.cam.get_heartbeat(worker),
-                        make_aware(datetime.fromtimestamp(t3)))
+                         make_aware(datetime.fromtimestamp(t3)))
 
     def test_handle_worker(self):
         worker = Worker(hostname='fuzzie')
@@ -129,14 +129,14 @@ class test_Camera(unittest.TestCase):
         events = [Event('worker-online', hostname=ws[0]),
                   Event('worker-online', hostname=ws[1]),
                   Event('worker-online', hostname=ws[2]),
-                  Event('task-received', uuid=uus[0], name='A',
-                                         hostname=ws[0]),
-                  Event('task-started', uuid=uus[0], name='A',
-                                        hostname=ws[0]),
-                  Event('task-received', uuid=uus[1], name='B',
-                                         hostname=ws[1]),
-                  Event('task-revoked', uuid=uus[2], name='C',
-                                        hostname=ws[2])]
+                  Event('task-received',
+                        uuid=uus[0], name='A', hostname=ws[0]),
+                  Event('task-started',
+                        uuid=uus[0], name='A', hostname=ws[0]),
+                  Event('task-received',
+                        uuid=uus[1], name='B', hostname=ws[1]),
+                  Event('task-revoked',
+                        uuid=uus[2], name='C', hostname=ws[2])]
         map(state.event, events)
         cam.on_shutter(state)
 
@@ -152,13 +152,12 @@ class test_Camera(unittest.TestCase):
         t3 = models.TaskState.objects.get(task_id=uus[2])
         self.assertEqual(t3.state, 'REVOKED')
 
-        events = [Event('task-succeeded', uuid=uus[0],
-                                          hostname=ws[0],
-                                          result=42),
-                 Event('task-failed', uuid=uus[1],
-                                      exception="KeyError('foo')",
-                                      hostname=ws[1]),
-                 Event('worker-offline', hostname=ws[0])]
+        events = [Event('task-succeeded',
+                        uuid=uus[0], hostname=ws[0], result=42),
+                  Event('task-failed',
+                        uuid=uus[1], exception="KeyError('foo')",
+                        hostname=ws[1]),
+                  Event('worker-offline', hostname=ws[0])]
         map(state.event, events)
         cam._last_worker_write.clear()
         cam.on_shutter(state)
