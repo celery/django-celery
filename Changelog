@@ -11,6 +11,8 @@
 ======
 :release-date: 2013-09-03 02:00 P.M BST
 
+- Now depends on celery 3.0.23
+
 - ``djcelery.contrib.test_runner`` used naive datetimes
   resulting in ``RuntimeWarning`` (Issue #242).
 
