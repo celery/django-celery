@@ -90,8 +90,9 @@ class ModelMonitor(admin.ModelAdmin):
     def change_view(self, request, object_id, extra_context=None):
         extra_context = extra_context or {}
         extra_context.setdefault('title', self.detail_title)
-        return super(ModelMonitor, self).change_view(request, object_id,
-                                                     extra_context=extra_context)
+        return super(ModelMonitor, self).change_view(
+            request, object_id, extra_context=extra_context,
+        )
 
     def has_delete_permission(self, request, obj=None):
         if not self.can_delete:
@@ -145,10 +146,7 @@ class TaskMonitor(ModelMonitor):
     ]
 
     class Media:
-        css = {'all': ('djcelery/style.css',)}
-
-    class Media:
-        css = {'all': ('djcelery/style.css',)}
+        css = {'all': ('djcelery/style.css', )}
 
     @action(_('Revoke selected tasks'))
     def revoke_tasks(self, request, queryset):
@@ -278,7 +276,9 @@ def periodic_task_form():
             try:
                 loads(value)
             except ValueError, exc:
-                raise forms.ValidationError(_('Unable to parse JSON: %s') % exc)
+                raise forms.ValidationError(
+                    _('Unable to parse JSON: %s') % exc,
+                )
             return value
 
         def clean_args(self):

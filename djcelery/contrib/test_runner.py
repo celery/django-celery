@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 from uuid import uuid4
-from datetime import datetime
 
 from django.conf import settings
 from django.test.simple import DjangoTestSuiteRunner
