@@ -60,7 +60,8 @@ class CeleryCommand(BaseCommand):
 
     def get_version(self):
         return 'celery {c.__version__}\ndjango-celery {d.__version__}'.format(
-                    c=celery, d=djcelery)
+            c=celery, d=djcelery,
+        )
 
     def execute(self, *args, **options):
         broker = options.get('broker')

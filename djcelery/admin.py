@@ -2,8 +2,6 @@ from __future__ import absolute_import, unicode_literals
 
 from anyjson import loads
 
-from anyjson import loads
-
 from django import forms
 from django.conf import settings
 from django.contrib import admin
@@ -30,12 +28,7 @@ from .utils import is_database_scheduler
 try:
     from django.utils.encoding import force_text
 except ImportError:
-    from django.utils.encoding import force_unicode as force_text
-
-try:
-    from django.utils.encoding import force_text
-except ImportError:
-    from django.utils.encoding import force_unicode as force_text
+    from django.utils.encoding import force_unicode as force_text  # noqa
 
 
 TASK_STATE_COLORS = {states.SUCCESS: 'green',

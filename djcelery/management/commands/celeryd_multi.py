@@ -22,4 +22,5 @@ class Command(CeleryCommand):
         argv = self.handle_default_options(argv)
         argv.append('--cmd={0[0]} celeryd_detach'.format(argv))
         multi.MultiTool().execute_from_commandline(
-                ['{0[0]} {0[1]}'.format(argv)] + argv[2:])
+            ['{0[0]} {0[1]}'.format(argv)] + argv[2:],
+        )
