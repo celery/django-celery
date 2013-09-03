@@ -75,15 +75,10 @@ def maybe_make_aware(value):
         return make_aware(value)
     return value
 
-def check_scheduler(scheduler):
-    if scheduler == 'djcelery.schedulers.DatabaseScheduler':
+
+def is_database_scheduler(scheduler):
+    if not scheduler:
         return False
-    else:
-        i = scheduler.rfind('.')
-        class_name = scheduler[i+1:]
-        from djcelery.schedulers import DatabaseScheduler
-        try:
-            module =  __import__(scheduler[:i])
-            return not issubclass(getattr(module, class_name), DatabaseScheduler)
-        except (AttributeError, ImportError):
-            return True
+    from kombu.utils import symbol_by_name
+    from .schedulers import DatabaseScheduler
+    return issubclass(symbol_by_name(scheduler), DatabaseScheduler)
