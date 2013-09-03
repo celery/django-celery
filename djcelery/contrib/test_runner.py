@@ -8,6 +8,7 @@ from django.test.simple import DjangoTestSuiteRunner
 
 from celery.task import Task
 from djcelery.models import TaskState
+from djcelery.utils import now
 
 
 USAGE = """\
@@ -62,7 +63,7 @@ class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
                                      result=retval,
                                      args=args,
                                      kwargs=kwargs,
-                                     tstamp=datetime.now())
+                                     tstamp=now())
         Task.on_success = classmethod(on_success_patched)
 
         # Monkey-patch Task.on_failure() method
@@ -74,7 +75,7 @@ class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
                                      result=einfo,
                                      args=args,
                                      kwargs=kwargs,
-                                     tstamp=datetime.now())
+                                     tstamp=now())
         Task.on_failure = classmethod(on_failure_patched)
 
         # Call parent's version
