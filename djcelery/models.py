@@ -1,6 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 from time import time, mktime
 
 from django.core.exceptions import MultipleObjectsReturned, ValidationError
@@ -347,6 +347,8 @@ class TaskState(models.Model):
         ordering = ['-tstamp']
 
     def save(self, *args, **kwargs):
+        self.expires = (None if self.expires is None
+                        else datetime.utcfromtimestamp(mktime(self.expires.timetuple())))))))
         super(TaskState, self).save(*args, **kwargs)
 
     def __unicode__(self):
