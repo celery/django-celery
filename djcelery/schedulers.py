@@ -108,6 +108,7 @@ class ModelEntry(ScheduleEntry):
         fields['queue'] = options.get('queue')
         fields['exchange'] = options.get('exchange')
         fields['routing_key'] = options.get('routing_key')
+        fields['expires'] = options.get('expires')
         return cls(PeriodicTask._default_manager.update_or_create(
             name=name, defaults=fields,
         ))
