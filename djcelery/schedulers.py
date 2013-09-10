@@ -49,7 +49,7 @@ class ModelEntry(ScheduleEntry):
         self.options = {'queue': model.queue,
                         'exchange': model.exchange,
                         'routing_key': model.routing_key,
-                        'expires': model.expires}
+                        'expires': model.expires or model.expires_at}
         self.total_run_count = model.total_run_count
         self.model = model
 
@@ -108,6 +108,11 @@ class ModelEntry(ScheduleEntry):
         fields['queue'] = options.get('queue')
         fields['exchange'] = options.get('exchange')
         fields['routing_key'] = options.get('routing_key')
+        expires = options.get('expires')
+        if isinstance(expires, (int, float)):
+            fields['expires'] = expires
+        else:
+            fields['expires_at'] = expires
         return cls(PeriodicTask._default_manager.update_or_create(
             name=name, defaults=fields,
         ))
