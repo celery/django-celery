@@ -24,3 +24,5 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'djcelery',
 )
+
+SECRET_KEY='a'

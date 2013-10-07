@@ -37,17 +37,22 @@ class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
     in ``djcelery.models.TaskState`` model. Tasks run eagerly.
 
     Exceptions is turned on. If you need to test ``on_failure``
-    behavior, you should monkey-patch in your test:
-        ``settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = False``
+    behavior, you should monkey-patch in your test::
+
+        settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = False
 
     USAGE:
-            In ``settings.py``:
-                TEST_RUNNER = 'djcelery.contrib.test_runner.' \
-                    'CeleryTestSuiteRunnerStoringResult'
 
-            In ``tests.py``:
-                from djcelery.models import TaskState
-                TaskState.object.filter(state='SUCCESS', args__contains='test')
+    In ``settings.py``::
+
+        TEST_RUNNER = '''
+            djcelery.contrib.test_runner.CeleryTestSuiteRunnerStoringResult
+        '''.strip()
+
+    In ``tests.py``::
+
+        from djcelery.models import TaskState
+        TaskState.object.filter(state='SUCCESS', args__contains='test')
 
     """
     def setup_test_environment(self, **kwargs):

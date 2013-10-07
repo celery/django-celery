@@ -29,7 +29,7 @@
 
     Contributed by Eugene Nagornyi.
 
-- Django Admin monitor:  Worker and Task now supports ``extra_context`.
+- Django Admin monitor:  Worker and Task now supports ``extra_context``.
 
     Fix contributed by @realitycheck.
 

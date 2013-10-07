@@ -2,6 +2,8 @@ from __future__ import absolute_import
 
 import logging
 
+from multiprocessing.util import Finalize
+
 from anyjson import loads, dumps
 from celery import current_app
 from celery import schedules
@@ -9,7 +11,6 @@ from celery.beat import Scheduler, ScheduleEntry
 from celery.utils.encoding import safe_str, safe_repr
 from celery.utils.log import get_logger
 from celery.utils.timeutils import is_naive
-from kombu.utils.finalize import Finalize
 
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
