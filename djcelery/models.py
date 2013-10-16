@@ -348,7 +348,7 @@ class TaskState(models.Model):
 
     def save(self, *args, **kwargs):
         self.expires = (None if self.expires is None
-                        else datetime.utcfromtimestamp(mktime(self.expires.timetuple())))))))
+                        else datetime.utcfromtimestamp(float("%d.%s" % (mktime(self.expires.timetuple()), self.expires.microsecond))))
         super(TaskState, self).save(*args, **kwargs)
 
     def __unicode__(self):
