@@ -10,7 +10,7 @@ from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
 from celery.utils.encoding import safe_str, safe_repr
 from celery.utils.timeutils import is_naive
-from kombu.utils.finalize import Finalize
+from multiprocessing.util import Finalize
 
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
