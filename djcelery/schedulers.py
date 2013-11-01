@@ -10,7 +10,13 @@ from celery import schedules
 from celery.beat import Scheduler, ScheduleEntry
 from celery.utils.encoding import safe_str, safe_repr
 from celery.utils.timeutils import is_naive
-from kombu.utils.finalize import Finalize
+
+try:
+    # The finalize module was removed from Kombu in version 3.0.
+    # Fall back to kombu.utils.finalize if Kombu version < 3.x
+    from multiprocessing.util import Finalize
+except ImportError:
+    from kombu.utils.finalize import Finalize
 
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
