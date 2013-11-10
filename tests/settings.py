@@ -11,6 +11,9 @@ import sys
 sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.join(os.getcwd(), os.pardir))
 
+import djcelery
+djcelery.setup_loader()
+
 NO_NOSE = os.environ.get('DJCELERY_NO_NOSE', False)
 
 SITE_ID = 300
@@ -25,8 +28,10 @@ ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
+AUTOCOMMIT = True
+
 if not NO_NOSE:
-    TEST_RUNNER = 'django_nose.run_tests'
+    TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 here = os.path.abspath(os.path.dirname(__file__))
 COVERAGE_EXCLUDE_MODULES = (
     'djcelery',

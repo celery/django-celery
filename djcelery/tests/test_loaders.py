@@ -3,13 +3,14 @@ from __future__ import absolute_import, unicode_literals
 from celery import loaders
 
 from djcelery import loaders as djloaders
+from djcelery.app import app
 from djcelery.tests.utils import unittest
 
 
 class TestDjangoLoader(unittest.TestCase):
 
     def setUp(self):
-        self.loader = djloaders.DjangoLoader()
+        self.loader = djloaders.DjangoLoader(app=app)
 
     def test_get_loader_cls(self):
 

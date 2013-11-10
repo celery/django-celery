@@ -335,7 +335,7 @@ class TaskState(models.Model):
     worker = models.ForeignKey(
         WorkerState, null=True, verbose_name=_('worker'),
     )
-    hidden = models.BooleanField(editable=False, db_index=True)
+    hidden = models.BooleanField(editable=False, default=False, db_index=True)
 
     objects = managers.TaskStateManager()
 

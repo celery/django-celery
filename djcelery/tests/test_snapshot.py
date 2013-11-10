@@ -45,13 +45,14 @@ class test_Camera(unittest.TestCase):
         t2 = time()
         t3 = time()
         for t in t1, t2, t3:
-            worker.on_heartbeat(timestamp=t)
+            worker.on_heartbeat(t, t)
+        self.state.workers[worker.hostname] = worker
         self.assertEqual(self.cam.get_heartbeat(worker),
                          make_aware(datetime.fromtimestamp(t3)))
 
     def test_handle_worker(self):
         worker = Worker(hostname='fuzzie')
-        worker.on_online(timestamp=time())
+        worker.on_online(time(), time())
         self.cam._last_worker_write.clear()
         m = self.cam.handle_worker((worker.hostname, worker))
         self.assertTrue(m)
@@ -63,11 +64,11 @@ class test_Camera(unittest.TestCase):
 
     def test_handle_task_received(self):
         worker = Worker(hostname='fuzzie')
-        worker.on_online(timestamp=time())
+        worker.on_online(time(), time())
         self.cam.handle_worker((worker.hostname, worker))
 
         task = create_task(worker)
-        task.on_received(timestamp=time())
+        task.on_received(time())
         self.assertEqual(task.state, 'RECEIVED')
         mt = self.cam.handle_task((task.uuid, task))
         self.assertEqual(mt.name, task.name)
@@ -79,7 +80,7 @@ class test_Camera(unittest.TestCase):
 
     def test_handle_task(self):
         worker1 = Worker(hostname='fuzzie')
-        worker1.on_online(timestamp=time())
+        worker1.on_online(time(), time())
         mw = self.cam.handle_worker((worker1.hostname, worker1))
         task1 = create_task(worker1)
         task1.on_received(timestamp=time())
@@ -104,7 +105,7 @@ class test_Camera(unittest.TestCase):
 
     def assertExpires(self, dec, expired, tasks=10):
         worker = Worker(hostname='fuzzie')
-        worker.on_online(timestamp=time())
+        worker.on_online(time(), time())
         for total in xrange(tasks):
             task = create_task(worker)
             task.on_received(timestamp=time() - dec)
@@ -137,7 +138,10 @@ class test_Camera(unittest.TestCase):
                         uuid=uus[1], name='B', hostname=ws[1]),
                   Event('task-revoked',
                         uuid=uus[2], name='C', hostname=ws[2])]
-        map(state.event, events)
+
+        for event in events:
+            event['local_received'] = time()
+            state.event(event)
         cam.on_shutter(state)
 
         for host in ws:

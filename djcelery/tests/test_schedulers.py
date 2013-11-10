@@ -2,13 +2,14 @@ from __future__ import absolute_import
 
 from datetime import datetime, timedelta
 from itertools import count
-from time import time
 
+from celery.five import monotonic
 from celery.schedules import schedule, crontab
 from celery.utils.timeutils import timedelta_seconds
 
 from djcelery import schedulers
 from djcelery import celery
+from djcelery.app import app
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
 from djcelery.tests.utils import unittest
@@ -109,7 +110,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         m3 = create_model_crontab(crontab(minute='2,4,5'))
         for obj in m1, m2, m3:
             obj.save()
-        self.s = self.Scheduler()
+        self.s = self.Scheduler(app=app)
         self.m1 = PeriodicTask.objects.get(name=m1.name)
         self.m2 = PeriodicTask.objects.get(name=m2.name)
         self.m3 = PeriodicTask.objects.get(name=m3.name)
@@ -149,7 +150,7 @@ class test_DatabaseScheduler(unittest.TestCase):
 
     def test_should_sync(self):
         self.assertTrue(self.s.should_sync())
-        self.s._last_sync = time()
+        self.s._last_sync = monotonic()
         self.assertFalse(self.s.should_sync())
         self.s._last_sync -= self.s.sync_every
         self.assertTrue(self.s.should_sync())
@@ -180,7 +181,7 @@ class test_DatabaseScheduler(unittest.TestCase):
         e1 = self.s.schedule[self.m2.name]
 
         # Increment the entry (but make sure it doesn't sync)
-        self.s._last_sync = time()
+        self.s._last_sync = monotonic()
         e2 = self.s.schedule[e1.name] = self.s.reserve(e1)
         self.assertEqual(self.s.flushed, 1)
 

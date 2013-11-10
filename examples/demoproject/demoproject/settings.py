@@ -17,6 +17,11 @@ DATABASES = {'default': {'NAME': 'testdb.sqlite',
                          'HOST': '',
                          'PORT': ''}}
 
+CELERYBEAT_SCHEDULE = {
+    'bssadlsadasdqwe': {'task': 'demoproject.tasks.add', 'args': (2, 2),
+        'schedule': 3},
+}
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',

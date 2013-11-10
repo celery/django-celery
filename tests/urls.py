@@ -1,5 +1,5 @@
-from django.conf.urls.defaults import (patterns, url, include,  # noqa
-                                       handler500, handler404)
+from django.conf.urls import (patterns, url, include,  # noqa
+                              handler500, handler404)
 from djcelery.views import apply
 
 # Uncomment the next two lines to enable the admin:

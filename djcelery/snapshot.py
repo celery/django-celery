@@ -2,7 +2,6 @@ from __future__ import absolute_import, unicode_literals
 
 from collections import defaultdict
 from datetime import datetime, timedelta
-from time import time
 
 from django.db import transaction
 from django.conf import settings
@@ -10,6 +9,7 @@ from django.conf import settings
 from celery import states
 from celery.events.state import Task
 from celery.events.snapshot import Polaroid
+from celery.five import monotonic
 from celery.utils.log import get_logger
 from celery.utils.timeutils import maybe_iso8601
 
@@ -62,12 +62,13 @@ class Camera(Polaroid):
 
     def handle_worker(self, (hostname, worker)):
         last_write, obj = self._last_worker_write[hostname]
-        if not last_write or time() - last_write > self.worker_update_freq:
+        if not last_write or \
+                monotonic() - last_write > self.worker_update_freq:
             obj = self.WorkerState.objects.update_or_create(
                 hostname=hostname,
                 defaults={'last_heartbeat': self.get_heartbeat(worker)},
             )
-            self._last_worker_write[hostname] = (time(), obj)
+            self._last_worker_write[hostname] = (monotonic(), obj)
         return obj
 
     def handle_task(self, (uuid, task), worker=None):
@@ -123,19 +124,6 @@ class Camera(Polaroid):
 
         return obj
 
-    def _autocommit(self, fun):
-        try:
-            fun()
-        except (KeyboardInterrupt, SystemExit):
-            transaction.commit()
-            raise
-        except Exception:
-            transaction.rollback()
-            raise
-        else:
-            transaction.commit()
-
-    @transaction.commit_manually
     def on_shutter(self, state, commit_every=100):
         if not state.event_count:
             transaction.commit()
@@ -147,9 +135,9 @@ class Camera(Polaroid):
                 if not i % commit_every:
                     transaction.commit()
 
-        self._autocommit(lambda: map(self.handle_worker,
-                                     state.workers.items()))
-        self._autocommit(_handle_tasks)
+        for worker in state.workers.items():
+            self.handle_worker(worker)
+        _handle_tasks()
 
     def on_cleanup(self):
         dirty = sum(self.TaskState.objects.expire_by_states(states, expires)

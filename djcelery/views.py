@@ -17,7 +17,7 @@ import celery.task  # noqa
 
 
 def JsonResponse(response):
-    return HttpResponse(serialize(response), mimetype='application/json')
+    return HttpResponse(serialize(response), content_type='application/json')
 
 
 def task_view(task):

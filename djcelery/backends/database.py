@@ -21,11 +21,12 @@ class DatabaseBackend(BaseDictBackend):
 
     subpolling_interval = 0.5
 
-    def _store_result(self, task_id, result, status, traceback=None):
+    def _store_result(self, task_id, result, status,
+                      traceback=None, request=None):
         """Store return value and status of an executed task."""
         self.TaskModel._default_manager.store_result(
             task_id, result, status,
-            traceback=traceback, children=self.current_task_children(),
+            traceback=traceback, children=self.current_task_children(request),
         )
         return result
 
