@@ -1,2 +1,1 @@
-pytz>dev
 celery>=3.1

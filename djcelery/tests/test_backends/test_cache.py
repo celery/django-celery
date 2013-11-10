@@ -127,8 +127,11 @@ class test_MemcacheWrapper(unittest.TestCase):
             sys.stderr.write(
                 '\n* Memcache library is not installed. Skipping test.\n')
             return
-        prev_cache_cls = memcached.CacheClass
-        memcached.CacheClass = locmem.CacheClass
+        try:
+            prev_cache_cls = memcached.CacheClass
+            memcached.CacheClass = locmem.CacheClass
+        except AttributeError:
+            return
         prev_backend_module = sys.modules.pop('djcelery.backends.cache')
         try:
             from djcelery.backends.cache import cache

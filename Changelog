@@ -5,6 +5,27 @@
 .. contents::
     :local:
 
+.. _version-3.1.0:
+
+3.1.0
+=====
+:release-date: 2013-11-10 1:04 A.M BST
+
+.. note::
+
+    Please test this release in staging first and
+    make sure you read the Celery 3.1 changelog at:
+
+    http://docs.celeryproject.org/en/latest/whatsnew-3.1.html
+
+    If you upgrade from an old version then you must also
+    double check that you have 'djcelery.setup_loader()'
+    in your settings.py!
+
+- Tests passing on Django 1.6
+
+- Now works with Celery 3.1
+
 .. _version-3.0.23:
 
 3.0.23
