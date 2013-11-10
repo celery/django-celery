@@ -277,7 +277,7 @@ def periodic_task_form():
             value = self.cleaned_data[field]
             try:
                 loads(value)
-            except ValueError, exc:
+            except ValueError as exc:
                 raise forms.ValidationError(
                     _('Unable to parse JSON: %s') % exc,
                 )
