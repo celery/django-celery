@@ -60,7 +60,8 @@ class Camera(Polaroid):
             return
         return aware_tstamp(heartbeat)
 
-    def handle_worker(self, (hostname, worker)):
+    def handle_worker(self, hostname_worker):
+        (hostname, worker) = hostname_worker
         last_write, obj = self._last_worker_write[hostname]
         if not last_write or \
                 monotonic() - last_write > self.worker_update_freq:
@@ -71,8 +72,9 @@ class Camera(Polaroid):
             self._last_worker_write[hostname] = (monotonic(), obj)
         return obj
 
-    def handle_task(self, (uuid, task), worker=None):
+    def handle_task(self, uuid_task, worker=None):
         """Handle snapshotted event."""
+        (uuid, task) = uuid_task
         if task.worker and task.worker.hostname:
             worker = self.handle_worker(
                 (task.worker.hostname, task.worker),
