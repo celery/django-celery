@@ -101,7 +101,9 @@ class CeleryCommand(BaseCommand):
         sys.stderr.write('\n')
         sys.exit()
 
+    def _is_unwanted_option(self, option):
+        return option._long_opts and option._long_opts[0] in self.skip_opts
+
     @property
     def option_list(self):
-        return [x for x in self.options
-                if x._long_opts[0] not in self.skip_opts]
+        return [x for x in self.options if not self._is_unwanted_option(x)]
