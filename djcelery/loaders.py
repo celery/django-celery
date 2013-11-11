@@ -3,9 +3,9 @@ from __future__ import absolute_import
 import os
 import imp
 import importlib
-import warnings
 
 from datetime import datetime
+from warnings import warn
 
 from celery import signals
 from celery.datastructures import DictAttribute
@@ -64,7 +64,7 @@ class DjangoLoader(BaseLoader):
             settings.CELERY_RESULT_BACKEND = 'database'
         if NO_TZ:
             if getattr(settings, 'CELERY_ENABLE_UTC', None):
-                warnings.warn('CELERY_ENABLE_UTC requires Django 1.4+')
+                warn('CELERY_ENABLE_UTC requires Django 1.4+')
             settings.CELERY_ENABLE_UTC = False
         return DictAttribute(settings)
 
@@ -130,8 +130,8 @@ class DjangoLoader(BaseLoader):
 
     def warn_if_debug(self, **kwargs):
         if settings.DEBUG:
-            warnings.warn('Using settings.DEBUG leads to a memory leak, never '
-                          'use this setting in production environments!')
+            warn('Using settings.DEBUG leads to a memory leak, never '
+                 'use this setting in production environments!')
 
     def import_default_modules(self):
         super(DjangoLoader, self).import_default_modules()
@@ -184,7 +184,12 @@ def find_related_module(app, related_name):
 
     try:
         app_path = importlib.import_module(app).__path__
-    except (AttributeError, ImportError):
+    except ImportError as exc:
+        warn('Autodiscover: Error importing %s.%s: %r' % (
+            app, related_name, exc,
+        ))
+        return
+    except AttributeError:
         return
 
     try:
