@@ -17,6 +17,29 @@
 
 - Fixed compatibility with Django pre 1.6 (Issue #285).
 
+- celerycam: Fixed error when expire function returned None (Issue #210)
+
+- DatabaseScheduler: Now automatically disables periodic task
+  if the schedule model it was connected is deleted (Issue #208).
+
+- Test runner now sets always eager settings on the app configuration.
+  (Issue #201).
+
+- TaskRunnerStoringResults stored results in the wrong table.
+
+    Fix contributed by Charlie DeTar.
+
+- Celerycam: Fixed problem when USE_TZ not enabled.
+
+    Fix contributed by Jens Alm
+
+- Celerycam: Fixed timezone problem with expires and eta
+  (Issue #275 + Issue #153).
+
+    Fix contributed by Alvaro Vega.
+
+- find_related_module now handles import errors (Issue #226).
+
 .. _version-3.1.0:
 
 3.1.0
