@@ -41,7 +41,12 @@ class ModelEntry(ScheduleEntry):
         self.app = current_app._get_current_object()
         self.name = model.name
         self.task = model.task
-        self.schedule = model.schedule
+        try:
+            self.schedule = model.schedule
+        except model.DoesNotExist:
+            logger.error('Schedule was removed from database')
+            logger.warning('Disabling %s', self.name)
+            self._disable(model)
         try:
             self.args = loads(model.args or '[]')
             self.kwargs = loads(model.kwargs or '{}')
@@ -49,9 +54,7 @@ class ModelEntry(ScheduleEntry):
             logging.error('Failed to serialize arguments for %s.', self.name,
                           exc_info=1)
             logging.warning('Disabling %s', self.name)
-            model.no_changes = True
-            model.enabled = False
-            model.save()
+            self._disable(model)
 
         self.options = {'queue': model.queue,
                         'exchange': model.exchange,
@@ -66,6 +69,11 @@ class ModelEntry(ScheduleEntry):
         if not is_naive(self.last_run_at):
             self.last_run_at = self.last_run_at.replace(tzinfo=None)
         assert orig.hour == self.last_run_at.hour  # timezone sanity
+
+    def _disable(self, model):
+        model.no_changes = True
+        model.enabled = False
+        model.save()
 
     def is_due(self):
         if not self.model.enabled:
