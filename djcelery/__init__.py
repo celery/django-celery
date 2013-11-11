@@ -19,12 +19,4 @@ __license__ = 'BSD (3 clause)'
 def setup_loader():
     os.environ.setdefault('CELERY_LOADER', 'djcelery.loaders.DjangoLoader')
 
-    def remove_fixup(*args, **kwargs):
-        pass
-
-    # FIXME: Celery 3.0.0 installs the django fixup even
-    # if the djclelery loader is active, remove for 3.0.1.
-    from celery.fixups import django
-    django.fixup = remove_fixup
-
 from celery import current_app as celery  # noqa

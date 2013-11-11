@@ -5,11 +5,23 @@
 .. contents::
     :local:
 
+.. _version-3.1.1:
+
+3.1.1
+=====
+:release-date: 2013-11-11 XX:XX X.X UTC
+
+- Fixed Python 3 compatibility problems.
+
+    Fix contributed by Anton Novosyolov.
+
+- Fixed compatibility with Django pre 1.6 (Issue #285).
+
 .. _version-3.1.0:
 
 3.1.0
 =====
-:release-date: 2013-11-10 1:04 A.M BST
+:release-date: 2013-11-10 1:04 A.M UTC
 
 .. note::
 
