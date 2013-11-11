@@ -9,7 +9,7 @@
 
 3.1.1
 =====
-:release-date: 2013-11-11 XX:XX X.X UTC
+:release-date: 2013-11-11 07:30 P.M UTC
 
 - Fixed Python 3 compatibility problems.
 
@@ -38,7 +38,8 @@
 
     Fix contributed by Alvaro Vega.
 
-- find_related_module now handles import errors (Issue #226).
+- Autodiscovery now warns instead of propagating import
+  errors (Issue #226).
 
 .. _version-3.1.0:
 

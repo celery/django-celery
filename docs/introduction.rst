@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/celery/celery/celery_128.png
 
-:Version: 3.1.0b2
+:Version: 3.1.1
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/celery/django-celery/
@@ -12,6 +12,14 @@
   python, django, webhooks, queue, distributed
 
 --
+
+.. warning::
+
+    **THIS PROJECT IS NO LONGER REQUIRED**
+
+    Please follow the new tutorial at:
+
+    http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
 
 django-celery provides Celery integration for Django; Using the Django ORM
 and cache backend for storing results, autodiscovery of task modules

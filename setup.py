@@ -178,8 +178,7 @@ setup(
     data_files=data_files,
     zip_safe=False,
     install_requires=[
-        'pytz>dev',
-        'celery>=3.0.11',
+        'celery>=3.1.1',
     ],
     cmdclass={'test': RunTests,
               'quicktest': QuickRunTests,
@@ -200,15 +199,11 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Programming Language :: Python :: Implementation :: Jython',
     ],
-    entry_points={
-        'console_scripts': ['djcelerymon = djcelery.mon:main'],
-    },
     long_description=long_description,
     **extra
 )
