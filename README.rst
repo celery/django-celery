@@ -13,9 +13,19 @@
 
 --
 
-django-celery provides Celery integration for Django; Using the Django ORM
-and cache backend for storing results, autodiscovery of task modules
-for applications listed in ``INSTALLED_APPS``, and more.
+.. adminition:: This library is no longer necessary
+
+Since Celery 3.1 you can now use Celery with Django directly,
+so new users should not be using this library for integration.
+
+Django-celery may still be used for the database result backend,
+and the Django periodic task admin, but these are optional features.
+
+See the new Django tutorial at:
+
+https://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
+
+The old README follows below.
 
 Using django-celery
 ===================
