@@ -16,7 +16,6 @@ recursive-include djcelery *.py
 recursive-include djcelery/static *
 recursive-include djcelery/templates *
 recursive-include docs *
-recursive-include examples *
 recursive-include tests *
 recursive-include requirements *.txt
 prune bin/*.pyc
