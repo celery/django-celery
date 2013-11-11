@@ -347,8 +347,10 @@ class TaskState(models.Model):
         ordering = ['-tstamp']
 
     def save(self, *args, **kwargs):
-        self.expires = (None if self.expires is None
-                        else datetime.utcfromtimestamp(float("%d.%s" % (mktime(self.expires.timetuple()), self.expires.microsecond))))
+        if self.expires is not None:
+            self.expires = datetime.utcfromtimestamp(float("%d.%s" % (
+                mktime(self.expires.timetuple()), self.expires.microsecond
+            )))
         super(TaskState, self).save(*args, **kwargs)
 
     def __unicode__(self):
