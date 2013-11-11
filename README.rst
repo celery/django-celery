@@ -13,7 +13,7 @@
 
 --
 
-.. adminition:: This library is no longer necessary
+**THIS LIBRARY IS NO LONGER REQUIRED**
 
 Since Celery 3.1 you can now use Celery with Django directly,
 so new users should not be using this library for integration.
