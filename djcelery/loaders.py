@@ -184,7 +184,7 @@ def find_related_module(app, related_name):
 
     try:
         app_path = importlib.import_module(app).__path__
-    except AttributeError:
+    except (AttributeError, ImportError):
         return
 
     try:
