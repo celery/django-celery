@@ -3,9 +3,9 @@ from __future__ import absolute_import, unicode_literals
 from django.conf import settings
 from django.test.simple import DjangoTestSuiteRunner
 
-from djcelery.app import app
-from djcelery.backends.database import DatabaseBackend
+from celery import current_app
 from celery.task import Task
+from djcelery.backends.database import DatabaseBackend
 
 
 USAGE = """\
@@ -15,9 +15,9 @@ Custom test runner to allow testing of celery delayed tasks.
 
 def _set_eager():
     settings.CELERY_ALWAYS_EAGER = True
-    app.conf.CELERY_ALWAYS_EAGER = True
+    current_app.conf.CELERY_ALWAYS_EAGER = True
     settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True  # Issue #75
-    app.conf.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+    current_app.conf.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 
 
 class CeleryTestSuiteRunner(DjangoTestSuiteRunner):
@@ -54,7 +54,8 @@ class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
     def setup_test_environment(self, **kwargs):
         # Monkey-patch Task.on_success() method
         def on_success_patched(self, retval, task_id, args, kwargs):
-            DatabaseBackend().store_result(task_id, retval, 'SUCCESS')
+            app = current_app._get_current_object()
+            DatabaseBackend(app=app).store_result(task_id, retval, 'SUCCESS')
         Task.on_success = classmethod(on_success_patched)
 
         super(CeleryTestSuiteRunnerStoringResult, self).setup_test_environment(
