@@ -129,8 +129,9 @@ class Camera(Polaroid):
 
         return obj
 
+    @transaction.commit_manually
     def on_shutter(self, state, commit_every=100):
-        if not state.event_count:
+        if not state.event_count and transaction.is_dirty():
             transaction.commit()
             return
 
@@ -143,6 +144,8 @@ class Camera(Polaroid):
         for worker in state.workers.items():
             self.handle_worker(worker)
         _handle_tasks()
+        if transaction.is_dirty():
+            transaction.commit()
 
     def on_cleanup(self):
         expired = (self.TaskState.objects.expire_by_states(states, expires)
