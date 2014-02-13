@@ -13,6 +13,8 @@
 
 - TestSuiteRunner should now be working again.
 
+- Database result backend now works with Python 3.
+
 - The `celery worker' management command now gives a proper error message
   when positional arguments are provided.
 
