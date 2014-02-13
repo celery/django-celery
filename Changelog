@@ -11,6 +11,8 @@
 =====
 :release-date: 2014-02-13 04:35 P.M UTC
 
+- Now depends on Celery 3.1.9
+
 - TestSuiteRunner should now be working again.
 
 - Database result backend now works with Python 3.

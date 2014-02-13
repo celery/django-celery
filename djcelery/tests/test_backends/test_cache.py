@@ -104,7 +104,7 @@ class test_custom_CacheBackend(unittest.TestCase):
         prev_backend = current_app.conf.CELERY_CACHE_BACKEND
         prev_module = sys.modules['djcelery.backends.cache']
         current_app.conf.CELERY_CACHE_BACKEND = \
-                'django.core.cache.backends.dummy.DummyCache'
+            'django.core.cache.backends.dummy.DummyCache'
         sys.modules.pop('djcelery.backends.cache')
         try:
             from djcelery.backends.cache import cache
