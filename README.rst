@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/celery/celery/celery_128.png
 
-:Version: 3.1.1
+:Version: 3.1.9
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/celery/django-celery/
@@ -13,19 +13,17 @@
 
 --
 
-**THIS LIBRARY IS NO LONGER REQUIRED**
+.. warning::
 
-Since Celery 3.1 you can now use Celery with Django directly,
-so new users should not be using this library for integration.
+    **THIS PROJECT IS NO LONGER REQUIRED**
 
-Django-celery may still be used for the database result backend,
-and the Django periodic task admin, but these are optional features.
+    Please follow the new tutorial at:
 
-See the new Django tutorial at:
+    http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
 
-https://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
-
-The old README follows below.
+django-celery provides Celery integration for Django; Using the Django ORM
+and cache backend for storing results, autodiscovery of task modules
+for applications listed in ``INSTALLED_APPS``, and more.
 
 Using django-celery
 ===================
