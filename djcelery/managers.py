@@ -17,7 +17,7 @@ from django.conf import settings
 
 from celery.utils.timeutils import maybe_timedelta
 
-from .db import commit_on_success, rollback_unless_managed
+from .db import commit_on_success, get_queryset, rollback_unless_managed
 from .utils import now
 
 
@@ -79,11 +79,12 @@ class ExtendedQuerySet(QuerySet):
 
 class ExtendedManager(models.Manager):
 
-    def get_query_set(self):
+    def get_queryset(self):
         return ExtendedQuerySet(self.model)
+    get_query_set = get_queryset  # Pre django 1.6
 
     def update_or_create(self, **kwargs):
-        return self.get_query_set().update_or_create(**kwargs)
+        return get_queryset(self).update_or_create(**kwargs)
 
     def connection_for_write(self):
         if connections:

@@ -1,7 +1,17 @@
 from __future__ import absolute_import
 
+import django
+
 from contextlib import contextmanager
 from django.db import transaction
+
+if django.VERSION < (1, 6):  # pragma: no cover
+
+    def get_queryset(s):
+        return s.get_query_set()
+else:
+    def get_queryset(s):  # noqa
+        return s.get_queryset()
 
 try:
     from django.db.transaction import atomic  # noqa
