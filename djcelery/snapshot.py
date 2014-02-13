@@ -76,7 +76,7 @@ class Camera(Polaroid):
 
     def handle_task(self, uuid_task, worker=None):
         """Handle snapshotted event."""
-        (uuid, task) = uuid_task
+        uuid, task = uuid_task
         if task.worker and task.worker.hostname:
             worker = self.handle_worker(
                 (task.worker.hostname, task.worker),
