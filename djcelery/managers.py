@@ -5,7 +5,7 @@ import warnings
 from functools import wraps
 from itertools import count
 
-from django.db import transaction, connection
+from django.db import connection
 try:
     from django.db import connections, router
 except ImportError:  # pre-Django 1.2
@@ -17,9 +17,7 @@ from django.conf import settings
 
 from celery.utils.timeutils import maybe_timedelta
 
-from .db import (
-    commit_on_success, commit_unless_managed, rollback_unless_managed,
-)
+from .db import commit_on_success, rollback_unless_managed
 from .utils import now
 
 
@@ -237,13 +235,10 @@ class TaskStateManager(ExtendedManager):
             return self.expired(states, expires).update(hidden=True)
 
     def purge(self):
-        meta = self.model._meta
-        cursor = self.connection_for_write().cursor()
-        cursor.execute(
-            'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),
-            (True, ),
-        )
-        try:
-            commit_unless_managed()
-        except transaction.TransactionManagementError:
-            pass
+        with commit_on_success():
+            meta = self.model._meta
+            cursor = self.connection_for_write().cursor()
+            cursor.execute(
+                'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),
+                (True, ),
+            )

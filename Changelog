@@ -18,11 +18,12 @@
 
     Fix contributed by Brett Gibson.
 
-- celerycam: The cleanup phase now commits the transaction for every row
-  deleted.
+- No longer uses manual transaction management to be compatible with Django
+  1.6.
 
-    This is likely to make the cleanup considerably slower, but needs to work
-    with Django 1.6.
+    This will probably decrease performance considerably, e.g. for clean up
+    of celerycam events and for celerybeat which now needs to commit the
+    transaction for every operation.
 
 - The `celery` management command now performs validation checks (Issue #253).
 

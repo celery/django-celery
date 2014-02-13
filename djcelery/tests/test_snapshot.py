@@ -17,6 +17,7 @@ from djcelery.tests.utils import unittest
 _next_id = count(0).next
 _next_clock = count(1).next
 
+
 def Event(*args, **kwargs):
     kwargs.setdefault('clock', _next_clock())
     kwargs.setdefault('local_received', time())

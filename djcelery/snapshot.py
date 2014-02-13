@@ -12,7 +12,6 @@ from celery.five import monotonic
 from celery.utils.log import get_logger
 from celery.utils.timeutils import maybe_iso8601
 
-from .db import commit_on_success
 from .models import WorkerState, TaskState
 from .utils import maybe_make_aware
 
