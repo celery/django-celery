@@ -178,7 +178,7 @@ setup(
     data_files=data_files,
     zip_safe=False,
     install_requires=[
-        'celery>=3.1.1',
+        'celery>=3.1.9',
     ],
     cmdclass={'test': RunTests,
               'quicktest': QuickRunTests,
