@@ -21,4 +21,5 @@
     djcelery.backends.cache
     djcelery.contrib.test_runner
     djcelery.humanize
+    djcelery.db
     djcelery.utils
