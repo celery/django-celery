@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-from django.db import transaction
 from django.conf import settings
 
 from celery import states
@@ -13,6 +12,7 @@ from celery.five import monotonic
 from celery.utils.log import get_logger
 from celery.utils.timeutils import maybe_iso8601
 
+from .db import commit_on_success
 from .models import WorkerState, TaskState
 from .utils import maybe_make_aware
 
@@ -129,23 +129,15 @@ class Camera(Polaroid):
 
         return obj
 
-    @transaction.commit_manually
     def on_shutter(self, state, commit_every=100):
-        if not state.event_count and transaction.is_dirty():
-            transaction.commit()
-            return
 
         def _handle_tasks():
             for i, task in enumerate(state.tasks.items()):
                 self.handle_task(task)
-                if not i % commit_every:
-                    transaction.commit()
 
         for worker in state.workers.items():
             self.handle_worker(worker)
         _handle_tasks()
-        if transaction.is_dirty():
-            transaction.commit()
 
     def on_cleanup(self):
         expired = (self.TaskState.objects.expire_by_states(states, expires)

@@ -17,6 +17,9 @@ from django.conf import settings
 
 from celery.utils.timeutils import maybe_timedelta
 
+from .db import (
+    commit_on_success, commit_unless_managed, rollback_unless_managed,
+)
 from .utils import now
 
 
@@ -47,8 +50,10 @@ def transaction_retry(max_retries=1):
                     # the transaction.
                     if retries >= _max_retries:
                         raise
-                    transaction.rollback_unless_managed()
-
+                    try:
+                        rollback_unless_managed()
+                    except Exception:
+                        pass
         return _inner
 
     return _outer
@@ -105,22 +110,16 @@ class ResultManager(ExtendedManager):
         """Get all expired task results."""
         return self.filter(date_done__lt=now() - maybe_timedelta(expires))
 
-    @transaction.commit_manually
     def delete_expired(self, expires):
         """Delete all expired taskset results."""
         meta = self.model._meta
-        try:
+        with commit_on_success():
             self.get_all_expired(expires).update(hidden=True)
             cursor = self.connection_for_write().cursor()
             cursor.execute(
                 'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),
                 (True, ),
             )
-        except:
-            transaction.rollback()
-            raise
-        else:
-            transaction.commit()
 
 
 class PeriodicTaskManager(ExtendedManager):
@@ -244,4 +243,7 @@ class TaskStateManager(ExtendedManager):
             'DELETE FROM {0.db_table} WHERE hidden=%s'.format(meta),
             (True, ),
         )
-        transaction.commit_unless_managed()
+        try:
+            commit_unless_managed()
+        except transaction.TransactionManagementError:
+            pass

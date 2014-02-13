@@ -4,7 +4,7 @@ from datetime import datetime
 from itertools import count
 from time import time
 
-from celery.events import Event
+from celery.events import Event as _Event
 from celery.events.state import State, Worker, Task
 from celery.utils import gen_unique_id
 
@@ -15,6 +15,12 @@ from djcelery.utils import make_aware
 from djcelery.tests.utils import unittest
 
 _next_id = count(0).next
+_next_clock = count(1).next
+
+def Event(*args, **kwargs):
+    kwargs.setdefault('clock', _next_clock())
+    kwargs.setdefault('local_received', time())
+    return _Event(*args, **kwargs)
 
 
 def create_task(worker, **kwargs):
