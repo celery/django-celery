@@ -61,7 +61,7 @@ def naturaldate(date, include_seconds=False):
                 return ungettext(
                     _('{minutes} minute ago'),
                     _('{minutes} minutes ago'), minutes
-                ).format(minutes)
+                ).format(minutes=minutes)
             else:
                 if include_seconds and seconds:
                     return ungettext(
