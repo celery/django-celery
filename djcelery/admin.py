@@ -261,6 +261,7 @@ def periodic_task_form():
 
         class Meta:
             model = PeriodicTask
+            exclude = ()
 
         def clean(self):
             data = super(PeriodicTaskForm, self).clean()
