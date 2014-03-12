@@ -14,8 +14,6 @@
 """
 from __future__ import absolute_import, unicode_literals
 
-import django
-
 from base64 import b64encode, b64decode
 from zlib import compress, decompress
 
@@ -35,12 +33,12 @@ DEFAULT_PROTOCOL = 2
 NO_DECOMPRESS_HEADER = b'\x1e\x00r8d9qwwerwhA@'
 
 
-if django.VERSION < (1, 3):
-    BaseField = models.Field
-else:
-    @with_metaclass(models.SubfieldBase)
-    class BaseField(models.Field):
-        pass
+@with_metaclass(models.SubfieldBase, skip_attrs=set([
+    'db_type',
+    'get_db_prep_save'
+    ]))
+class BaseField(models.Field):
+    pass
 
 
 class PickledObject(str):
