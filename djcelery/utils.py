@@ -36,12 +36,19 @@ try:
                                oracle.OperationalError)
 except ImportError:
     _oracle_database_errors = ()  # noqa
+try:
+    import pymongo as mongodb
+    _mongodb_database_errors = (mongodb.errors.AutoReconnect,
+                                mongodb.errors.OperationFailure)
+except ImportError:
+    _mongodb_database_errors = ()  # noqa
 
 DATABASE_ERRORS = ((DatabaseError, ) +
                    _my_database_errors +
                    _pg_database_errors +
                    _lite_database_errors +
-                   _oracle_database_errors)
+                   _oracle_database_errors +
+                   _mongodb_database_errors)
 
 
 try:
