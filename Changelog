@@ -5,6 +5,38 @@
 .. contents::
     :local:
 
+.. _version-3.1.10:
+
+3.1.10
+======
+:release-date: 2014-03-31 04:00 P.M UTC
+
+- Test suite Django version compatibility fixes
+
+    Contributed by Spencer Ellinor
+
+- Admin: Model forms now defines ``fields`` and ``exclude`` attributes
+  (Issue #311)
+
+    Contributed by David Fischer.
+
+- Models: ``get_query_set`` renamed to ``get_queryset`` (but alias available)
+  (Issue #308).
+
+    Contributed by David Fischer.
+
+- Admin: Fixed bug in ``humanize.py``.
+
+    Contributed by koodjo.
+
+- Support for Django 1.8's ``DiscoverRunner``.
+
+    Contributed by David Fischer.
+
+- Snapshot: Fixed time stamp timezone issue.
+
+    Contributed by Michael van Tellingen.
+
 .. _version-3.1.9:
 
 3.1.9
