@@ -1,7 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.conf import settings
-from django.test.simple import DjangoTestSuiteRunner
+try:
+    from django.test.runner import DiscoverRunner
+except ImportError:
+    from django.test.simple import DjangoTestSuiteRunner as DiscoverRunner
 
 from celery import current_app
 from celery.task import Task
@@ -20,7 +23,7 @@ def _set_eager():
     current_app.conf.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 
 
-class CeleryTestSuiteRunner(DjangoTestSuiteRunner):
+class CeleryTestSuiteRunner(DiscoverRunner):
     """Django test runner allowing testing of celery delayed tasks.
 
     All tasks are run locally, not in a worker.
@@ -35,7 +38,7 @@ class CeleryTestSuiteRunner(DjangoTestSuiteRunner):
         super(CeleryTestSuiteRunner, self).setup_test_environment(**kwargs)
 
 
-class CeleryTestSuiteRunnerStoringResult(DjangoTestSuiteRunner):
+class CeleryTestSuiteRunnerStoringResult(DiscoverRunner):
     """Django test runner allowing testing of celery delayed tasks,
     and storing the results of those tasks in ``TaskMeta``.
 
