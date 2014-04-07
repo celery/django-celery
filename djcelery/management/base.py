@@ -55,7 +55,7 @@ patch_thread_ident()
 
 class CeleryCommand(BaseCommand):
     options = BaseCommand.option_list
-    skip_opts = ['--app', '--loader', '--config']
+    skip_opts = ['--app', '--loader', '--config', '--no-color']
     keep_base_opts = False
 
     def get_version(self):
