@@ -11,7 +11,6 @@ from django.utils.translation import ugettext_lazy as _
 from celery import schedules
 from celery import states
 from celery.events.state import heartbeat_expires
-from celery.utils.timeutils import timedelta_seconds
 
 from . import managers
 from .picklefield import PickledObjectField
@@ -104,7 +103,7 @@ class IntervalSchedule(models.Model):
 
     @classmethod
     def from_schedule(cls, schedule, period='seconds'):
-        every = timedelta_seconds(schedule.run_every)
+        every = max(schedule.run_every.total_seconds(), 0)
         try:
             return cls.objects.get(every=every, period=period)
         except cls.DoesNotExist:

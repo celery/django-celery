@@ -8,7 +8,6 @@ from django.utils.encoding import smart_str
 from django.core.cache import cache, get_cache
 
 from celery import current_app
-from celery.utils.timeutils import timedelta_seconds
 from celery.backends.base import KeyValueStoreBackend
 
 # CELERY_CACHE_BACKEND overrides the django-global(tm) backend settings.
@@ -55,7 +54,7 @@ class CacheBackend(KeyValueStoreBackend):
         expires = kwargs.get('expires',
                              current_app.conf.CELERY_TASK_RESULT_EXPIRES)
         if isinstance(expires, timedelta):
-            expires = int(timedelta_seconds(expires))
+            expires = int(max(expires.total_seconds(), 0))
         self.expires = expires
 
     def get(self, key):

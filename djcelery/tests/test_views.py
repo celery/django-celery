@@ -186,9 +186,9 @@ class test_task_status(ViewTestCase):
 
 class test_task_is_successful(ViewTestCase):
 
-    def assertStatusForIs(self, status, outcome):
+    def assertStatusForIs(self, status, outcome, result=None):
         uuid = gen_unique_id()
-        result = gen_unique_id()
+        result = result or gen_unique_id()
         current_app.backend.store_result(uuid, result, status)
         json = self.client.get(task_is_successful(task_id=uuid))
         self.assertJSONEqual(json, {'task': {'id': uuid,
@@ -201,7 +201,7 @@ class test_task_is_successful(ViewTestCase):
         self.assertStatusForIs(states.PENDING, False)
 
     def test_failure(self):
-        self.assertStatusForIs(states.FAILURE, False)
+        self.assertStatusForIs(states.FAILURE, False, KeyError('foo'))
 
     def test_retry(self):
-        self.assertStatusForIs(states.RETRY, False)
+        self.assertStatusForIs(states.RETRY, False, KeyError('foo'))

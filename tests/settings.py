@@ -59,6 +59,10 @@ CELERY_DEFAULT_QUEUE = 'testcelery'
 
 CELERY_QUEUES = {'testcelery': {'binding_key': 'testcelery'}}
 
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+
 MANAGERS = ADMINS
 
 DATABASES = {

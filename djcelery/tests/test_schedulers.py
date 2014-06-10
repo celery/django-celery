@@ -5,7 +5,6 @@ from itertools import count
 
 from celery.five import monotonic
 from celery.schedules import schedule, crontab
-from celery.utils.timeutils import timedelta_seconds
 
 from djcelery import schedulers
 from djcelery import celery
@@ -245,7 +244,7 @@ class test_models(unittest.TestCase):
     def test_PeriodicTask_schedule_property(self):
         p1 = create_model_interval(schedule(timedelta(seconds=10)))
         s1 = p1.schedule
-        self.assertEqual(timedelta_seconds(s1.run_every), 10)
+        self.assertEqual(s1.run_every.total_seconds(), 10)
 
         p2 = create_model_crontab(crontab(hour='4, 5',
                                           minute='10,20,30',

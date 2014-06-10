@@ -7,9 +7,10 @@ from django.http import HttpResponse, Http404
 from anyjson import serialize
 
 from celery import states
+from celery.five import keys, items
 from celery.registry import tasks
 from celery.result import AsyncResult
-from celery.utils import get_full_cls_name, kwdict
+from celery.utils import get_full_cls_name
 from celery.utils.encoding import safe_repr
 
 # Ensure built-in tasks are loaded for task_list view
@@ -31,10 +32,11 @@ def task_view(task):
     """
 
     def _applier(request, **options):
-        kwargs = kwdict(request.method == 'POST' and
-                        request.POST or request.GET)
+        kwargs = request.POST if request.method == 'POST' else request.GET
         # no multivalue
-        kwargs = dict(((k, v) for k, v in kwargs.iteritems()), **options)
+        kwargs = {k: v for k, v in items(kwargs)}
+        if options:
+            kwargs.update(options)
         result = task.apply_async(kwargs=kwargs)
         return JsonResponse({'ok': 'true', 'task_id': result.task_id})
 
@@ -67,7 +69,7 @@ def task_status(request, task_id):
     """Returns task status and result in JSON format."""
     result = AsyncResult(task_id)
     state, retval = result.state, result.result
-    response_data = dict(id=task_id, status=state, result=retval)
+    response_data = {'id': task_id, 'status': state, 'result': retval}
     if state in states.EXCEPTION_STATES:
         traceback = result.traceback
         response_data.update({'result': safe_repr(retval),
@@ -78,8 +80,7 @@ def task_status(request, task_id):
 
 def registered_tasks(request):
     """View returning all defined tasks as a JSON object."""
-    return JsonResponse({'regular': tasks.regular().keys(),
-                         'periodic': tasks.periodic().keys()})
+    return JsonResponse({'regular': list(keys(tasks)), 'periodic': ''})
 
 
 def task_webhook(fun):
