@@ -1,12 +1,13 @@
 from __future__ import absolute_import, unicode_literals
 
 from datetime import timedelta, datetime
-from time import time, mktime
+from time import time, mktime, gmtime
 
 from django.core.exceptions import MultipleObjectsReturned, ValidationError
 from django.db import models
 from django.db.models import signals
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from celery import schedules
 from celery import states
@@ -305,7 +306,9 @@ class WorkerState(models.Model):
 
     def is_alive(self):
         if self.last_heartbeat:
-            return time() < heartbeat_expires(self.heartbeat_timestamp)
+            # Use UTC timestamp if USE_TZ is true, or else use local timestamp
+            timestamp = mktime(gmtime()) if settings.USE_TZ else time()
+            return timestamp < heartbeat_expires(self.heartbeat_timestamp)
         return False
 
     @property
