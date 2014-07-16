@@ -3,15 +3,9 @@
 
 {% block breadcrumbs %}
   <div class="breadcrumbs">
-    <a href="../../">
-      {% trans "Home" %}
-    </a>
-    &rsaquo;
-    <a href="../">
-      {{ app_label|capfirst }}
-    </a>
-    &rsaquo;
-    {{ cl.opts.verbose_name_plural|capfirst }}
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+    &rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
   </div>
   {% if wrong_scheduler %}
     <ul class="messagelist">
