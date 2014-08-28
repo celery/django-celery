@@ -67,7 +67,7 @@ class ViewTestCase(DjangoTestCase):
     def assertJSONEqual(self, json, py):
         json = isinstance(json, HttpResponse) and json.content or json
         try:
-            self.assertEqual(deserialize(json), py)
+            self.assertEqual(deserialize(json.decode('utf-8')), py)
         except TypeError as exc:
             raise TypeError('{0}: {1}'.format(exc, json))
 
@@ -120,7 +120,7 @@ class test_registered_tasks(ViewTestCase):
 
     def test_list_registered_tasks(self):
         json = self.client.get(registered_tasks())
-        tasks = deserialize(json.content)
+        tasks = deserialize(json.content.decode('utf-8'))
         self.assertIn('celery.backend_cleanup', tasks['regular'])
 
 
@@ -137,7 +137,8 @@ class test_webhook_task(ViewTestCase):
         request = MockRequest().get('/tasks/add', dict(x=10, y=10))
         response = add_webhook(request)
         self.assertDictContainsSubset({'status': 'success', 'retval': 20},
-                                      deserialize(response.content))
+                                      deserialize(
+                                        response.content.decode('utf-8')))
 
     def test_failed_request(self):
 
@@ -151,7 +152,8 @@ class test_webhook_task(ViewTestCase):
         response = error_webhook(request)
         self.assertDictContainsSubset({'status': 'failure',
                                        'reason': '<MyError: (20,)>'},
-                                      deserialize(response.content))
+                                      deserialize(
+                                        response.content.decode('utf-8')))
 
 
 class test_task_status(ViewTestCase):
