@@ -7,7 +7,6 @@ from django.core.exceptions import MultipleObjectsReturned, ValidationError
 from django.db import models
 from django.db.models import signals
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 
 from celery import schedules
 from celery import states
@@ -17,6 +16,7 @@ from celery.utils.timeutils import timedelta_seconds
 from . import managers
 from .picklefield import PickledObjectField
 from .utils import now
+from .compat import python_2_unicode_compatible
 
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
 
