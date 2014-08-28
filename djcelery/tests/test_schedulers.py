@@ -5,7 +5,6 @@ from itertools import count
 
 from celery.five import monotonic
 from celery.schedules import schedule, crontab
-from celery.utils.compat import string as unicode
 
 from djcelery import schedulers
 from djcelery import celery
@@ -13,6 +12,7 @@ from djcelery.app import app
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
 from djcelery.tests.utils import unittest
+from djcelery.compat import unicode
 
 
 def create_model_interval(schedule, **kwargs):

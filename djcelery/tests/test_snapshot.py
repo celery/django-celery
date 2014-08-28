@@ -8,13 +8,14 @@ from celery import states
 from celery.events import Event as _Event
 from celery.events.state import State, Worker, Task
 from celery.utils import gen_unique_id
-from celery.utils.compat import string as unicode
 
 from djcelery import celery
 from djcelery import snapshot
 from djcelery import models
 from djcelery.utils import make_aware
 from djcelery.tests.utils import unittest
+from djcelery.compat import unicode
+
 
 _next_id_gen = count(0)
 _next_id = lambda: next(_next_id_gen)
