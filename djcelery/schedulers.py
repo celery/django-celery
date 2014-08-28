@@ -250,6 +250,6 @@ class DatabaseScheduler(Scheduler):
             self._schedule = self.all_as_schedule()
             if logger.isEnabledFor(logging.DEBUG):
                 debug('Current schedule:\n%s', '\n'.join(
-                    repr(entry) for entry in self._schedule.itervalues()),
+                    repr(entry) for entry in self._schedule.values()),
                 )
         return self._schedule

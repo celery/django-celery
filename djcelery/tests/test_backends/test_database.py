@@ -55,8 +55,8 @@ class TestDatabaseBackend(unittest.TestCase):
         try:
             raise KeyError('foo')
         except KeyError as exception:
-            pass
-        b.mark_as_failure(tid3, exception)
+            b.mark_as_failure(tid3, exception)
+
         self.assertEqual(b.get_status(tid3), states.FAILURE)
         self.assertIsInstance(b.get_result(tid3), KeyError)
 
@@ -90,7 +90,7 @@ class TestDatabaseBackend(unittest.TestCase):
     def test_cleanup(self):
         b = DatabaseBackend(app=app)
         b.TaskModel._default_manager.all().delete()
-        ids = [gen_unique_id() for _ in xrange(3)]
+        ids = [gen_unique_id() for _ in range(3)]
         for i, res in enumerate((16, 32, 64)):
             b.mark_as_done(ids[i], res)
 

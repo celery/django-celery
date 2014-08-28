@@ -5,6 +5,7 @@ from itertools import count
 
 from celery.five import monotonic
 from celery.schedules import schedule, crontab
+from celery.utils.compat import string as unicode
 
 from djcelery import schedulers
 from djcelery import celery
@@ -23,7 +24,9 @@ def create_model_crontab(schedule, **kwargs):
     return create_model(crontab=CrontabSchedule.from_schedule(schedule),
                         **kwargs)
 
-_next_id = count(0).next
+
+_next_id_get = count(0)
+_next_id = lambda: next(_next_id_get)
 
 
 def create_model(Model=PeriodicTask, **kwargs):
