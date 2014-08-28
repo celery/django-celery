@@ -316,6 +316,9 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
         }),
     )
 
+    def __unicode__(self, instance):
+        return force_text(instance)
+
     def __init__(self, *args, **kwargs):
         super(PeriodicTaskAdmin, self).__init__(*args, **kwargs)
         self.form = periodic_task_form()
