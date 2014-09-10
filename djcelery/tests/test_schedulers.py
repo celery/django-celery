@@ -12,6 +12,7 @@ from djcelery.app import app
 from djcelery.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 from djcelery.models import PeriodicTasks
 from djcelery.tests.utils import unittest
+from djcelery.compat import unicode
 
 
 def create_model_interval(schedule, **kwargs):
@@ -23,7 +24,9 @@ def create_model_crontab(schedule, **kwargs):
     return create_model(crontab=CrontabSchedule.from_schedule(schedule),
                         **kwargs)
 
-_next_id = count(0).next
+
+_next_id_get = count(0)
+_next_id = lambda: next(_next_id_get)
 
 
 def create_model(Model=PeriodicTask, **kwargs):

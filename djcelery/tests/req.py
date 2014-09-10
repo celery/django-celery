@@ -6,6 +6,8 @@ from django.core.handlers.base import BaseHandler
 
 from celery.utils.compat import WhateverIO
 
+from djcelery.compat import unicode
+
 
 class RequestFactory(Client):
     """Class that lets you create mock Request objects for use in testing.
@@ -28,7 +30,7 @@ class RequestFactory(Client):
         """Similar to parent class, but returns the request object as
         soon as it has created it."""
         environ = {
-            'HTTP_COOKIE': self.cookies,
+            'HTTP_COOKIE': unicode(self.cookies),
             'HTTP_USER_AGENT': 'Django UnitTest Client 1.0',
             'REMOTE_ADDR': '127.0.0.1',
             'PATH_INFO': '/',

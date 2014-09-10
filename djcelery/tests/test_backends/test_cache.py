@@ -51,7 +51,7 @@ class test_CacheBackend(unittest.TestCase):
         backend = CacheBackend(app=app)
         group_id = gen_unique_id()
         subtask_ids = [gen_unique_id() for i in range(10)]
-        subtasks = map(result.AsyncResult, subtask_ids)
+        subtasks = list(map(result.AsyncResult, subtask_ids))
         res = result.GroupResult(group_id, subtasks)
         res.save(backend=backend)
         saved = result.GroupResult.restore(group_id, backend=backend)
@@ -81,8 +81,7 @@ class test_CacheBackend(unittest.TestCase):
             raise KeyError('foo')
         except KeyError as exception:
             einfo = ExceptionInfo(sys.exc_info())
-            pass
-        cb.mark_as_failure(tid3, exception, traceback=einfo.traceback)
+            cb.mark_as_failure(tid3, exception, traceback=einfo.traceback)
         self.assertEqual(cb.get_status(tid3), states.FAILURE)
         self.assertIsInstance(cb.get_result(tid3), KeyError)
         self.assertEqual(cb.get_traceback(tid3), einfo.traceback)

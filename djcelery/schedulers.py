@@ -19,6 +19,7 @@ from .db import commit_on_success
 from .models import (PeriodicTask, PeriodicTasks,
                      CrontabSchedule, IntervalSchedule)
 from .utils import DATABASE_ERRORS, make_aware
+from .compat import itervalues
 
 # This scheduler must wake up more frequently than the
 # regular of 5 minutes because it needs to take external
@@ -250,6 +251,6 @@ class DatabaseScheduler(Scheduler):
             self._schedule = self.all_as_schedule()
             if logger.isEnabledFor(logging.DEBUG):
                 debug('Current schedule:\n%s', '\n'.join(
-                    repr(entry) for entry in self._schedule.itervalues()),
+                    repr(entry) for entry in itervalues(self._schedule)),
                 )
         return self._schedule

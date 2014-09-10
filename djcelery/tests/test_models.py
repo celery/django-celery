@@ -9,6 +9,7 @@ from djcelery import celery
 from djcelery.models import TaskMeta, TaskSetMeta
 from djcelery.utils import now
 from djcelery.tests.utils import unittest
+from djcelery.compat import unicode
 
 
 class TestModels(unittest.TestCase):

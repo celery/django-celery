@@ -14,9 +14,14 @@ from djcelery import snapshot
 from djcelery import models
 from djcelery.utils import make_aware
 from djcelery.tests.utils import unittest
+from djcelery.compat import unicode
 
-_next_id = count(0).next
-_next_clock = count(1).next
+
+_next_id_gen = count(0)
+_next_id = lambda: next(_next_id_gen)
+
+_next_clock_gen = count(1)
+_next_clock = lambda: next(_next_clock_gen)
 
 
 def Event(*args, **kwargs):
@@ -116,7 +121,7 @@ class test_Camera(unittest.TestCase):
     def assertExpires(self, dec, expired, tasks=10):
         worker = Worker(hostname='fuzzie')
         worker.event('online', time(), time(), {})
-        for total in xrange(tasks):
+        for total in range(tasks):
             task = create_task(worker)
             task.event('received', time() - dec, time() - dec, {})
             task.event('succeeded', time() - dec, time() - dec, {'result': 42})
@@ -135,7 +140,7 @@ class test_Camera(unittest.TestCase):
         cam = self.cam
 
         ws = ['worker1.ex.com', 'worker2.ex.com', 'worker3.ex.com']
-        uus = [gen_unique_id() for i in xrange(50)]
+        uus = [gen_unique_id() for i in range(50)]
 
         events = [Event('worker-online', hostname=ws[0]),
                   Event('worker-online', hostname=ws[1]),
@@ -172,7 +177,7 @@ class test_Camera(unittest.TestCase):
                         uuid=uus[1], exception="KeyError('foo')",
                         hostname=ws[1]),
                   Event('worker-offline', hostname=ws[0])]
-        map(state.event, events)
+        list(map(state.event, events))
         cam._last_worker_write.clear()
         cam.on_shutter(state)
 
