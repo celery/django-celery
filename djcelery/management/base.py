@@ -18,7 +18,6 @@ was created in thread id {1} and this is thread id {2}.\
 VALIDATE_MODELS = not django.VERSION >= (1, 7)
 
 
-
 def patch_thread_ident():
     # monkey patch django.
     # This patch make sure that we use real threads to get the ident which
