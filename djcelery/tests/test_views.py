@@ -136,9 +136,9 @@ class test_webhook_task(ViewTestCase):
 
         request = MockRequest().get('/tasks/add', dict(x=10, y=10))
         response = add_webhook(request)
-        self.assertDictContainsSubset({'status': 'success', 'retval': 20},
-                                      deserialize(
-                                        response.content.decode('utf-8')))
+        self.assertDictContainsSubset(
+            {'status': 'success', 'retval': 20},
+            deserialize(response.content.decode('utf-8')))
 
     def test_failed_request(self):
 
@@ -150,10 +150,10 @@ class test_webhook_task(ViewTestCase):
 
         request = MockRequest().get('/tasks/error', dict(x=10, y=10))
         response = error_webhook(request)
-        self.assertDictContainsSubset({'status': 'failure',
-                                       'reason': '<MyError: (20,)>'},
-                                      deserialize(
-                                        response.content.decode('utf-8')))
+        self.assertDictContainsSubset(
+            {'status': 'failure',
+             'reason': '<MyError: (20,)>'},
+            deserialize(response.content.decode('utf-8')))
 
 
 class test_task_status(ViewTestCase):
