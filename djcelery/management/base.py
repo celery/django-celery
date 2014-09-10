@@ -57,6 +57,7 @@ class CeleryCommand(BaseCommand):
     options = BaseCommand.option_list
     skip_opts = ['--app', '--loader', '--config', '--no-color']
     keep_base_opts = False
+    stdout, stderr = sys.stdout, sys.stderr
 
     def get_version(self):
         return 'celery {c.__version__}\ndjango-celery {d.__version__}'.format(
