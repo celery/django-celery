@@ -23,3 +23,4 @@
     djcelery.humanize
     djcelery.db
     djcelery.utils
+    djcelery.compat
