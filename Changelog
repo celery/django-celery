@@ -5,6 +5,15 @@
 .. contents::
     :local:
 
+.. _version-3.1.16:
+
+3.1.16
+======
+:release-date: 2014-09-19 00:00 06:00 P.M UTC
+
+- Fixed a problem with management commands hanging when
+  ``djcelery`` is added to ``INSTALLED_APPS``.
+
 .. _version-3.1.15:
 
 3.1.15
