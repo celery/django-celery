@@ -17,6 +17,6 @@ __license__ = 'BSD (3 clause)'
 
 
 def setup_loader():
-    os.environ.setdefault('CELERY_LOADER', 'djcelery.loaders.DjangoLoader')
+    os.environ.setdefault(b'CELERY_LOADER', b'djcelery.loaders.DjangoLoader')
 
 from celery import current_app as celery  # noqa
