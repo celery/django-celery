@@ -1,13 +1,13 @@
 from __future__ import absolute_import, unicode_literals
 
+import celery
+import djcelery
 import django
-import os
 import sys
 
 from django.core.management.base import BaseCommand
 
-import celery
-import djcelery
+from djcelery.compat import setenv
 
 DB_SHARED_THREAD = """\
 DatabaseWrapper objects created in a thread can only \
@@ -75,7 +75,7 @@ class CeleryCommand(BaseCommand):
         super(CeleryCommand, self).execute(*args, **options)
 
     def set_broker(self, broker):
-        os.environ['CELERY_BROKER_URL'] = broker
+        setenv('CELERY_BROKER_URL', broker)
 
     def run_from_argv(self, argv):
         self.handle_default_options(argv[2:])
@@ -90,7 +90,7 @@ class CeleryCommand(BaseCommand):
             # called with the resulting options parsed by optparse.
             if '--settings=' in arg:
                 _, settings_module = arg.split('=')
-                os.environ['DJANGO_SETTINGS_MODULE'] = settings_module
+                setenv('DJANGO_SETTINGS_MODULE', settings_module)
             elif '--pythonpath=' in arg:
                 _, pythonpath = arg.split('=')
                 sys.path.insert(0, pythonpath)
