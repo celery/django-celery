@@ -120,6 +120,11 @@ class ModelEntry(ScheduleEntry):
             fields.pop(skip_field, None)
         schedule = fields.pop('schedule')
         model_schedule, model_field = cls.to_model_schedule(schedule)
+
+        # reset schedule
+        for t in cls.model_schedules:
+            fields[t[2]] = None
+
         fields[model_field] = model_schedule
         fields['args'] = dumps(fields.get('args') or [])
         fields['kwargs'] = dumps(fields.get('kwargs') or {})
@@ -131,7 +136,7 @@ class ModelEntry(ScheduleEntry):
         ))
 
     def __repr__(self):
-        return '<ModelEntry: {0} {1}(*{2}, **{3}) {{4}}>'.format(
+        return '<ModelEntry: {0} {1}(*{2}, **{3}) {4}>'.format(
             safe_str(self.name), self.task, safe_repr(self.args),
             safe_repr(self.kwargs), self.schedule,
         )
