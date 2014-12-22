@@ -18,7 +18,8 @@ from .picklefield import PickledObjectField
 from .utils import fromtimestamp, now
 from .compat import python_2_unicode_compatible
 
-TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
+ALL_STATES = sorted(states.ALL_STATES)
+TASK_STATE_CHOICES = zip(ALL_STATES, ALL_STATES)
 
 
 @python_2_unicode_compatible
