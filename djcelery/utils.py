@@ -93,3 +93,10 @@ def is_database_scheduler(scheduler):
     from kombu.utils import symbol_by_name
     from .schedulers import DatabaseScheduler
     return issubclass(symbol_by_name(scheduler), DatabaseScheduler)
+
+
+def fromtimestamp(value):
+    if getattr(settings, 'CELERY_ENABLE_UTC', False):
+        return datetime.utcfromtimestamp(value)
+    else:
+        return datetime.fromtimestamp(value)
