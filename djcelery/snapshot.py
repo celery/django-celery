@@ -13,7 +13,7 @@ from celery.utils.log import get_logger
 from celery.utils.timeutils import maybe_iso8601
 
 from .models import WorkerState, TaskState
-from .utils import maybe_make_aware
+from .utils import fromtimestamp, maybe_make_aware
 
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
 SUCCESS_STATES = frozenset([states.SUCCESS])
@@ -33,7 +33,7 @@ debug = logger.debug
 
 def aware_tstamp(secs):
     """Event timestamps uses the local timezone."""
-    return maybe_make_aware(datetime.utcfromtimestamp(secs))
+    return maybe_make_aware(fromtimestamp(secs))
 
 
 class Camera(Polaroid):
