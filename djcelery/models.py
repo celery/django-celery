@@ -16,7 +16,7 @@ from celery.utils.timeutils import timedelta_seconds
 
 from . import managers
 from .picklefield import PickledObjectField
-from .utils import now
+from .utils import fromtimestamp, now
 from .compat import python_2_unicode_compatible
 
 TASK_STATE_CHOICES = zip(states.ALL_STATES, states.ALL_STATES)
@@ -360,11 +360,11 @@ class TaskState(models.Model):
 
     def save(self, *args, **kwargs):
         if self.eta is not None:
-            self.eta = datetime.utcfromtimestamp(float('%d.%s' % (
+            self.eta = fromtimestamp(float('%d.%s' % (
                 mktime(self.eta.timetuple()), self.eta.microsecond,
             )))
         if self.expires is not None:
-            self.expires = datetime.utcfromtimestamp(float('%d.%s' % (
+            self.expires = fromtimestamp(float('%d.%s' % (
                 mktime(self.expires.timetuple()), self.expires.microsecond,
             )))
         super(TaskState, self).save(*args, **kwargs)
