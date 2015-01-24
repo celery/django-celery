@@ -97,11 +97,26 @@ for schema migrations, you'll want to::
 
     $ python manage.py migrate djcelery
 
+For Django 1.6 and older
+------------------------
+
 For those who are not using south, a normal :command:`syncdb` will work::
 
     $ python manage.py syncdb
 
 .. _south: http://pypi.python.org/pypi/South/
+
+For Django 1.7 and newer
+------------------------
+
+If you are still using South, you should either:
+
+* Upgrade to South 1.0
+* If you can't upgrade to South 1.0 then add this to the Django settings::
+
+    SOUTH_MIGRATION_MODULES = {
+        'djcelery': 'djcelery.south_migrations',
+    }
 
 Downloading and installing from source
 --------------------------------------
@@ -129,7 +144,7 @@ Mailing list
 ------------
 
 For discussions about the usage, development, and future of celery,
-please join the `celery-users`_ mailing list. 
+please join the `celery-users`_ mailing list.
 
 .. _`celery-users`: http://groups.google.com/group/celery-users/
 
