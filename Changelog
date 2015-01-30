@@ -5,6 +5,14 @@
 .. contents::
     :local:
 
+.. _version-3.1.17:
+
+3.1.17
+======
+:release-date: TBD
+
+- Added support for Django 1.7 migrations.
+
 .. _version-3.1.16:
 
 3.1.16
