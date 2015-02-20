@@ -254,3 +254,17 @@ class DatabaseScheduler(Scheduler):
                     repr(entry) for entry in itervalues(self._schedule)),
                 )
         return self._schedule
+
+    @classmethod
+    def create_or_update_task(cls, name, **schedule_dict):
+        if 'schedule' not in schedule_dict:
+            try:
+                schedule_dict['schedule'] = \
+                    PeriodicTask._default_manager.get(name=name).schedule
+            except PeriodicTask.DoesNotExist:
+                pass
+        cls.Entry.from_entry(name, **schedule_dict)
+
+    @classmethod
+    def delete_task(cls, name):
+        PeriodicTask._default_manager.get(name=name).delete()
