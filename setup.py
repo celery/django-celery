@@ -10,7 +10,6 @@ except ImportError:
     from ez_setup import use_setuptools
     use_setuptools()
     from setuptools import setup, Command  # noqa
-from distutils.command.install import INSTALL_SCHEMES
 
 extra = {}
 
@@ -58,7 +57,7 @@ finally:
     meta_fh.close()
 
 
-packages, data_files = [], []
+packages, package_data = [], {}
 root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
@@ -76,9 +75,6 @@ def fullsplit(path, result=None):
     return fullsplit(head, [tail] + result)
 
 
-for scheme in INSTALL_SCHEMES.values():
-    scheme['data'] = scheme['purelib']
-
 SKIP_EXTENSIONS = ['.pyc', '.pyo', '.swp', '.swo']
 
 
@@ -93,15 +89,21 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
     for i, dirname in enumerate(dirnames):
         if dirname.startswith('.'):
             del dirnames[i]
+    parts = fullsplit(dirpath)
+    package_name = '.'.join(parts)
     for filename in filenames:
         if filename.endswith('.py'):
-            packages.append('.'.join(fullsplit(dirpath)))
+            packages.append(package_name)
         elif is_unwanted_file(filename):
             pass
         else:
-            data_files.append(
-                [dirpath, [os.path.join(dirpath, f) for f in filenames]],
-            )
+            relative_path = []
+            while '.'.join(parts) not in packages:
+                relative_path.append(parts.pop())
+            relative_path.reverse()
+            path = os.path.join(*relative_path)
+            package_files = package_data.setdefault('.'.join(parts), [])
+            package_files.extend([os.path.join(path, f) for f in filenames])
 
 
 class RunTests(Command):
@@ -175,7 +177,7 @@ setup(
     platforms=['any'],
     license='BSD',
     packages=packages,
-    data_files=data_files,
+    package_data=package_data,
     zip_safe=False,
     install_requires=[
         'celery>=3.1.10',
