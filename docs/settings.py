@@ -25,4 +25,4 @@ INSTALLED_APPS = (
     'djcelery',
 )
 
-SECRET_KEY='a'
+SECRET_KEY = 'a'

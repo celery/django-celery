@@ -39,8 +39,8 @@ def patch_thread_ident():
                 self._thread_ident = _get_ident()
 
             def _validate_thread_sharing(self):
-                if (not self.allow_thread_sharing
-                        and self._thread_ident != _get_ident()):
+                if (not self.allow_thread_sharing and
+                        self._thread_ident != _get_ident()):
                     raise DatabaseError(
                         DB_SHARED_THREAD % (
                             self.alias, self._thread_ident, _get_ident()),

@@ -75,8 +75,13 @@ try:
 
 except ImportError:
     now = datetime.now
-    make_aware = make_naive = lambda x: x
-    is_aware = lambda x: False
+
+    def _pass(x):
+        return x
+    make_aware = make_naive = _pass
+
+    def is_aware(x):
+        return False
 
 
 def maybe_make_aware(value):

@@ -17,22 +17,19 @@ from djcelery.tests.utils import unittest
 from djcelery.compat import unicode
 
 
-_next_id_gen = count(0)
-_next_id = lambda: next(_next_id_gen)
-
-_next_clock_gen = count(1)
-_next_clock = lambda: next(_next_clock_gen)
+_ids = count(0)
+_clock = count(1)
 
 
 def Event(*args, **kwargs):
-    kwargs.setdefault('clock', _next_clock())
+    kwargs.setdefault('clock', next(_clock))
     kwargs.setdefault('local_received', time())
     return _Event(*args, **kwargs)
 
 
 def create_task(worker, **kwargs):
     d = dict(uuid=gen_unique_id(),
-             name='djcelery.unittest.task{0}'.format(_next_id()),
+             name='djcelery.unittest.task{0}'.format(next(_ids)),
              worker=worker)
     return Task(**dict(d, **kwargs))
 
