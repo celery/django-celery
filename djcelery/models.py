@@ -121,7 +121,7 @@ class IntervalSchedule(models.Model):
     def __str__(self):
         if self.every == 1:
             return _('every {0.period_singular}').format(self)
-        return _('every {0.every} {0.period}').format(self)
+        return _('every {0.every:d} {0.period}').format(self)
 
     @property
     def period_singular(self):
