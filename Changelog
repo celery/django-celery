@@ -5,6 +5,37 @@
 .. contents::
     :local:
 
+.. _version-3.1.17:
+
+3.1.17
+======
+:release-date: 2015-10-09 04:02 P.M PDT
+
+- Adds Django migrations
+
+    ... warning::
+
+        Old South migrations have been moved to ``djcelery.south_migrations``,
+        so if you still use South you need to configure the new location
+        in ``settings.py``:
+
+        .. code-block:: python
+
+            SOUTH_MIGRATION_MODULES = {
+                'djcelery': 'djcelery.south_migrations',
+            }
+
+- ``djcelery.picklefield`` now compatible with Django 1.8
+
+    Fix taken upstream from ``django-picklefield``.
+
+- Fixed timezone issues when CELERY_ENABLE_UTC not set.
+
+    Fix contributed by Dmitriy Krasilnikov.
+
+- Fixed Python 3 compatibility issue in ``setup_loader``
+  (Issue #344, Issue #346).
+
 .. _version-3.1.16:
 
 3.1.16
