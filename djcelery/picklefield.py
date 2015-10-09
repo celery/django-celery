@@ -96,6 +96,9 @@ class PickledObjectField(BaseField):
                     raise
                 return value
 
+    def from_db_value(self, value, expression, connection, context):
+        return self.to_python(value)
+
     def get_db_prep_value(self, value, **kwargs):
         if value is not None and not isinstance(value, PickledObject):
             return force_text(encode(value, self.compress, self.protocol))
