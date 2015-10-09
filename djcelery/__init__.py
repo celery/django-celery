@@ -6,7 +6,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 import sys
 
-VERSION = (3, 1, 16)
+VERSION = (3, 1, 17)
 __version__ = '.'.join(map(str, VERSION[0:3])) + ''.join(VERSION[3:])
 __author__ = 'Ask Solem'
 __contact__ = 'ask@celeryproject.org'
