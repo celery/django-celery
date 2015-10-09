@@ -1,5 +1,5 @@
 """Old django celery integration project."""
-# :copyright: (c) 2009 - 2012 by Ask Solem.
+# :copyright: (c) 2009 - 2015 by Ask Solem.
 # :license:   BSD, see LICENSE for more details.
 from __future__ import absolute_import, unicode_literals
 
