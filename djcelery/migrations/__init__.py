@@ -10,7 +10,7 @@ to point to the correct migrations module:
 """
 
 try:
-    from django.db import migrations
+    from django.db import migrations  # noqa
 except ImportError:
     from django.core.exceptions import ImproperlyConfigured
     raise ImproperlyConfigured(SOUTH_ERROR_MESSAGE)

@@ -14,7 +14,7 @@ class Migration(SchemaMigration):
 
         # Adding model 'TaskMeta'
         db.create_table('celery_taskmeta', (
-                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+                ('id',self.gf('django.db.models.fields.AutoField')(primary_key=True)),
                 ('task_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
                 ('status', self.gf('django.db.models.fields.CharField')(default='PENDING', max_length=50)),
                 ('result', self.gf('djcelery.picklefield.PickledObjectField')(default=None, null=True)),

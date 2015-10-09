@@ -28,13 +28,12 @@ def create_model_crontab(schedule, **kwargs):
     return create_model(crontab=crontab, **kwargs)
 
 
-_next_id_get = count(0)
-_next_id = lambda: next(_next_id_get)
+_ids = count(0)
 
 
 def create_model(Model=PeriodicTask, **kwargs):
-    entry = dict(name='thefoo{0}'.format(_next_id()),
-                 task='djcelery.unittest.add{0}'.format(_next_id()),
+    entry = dict(name='thefoo{0}'.format(next(_ids)),
+                 task='djcelery.unittest.add{0}'.format(next(_ids)),
                  args='[2, 2]',
                  kwargs='{"callback": "foo"}',
                  queue='xaz',

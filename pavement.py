@@ -78,7 +78,7 @@ def verifyindex(options):
 def flake8(options):
     noerror = getattr(options, 'noerror', False)
     complexity = getattr(options, 'complexity', 22)
-    migrations_path = os.path.join('djcelery', 'migrations', '0.+?\.py')
+    migrations_path = os.path.join('djcelery', 'south_migrations', '0.+?\.py')
     sh("""flake8 djcelery | perl -mstrict -mwarnings -nle'
         my $ignore = (m/too complex \((\d+)\)/ && $1 le %s)
                    || (m{^%s});

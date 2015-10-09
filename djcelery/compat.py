@@ -28,13 +28,17 @@ def python_2_unicode_compatible(cls):
 
 if PY3:
     unicode = str
-    itervalues = lambda x: x.values()
+
+    def itervalues(x):
+        return x.values()
 
     def setenv(k, v):
         os.environ[bytes_to_str(k)] = bytes_to_str(v)
 else:
     unicode = unicode
-    itervalues = lambda x: x.itervalues()
+
+    def itervalues(x):  # noqa
+        return x.itervalues()
 
     def setenv(k, v):  # noqa
         os.environ[str_to_bytes(k)] = str_to_bytes(v)
