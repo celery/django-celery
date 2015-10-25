@@ -34,7 +34,7 @@ def task_view(task):
         kwargs = kwdict(request.method == 'POST' and
                         request.POST or request.GET)
         # no multivalue
-        kwargs = dict(((k, v) for k, v in kwargs.iteritems()), **options)
+        kwargs = dict(((k, v) for k, v in kwargs.items()), **options)
         result = task.apply_async(kwargs=kwargs)
         return JsonResponse({'ok': 'true', 'task_id': result.task_id})
 
@@ -78,8 +78,8 @@ def task_status(request, task_id):
 
 def registered_tasks(request):
     """View returning all defined tasks as a JSON object."""
-    return JsonResponse({'regular': tasks.regular().keys(),
-                         'periodic': tasks.periodic().keys()})
+    return JsonResponse({'regular': list(tasks.regular().keys()),
+                         'periodic': list(tasks.periodic().keys())})
 
 
 def task_webhook(fun):
