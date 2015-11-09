@@ -247,55 +247,54 @@ class LaxChoiceField(forms.ChoiceField):
         return True
 
 
-def periodic_task_form():
+def _get_periodic_task_choices():
     current_app.loader.import_default_modules()
     tasks = list(sorted(name for name in current_app.tasks
                         if not name.startswith('celery.')))
-    choices = (('', ''), ) + tuple(zip(tasks, tasks))
+    return (('', ''), ) + tuple(zip(tasks, tasks))
 
-    class PeriodicTaskForm(forms.ModelForm):
-        regtask = LaxChoiceField(label=_('Task (registered)'),
-                                 choices=choices, required=False)
-        task = forms.CharField(label=_('Task (custom)'), required=False,
-                               max_length=200)
 
-        class Meta:
-            model = PeriodicTask
-            exclude = ()
+class PeriodicTaskForm(forms.ModelForm):
+    regtask = LaxChoiceField(label=_('Task (registered)'),
+                             choices=_get_periodic_task_choices, required=False)
+    task = forms.CharField(label=_('Task (custom)'), required=False,
+                           max_length=200)
 
-        def clean(self):
-            data = super(PeriodicTaskForm, self).clean()
-            regtask = data.get('regtask')
-            if regtask:
-                data['task'] = regtask
-            if not data['task']:
-                exc = forms.ValidationError(_('Need name of task'))
-                self._errors['task'] = self.error_class(exc.messages)
-                raise exc
-            return data
+    class Meta:
+        model = PeriodicTask
+        exclude = ()
 
-        def _clean_json(self, field):
-            value = self.cleaned_data[field]
-            try:
-                loads(value)
-            except ValueError as exc:
-                raise forms.ValidationError(
-                    _('Unable to parse JSON: %s') % exc,
-                )
-            return value
+    def clean(self):
+        data = super(PeriodicTaskForm, self).clean()
+        regtask = data.get('regtask')
+        if regtask:
+            data['task'] = regtask
+        if not data['task']:
+            exc = forms.ValidationError(_('Need name of task'))
+            self._errors['task'] = self.error_class(exc.messages)
+            raise exc
+        return data
 
-        def clean_args(self):
-            return self._clean_json('args')
+    def _clean_json(self, field):
+        value = self.cleaned_data[field]
+        try:
+            loads(value)
+        except ValueError as exc:
+            raise forms.ValidationError(
+                _('Unable to parse JSON: %s') % exc,
+            )
+        return value
 
-        def clean_kwargs(self):
-            return self._clean_json('kwargs')
+    def clean_args(self):
+        return self._clean_json('args')
 
-    return PeriodicTaskForm
+    def clean_kwargs(self):
+        return self._clean_json('kwargs')
 
 
 class PeriodicTaskAdmin(admin.ModelAdmin):
     model = PeriodicTask
-    form = periodic_task_form()
+    form = PeriodicTaskForm
     list_display = ('__unicode__', 'enabled')
     fieldsets = (
         (None, {
@@ -315,10 +314,6 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
             'classes': ('extrapretty', 'wide', 'collapse'),
         }),
     )
-
-    def __init__(self, *args, **kwargs):
-        super(PeriodicTaskAdmin, self).__init__(*args, **kwargs)
-        self.form = periodic_task_form()
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
