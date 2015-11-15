@@ -196,7 +196,8 @@ def find_related_module(app, related_name):
         return
 
     try:
-        imp.find_module(related_name, app_path)
+        file, _, _ = imp.find_module(related_name, app_path)
+        file.close()
     except ImportError:
         return
 
