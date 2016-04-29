@@ -5,7 +5,7 @@ from datetime import timedelta
 
 import django
 from django.utils.encoding import smart_str
-from django.core.cache import cache, get_cache
+from django.core.cache import cache, caches
 
 from celery import current_app
 from celery.utils.timeutils import timedelta_seconds
@@ -13,7 +13,7 @@ from celery.backends.base import KeyValueStoreBackend
 
 # CELERY_CACHE_BACKEND overrides the django-global(tm) backend settings.
 if current_app.conf.CELERY_CACHE_BACKEND:
-    cache = get_cache(current_app.conf.CELERY_CACHE_BACKEND)  # noqa
+    cache = caches(current_app.conf.CELERY_CACHE_BACKEND)  # noqa
 
 
 class DjangoMemcacheWrapper(object):
