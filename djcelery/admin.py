@@ -297,6 +297,7 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
     model = PeriodicTask
     form = periodic_task_form()
     list_display = ('__unicode__', 'enabled')
+    ordering = ["-enabled", "name"]
     fieldsets = (
         (None, {
             'fields': ('name', 'regtask', 'task', 'enabled'),
