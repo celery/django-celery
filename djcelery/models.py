@@ -19,7 +19,7 @@ from .utils import fromtimestamp, now
 from .compat import python_2_unicode_compatible
 
 ALL_STATES = sorted(states.ALL_STATES)
-TASK_STATE_CHOICES = zip(ALL_STATES, ALL_STATES)
+TASK_STATE_CHOICES = sorted(zip(ALL_STATES, ALL_STATES))
 
 
 @python_2_unicode_compatible
