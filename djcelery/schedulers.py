@@ -131,7 +131,7 @@ class ModelEntry(ScheduleEntry):
         ))
 
     def __repr__(self):
-        return '<ModelEntry: {0} {1}(*{2}, **{3}) {{4}}>'.format(
+        return '<ModelEntry: {0} {1}(*{2}, **{3}) {4}>'.format(
             safe_str(self.name), self.task, safe_repr(self.args),
             safe_repr(self.kwargs), self.schedule,
         )
