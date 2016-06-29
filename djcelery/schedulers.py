@@ -95,7 +95,7 @@ class ModelEntry(ScheduleEntry):
     def save(self):
         # Object may not be synchronized, so only
         # change the fields we care about.
-        obj = self.model._default_manager.get(pk=self.model.pk)
+        obj = type(self.model)._default_manager.get(pk=self.model.pk)
         for field in self.save_fields:
             setattr(obj, field, getattr(self.model, field))
         obj.last_run_at = make_aware(obj.last_run_at)
