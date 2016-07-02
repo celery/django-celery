@@ -1,17 +1,9 @@
-try:
-    from django.conf.urls import (patterns, include, url,
-                                  handler500, handler404)
-except ImportError:
-    from django.conf.urls.defaults import (patterns, include, url,  # noqa
-                                  handler500, handler404)
+from django.conf.urls import include, url
+
 from djcelery.views import apply
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     # Example:
     # (r'^tests/', include('tests.foo.urls')),
 
@@ -24,4 +16,4 @@ urlpatterns = patterns(
     url(r'^apply/(?P<task_name>.+?)/', apply, name='celery-apply'),
     url(r'^celery/', include('djcelery.urls')),
 
-)
+]
