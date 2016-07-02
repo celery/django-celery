@@ -15,7 +15,7 @@
 
 .. warning::
 
-    **THIS PROJECT IS NO LONGER REQUIRED**
+    **THIS PROJECT IS ONLY REQUIRED IF YOU WANT TO USE DJANGO AS TRANSPORT & RESULT BACKEND**
 
     Please follow the new tutorial at:
 
@@ -91,16 +91,12 @@ To install using ``easy_install``,::
 
     $ easy_install django-celery
 
-You will then want to create the necessary tables. If you are using south_
-for schema migrations, you'll want to::
+You will then want to create the necessary tables. If you generating
+schema migrations, you'll want to run::
 
     $ python manage.py migrate djcelery
 
-For those who are not using south, a normal ``syncdb`` will work::
 
-    $ python manage.py syncdb
-
-.. _south: http://pypi.python.org/pypi/South/
 
 Downloading and installing from source
 --------------------------------------
