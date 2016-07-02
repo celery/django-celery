@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime, timedelta
 from itertools import count
@@ -16,22 +16,23 @@ from djcelery.compat import unicode
 
 
 def create_model_interval(schedule, **kwargs):
-    return create_model(interval=IntervalSchedule.from_schedule(schedule),
-                        **kwargs)
+    interval = IntervalSchedule.from_schedule(schedule)
+    interval.save()
+    return create_model(interval=interval, **kwargs)
 
 
 def create_model_crontab(schedule, **kwargs):
-    return create_model(crontab=CrontabSchedule.from_schedule(schedule),
-                        **kwargs)
+    crontab = CrontabSchedule.from_schedule(schedule)
+    crontab.save()
+    return create_model(crontab=crontab, **kwargs)
 
 
-_next_id_get = count(0)
-_next_id = lambda: next(_next_id_get)
+_ids = count(0)
 
 
 def create_model(Model=PeriodicTask, **kwargs):
-    entry = dict(name='thefoo{0}'.format(_next_id()),
-                 task='djcelery.unittest.add{0}'.format(_next_id()),
+    entry = dict(name='thefoo{0}'.format(next(_ids)),
+                 task='djcelery.unittest.add{0}'.format(next(_ids)),
                  args='[2, 2]',
                  kwargs='{"callback": "foo"}',
                  queue='xaz',
@@ -237,7 +238,7 @@ class test_models(unittest.TestCase):
     def test_PeriodicTask_unicode_interval(self):
         p = create_model_interval(schedule(timedelta(seconds=10)))
         self.assertEqual(unicode(p),
-                         '{0}: every 10.0 seconds'.format(p.name))
+                         '{0}: every 10 seconds'.format(p.name))
 
     def test_PeriodicTask_unicode_crontab(self):
         p = create_model_crontab(crontab(hour='4, 5', day_of_week='4, 5'))

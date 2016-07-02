@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import re
 import sys
 import codecs
 
@@ -19,11 +20,13 @@ is_py3k = sys.version_info[0] == 3
 # -*- Distribution Meta -*-
 NAME = 'django-celery'
 
-import re
 re_meta = re.compile(r'__(\w+?)__\s*=\s*(.*)')
 re_vers = re.compile(r'VERSION\s*=\s*\((.*?)\)')
 re_doc = re.compile(r'^"""(.+?)"""')
-rq = lambda s: s.strip("\"'")
+
+
+def rq(s):
+    return s.strip("\"'")
 
 
 def add_default(m):
@@ -121,9 +124,7 @@ class RunTests(Command):
         os.chdir(testproj_dir)
         sys.path.append(testproj_dir)
         from django.core.management import execute_from_command_line
-        settings_module = os.environ.setdefault(
-            'DJANGO_SETTINGS_MODULE', 'settings',
-        )
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
         prev_argv = list(sys.argv)
         try:
             sys.argv = [__file__, 'test'] + self.extra_args
@@ -180,7 +181,7 @@ setup(
     package_data=package_data,
     zip_safe=False,
     install_requires=[
-        'celery>=3.1.10',
+        'celery>=3.1.15',
     ],
     cmdclass={'test': RunTests,
               'quicktest': QuickRunTests,

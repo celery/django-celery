@@ -5,6 +5,71 @@
 .. contents::
     :local:
 
+.. _version-3.1.17:
+
+3.1.17
+======
+:release-date: 2015-10-09 04:02 P.M PDT
+
+- Adds Django migrations
+
+    ... warning::
+
+        Old South migrations have been moved to ``djcelery.south_migrations``,
+        so if you still use South you need to configure the new location
+        in ``settings.py``:
+
+        .. code-block:: python
+
+            SOUTH_MIGRATION_MODULES = {
+                'djcelery': 'djcelery.south_migrations',
+            }
+
+- ``djcelery.picklefield`` now compatible with Django 1.8
+
+    Fix taken upstream from ``django-picklefield``.
+
+- Fixed timezone issues when CELERY_ENABLE_UTC not set.
+
+    Fix contributed by Dmitriy Krasilnikov.
+
+- Fixed Python 3 compatibility issue in ``setup_loader``
+  (Issue #344, Issue #346).
+
+.. _version-3.1.16:
+
+3.1.16
+======
+:release-date: 2014-09-19 00:00 06:00 P.M UTC
+
+- Fixed a problem with management commands hanging when
+  ``djcelery`` is added to ``INSTALLED_APPS``.
+
+.. _version-3.1.15:
+
+3.1.15
+======
+:release-date: 2014-09-15 00:00 P.M UTC
+
+- Now depends on Celery 3.1.15
+
+- Better Python 3 compatibility
+
+    Contributed by Piotr Bulinski.
+
+- Commands now disables model validation when using Django > 1.7 (Issue #336).
+
+- No longer shadows the new ``--no-color`` option in Django 1.7.
+
+- Commands now have ``.stderr`` and ``.stdout`` attributes for Django 1.7
+  compatibility.
+
+    Fix contributed by artscoop.
+
+- ``WorkerState.is_alive()`` is now accurate with ``USE_TZ`` enabled.
+
+    Fix contributed by Rockallite Wulf.
+
 .. _version-3.1.10:
 
 3.1.10

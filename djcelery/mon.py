@@ -7,6 +7,8 @@ import types
 from celery.app.defaults import strtobool
 from celery.utils import import_from_cwd
 
+from djcelery.compat import setenv
+
 DEFAULT_APPS = ('django.contrib.auth',
                 'django.contrib.contenttypes',
                 'django.contrib.sessions',
@@ -63,7 +65,7 @@ def run_monitor(argv):
 
 def main(argv=sys.argv):
     from django.core import management
-    os.environ['CELERY_LOADER'] = 'default'
+    setenv('CELERY_LOADER', 'default')
     configure()
     management.call_command('syncdb')
     run_monitor(argv)

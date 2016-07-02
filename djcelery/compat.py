@@ -1,6 +1,9 @@
 from __future__ import absolute_import
 
+import os
 import sys
+
+from kombu.utils.encoding import bytes_to_str, str_to_bytes
 
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] == 3
@@ -25,7 +28,17 @@ def python_2_unicode_compatible(cls):
 
 if PY3:
     unicode = str
-    itervalues = lambda x: x.values()
+
+    def itervalues(x):
+        return x.values()
+
+    def setenv(k, v):
+        os.environ[bytes_to_str(k)] = bytes_to_str(v)
 else:
     unicode = unicode
-    itervalues = lambda x: x.itervalues()
+
+    def itervalues(x):  # noqa
+        return x.itervalues()
+
+    def setenv(k, v):  # noqa
+        os.environ[str_to_bytes(k)] = str_to_bytes(v)

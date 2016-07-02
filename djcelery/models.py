@@ -1,6 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
-from datetime import timedelta, datetime
+from datetime import timedelta
 from time import time, mktime, gmtime
 
 from django.core.exceptions import MultipleObjectsReturned, ValidationError
@@ -20,6 +20,10 @@ from .compat import python_2_unicode_compatible
 
 ALL_STATES = sorted(states.ALL_STATES)
 TASK_STATE_CHOICES = sorted(zip(ALL_STATES, ALL_STATES))
+
+
+def cronexp(field):
+    return field and str(field).replace(' ', '') or '*'
 
 
 @python_2_unicode_compatible
@@ -121,7 +125,7 @@ class IntervalSchedule(models.Model):
     def __str__(self):
         if self.every == 1:
             return _('every {0.period_singular}').format(self)
-        return _('every {0.every} {0.period}').format(self)
+        return _('every {0.every:d} {0.period}').format(self)
 
     @property
     def period_singular(self):
@@ -149,10 +153,12 @@ class CrontabSchedule(models.Model):
                     'day_of_week', 'hour', 'minute']
 
     def __str__(self):
-        rfield = lambda f: f and str(f).replace(' ', '') or '*'
         return '{0} {1} {2} {3} {4} (m/h/d/dM/MY)'.format(
-            rfield(self.minute), rfield(self.hour), rfield(self.day_of_week),
-            rfield(self.day_of_month), rfield(self.month_of_year),
+            cronexp(self.minute),
+            cronexp(self.hour),
+            cronexp(self.day_of_week),
+            cronexp(self.day_of_month),
+            cronexp(self.month_of_year),
         )
 
     @property
