@@ -1,6 +1,6 @@
 from celery.task import task
 
-from django.db.models import get_model
+from .models import Thing
 
 
 @task(name='c.unittest.SomeAppTask')
@@ -10,6 +10,5 @@ def SomeAppTask(**kwargs):
 
 @task(name='c.unittest.SomeModelTask')
 def SomeModelTask(pk):
-    model = get_model('someapp', 'Thing')
-    thing = model.objects.get(pk=pk)
+    thing = Thing.objects.get(pk=pk)
     return thing.name
