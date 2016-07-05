@@ -104,12 +104,7 @@ class test_custom_CacheBackend(unittest.TestCase):
         prev_backend = current_app.conf.CELERY_CACHE_BACKEND
         prev_module = sys.modules['djcelery.backends.cache']
 
-        if django.VERSION >= (1, 3):
-            current_app.conf.CELERY_CACHE_BACKEND = \
-                'django.core.cache.backends.dummy.DummyCache'
-        else:
-            # Django 1.2 used 'scheme://' style cache backends
-            current_app.conf.CELERY_CACHE_BACKEND = 'dummy://'
+        current_app.conf.CELERY_CACHE_BACKEND = 'dummy'
         sys.modules.pop('djcelery.backends.cache')
         try:
             from djcelery.backends.cache import cache
