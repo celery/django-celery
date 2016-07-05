@@ -1,0 +1,39 @@
+language: python
+
+python:
+    - "3.5"
+
+sudo: false
+
+env:
+    - TOX_ENV=py27-lint
+    - TOX_ENV=py27-docs
+    - TOX_ENV=py35-django19
+    - TOX_ENV=py34-django19
+    - TOX_ENV=py27-django19
+    - TOX_ENV=py35-django18
+    - TOX_ENV=py34-django18
+    - TOX_ENV=py33-django18
+    - TOX_ENV=py32-django18
+    - TOX_ENV=py27-django18
+    - TOX_ENV=py27-django110
+    - TOX_ENV=py35-django110
+    - TOX_ENV=py34-django110
+
+matrix:
+    fast_finish: true
+
+install:
+    # Virtualenv < 14 is required to keep the Python 3.2 builds running.
+    - pip install tox "virtualenv<14"
+
+script:
+    - tox -e $TOX_ENV
+
+after_success:
+    - pip install codecov
+    - codecov -e TOX_ENV
+
+notifications:
+    email: false
+Status API Training Shop Blog About
