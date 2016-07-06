@@ -6,19 +6,19 @@ python:
 sudo: false
 
 env:
-    - TOX_ENV=py27-lint
-    - TOX_ENV=py27-docs
-    - TOX_ENV=py35-django19
-    - TOX_ENV=py34-django19
-    - TOX_ENV=py27-django19
-    - TOX_ENV=py35-django18
-    - TOX_ENV=py34-django18
-    - TOX_ENV=py33-django18
-    - TOX_ENV=py32-django18
-    - TOX_ENV=py27-django18
-    - TOX_ENV=py27-django110
-    - TOX_ENV=py35-django110
-    - TOX_ENV=py34-django110
+    - TOXENV=py27-lint
+    - TOXENV=py27-docs
+    - TOXENV=py35-django19
+    - TOXENV=py34-django19
+    - TOXENV=py27-django19
+    - TOXENV=py35-django18
+    - TOXENV=py34-django18
+    - TOXENV=py33-django18
+    - TOXENV=py32-django18
+    - TOXENV=py27-django18
+    - TOXENV=py27-django110
+    - TOXENV=py35-django110
+    - TOXENV=py34-django110
 
 matrix:
     fast_finish: true
@@ -28,12 +28,11 @@ install:
     - pip install tox "virtualenv<14"
 
 script:
-    - tox -e $TOX_ENV
+    - tox
 
 after_success:
     - pip install codecov
-    - codecov -e TOX_ENV
+    - codecov -e TOXENV
 
 notifications:
     email: false
-Status API Training Shop Blog About
