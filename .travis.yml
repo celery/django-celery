@@ -6,15 +6,12 @@ python:
 sudo: false
 
 env:
-    - TOXENV=py27-lint
-    - TOXENV=py27-docs
     - TOXENV="py35-django1.9"
     - TOXENV="py34-django1.9"
     - TOXENV="py27-django1.9"
     - TOXENV="py35-django1.8"
     - TOXENV="py34-django1.8"
     - TOXENV="py33-django1.8"
-    - TOXENV="py32-django1.8"
     - TOXENV="py27-django1.8"
     - TOXENV="py27-django1.10"
     - TOXENV="py35-django1.10"
