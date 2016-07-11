@@ -15,8 +15,6 @@ be used in that same thread.  The object with alias '{0}' \
 was created in thread id {1} and this is thread id {2}.\
 """
 
-VALIDATE_MODELS = not django.VERSION >= (1, 7)
-
 
 def patch_thread_ident():
     # monkey patch django.
@@ -59,7 +57,7 @@ patch_thread_ident()
 class CeleryCommand(BaseCommand):
     options = BaseCommand.option_list
     skip_opts = ['--app', '--loader', '--config', '--no-color']
-    requires_model_validation = VALIDATE_MODELS
+    requires_system_checks = False
     keep_base_opts = False
     stdout, stderr = sys.stdout, sys.stderr
 
