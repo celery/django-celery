@@ -16,6 +16,7 @@ env:
     - TOXENV="py27-django1.10"
     - TOXENV="py35-django1.10"
     - TOXENV="py34-django1.10"
+    - TOXENV="flake8"
 
 matrix:
     fast_finish: true
