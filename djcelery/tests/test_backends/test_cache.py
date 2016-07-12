@@ -5,7 +5,6 @@ import sys
 from datetime import timedelta
 
 from billiard.einfo import ExceptionInfo
-import django
 from django.core.cache.backends.base import InvalidCacheBackendError
 
 from celery import result

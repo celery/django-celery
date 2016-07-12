@@ -41,7 +41,7 @@ else:
     @with_metaclass(models.SubfieldBase, skip_attrs=set([
         'db_type',
         'get_db_prep_save'
-        ]))
+    ]))
     class BaseField(models.Field):  # noqa
         pass
 
