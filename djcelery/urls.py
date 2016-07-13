@@ -26,15 +26,15 @@ urlpatterns = [
         r'^%s/done/?$' % task_pattern,
         views.is_task_successful,
         name='celery-is_task_successful'
-        ),
+    ),
     url(
         r'^%s/status/?$' % task_pattern,
         views.task_status,
         name='celery-task_status'
-        ),
+    ),
     url(
         r'^tasks/?$',
         views.registered_tasks,
         name='celery-tasks'
-        ),
+    ),
 ]

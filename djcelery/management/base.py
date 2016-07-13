@@ -2,7 +2,6 @@ from __future__ import absolute_import, unicode_literals
 
 import celery
 import djcelery
-import django
 import sys
 
 from django.core.management.base import BaseCommand
