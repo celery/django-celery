@@ -14,7 +14,8 @@ DEFAULT_APPS = ('django.contrib.auth',
                 'django.contrib.sessions',
                 'django.contrib.admin',
                 'django.contrib.admindocs',
-                'djcelery')
+                'djcelery',
+                )
 
 DEFAULTS = {'ROOT_URLCONF': 'djcelery.monproj.urls',
             'DATABASE_ENGINE': 'sqlite3',
@@ -25,7 +26,8 @@ DEFAULTS = {'ROOT_URLCONF': 'djcelery.monproj.urls',
             'BROKER_URL': 'amqp://',
             'SITE_ID': 1,
             'INSTALLED_APPS': DEFAULT_APPS,
-            'DEBUG': strtobool(os.environ.get('DJCELERYMON_DEBUG', '0'))}
+            'DEBUG': strtobool(os.environ.get('DJCELERYMON_DEBUG', '0'))
+            }
 
 
 def default_settings(name='__default_settings__'):
@@ -67,7 +69,7 @@ def main(argv=sys.argv):
     from django.core import management
     setenv('CELERY_LOADER', 'default')
     configure()
-    management.call_command('syncdb')
+    management.call_command('migrate')
     run_monitor(argv)
 
 if __name__ == '__main__':
