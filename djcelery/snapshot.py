@@ -58,7 +58,7 @@ class Camera(Polaroid):
         except IndexError:
             return
         # Check for timezone settings
-        if getattr(settings, "USE_TZ", False):
+        if settings.USE_TZ:
             return aware_tstamp(heartbeat)
         return datetime.fromtimestamp(heartbeat)
 
