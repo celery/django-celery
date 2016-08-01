@@ -48,8 +48,8 @@ def naturaldate(date, include_seconds=False):
     delta_midnight = today - date
 
     days = delta.days
-    hours = int(round(delta.seconds / 3600, 0))
-    minutes = delta.seconds / 60
+    hours = delta.seconds // 3600
+    minutes = delta.seconds // 60
     seconds = delta.seconds
 
     if days < 0:
@@ -80,6 +80,6 @@ def naturaldate(date, include_seconds=False):
     count = 0
     for chunk, pluralizefun in OLDER_CHUNKS:
         if days >= chunk:
-            count = round((delta_midnight.days + 1) / chunk, 0)
+            count = int(round((delta_midnight.days + 1) / chunk, 0))
             fmt = pluralizefun(count)
             return fmt.format(num=count)
