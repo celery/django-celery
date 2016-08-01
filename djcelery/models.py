@@ -15,7 +15,7 @@ from celery.events.state import heartbeat_expires
 
 from . import managers
 from .picklefield import PickledObjectField
-from .utils import fromtimestamp, now
+from .utils import now
 from .compat import python_2_unicode_compatible
 
 ALL_STATES = sorted(states.ALL_STATES)
@@ -363,17 +363,6 @@ class TaskState(models.Model):
         verbose_name_plural = _('tasks')
         get_latest_by = 'tstamp'
         ordering = ['-tstamp']
-
-    def save(self, *args, **kwargs):
-        if self.eta is not None:
-            self.eta = fromtimestamp(float('%d.%s' % (
-                mktime(self.eta.timetuple()), self.eta.microsecond,
-            )))
-        if self.expires is not None:
-            self.expires = fromtimestamp(float('%d.%s' % (
-                mktime(self.expires.timetuple()), self.expires.microsecond,
-            )))
-        super(TaskState, self).save(*args, **kwargs)
 
     def __str__(self):
         name = self.name or 'UNKNOWN'

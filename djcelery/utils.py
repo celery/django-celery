@@ -75,6 +75,16 @@ def maybe_make_aware(value):
     return value
 
 
+def correct_awareness(value):
+    if isinstance(value, datetime):
+        if settings.USE_TZ:
+            return make_aware(value)
+        elif timezone.is_aware(value):
+            default_tz = timezone.get_default_timezone()
+            return timezone.make_naive(value, default_tz)
+    return value
+
+
 def is_database_scheduler(scheduler):
     if not scheduler:
         return False

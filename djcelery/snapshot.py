@@ -13,7 +13,7 @@ from celery.utils.log import get_logger
 from celery.utils.timeutils import maybe_iso8601
 
 from .models import WorkerState, TaskState
-from .utils import fromtimestamp, maybe_make_aware
+from .utils import fromtimestamp, maybe_make_aware, correct_awareness
 
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
 SUCCESS_STATES = frozenset([states.SUCCESS])
@@ -86,8 +86,8 @@ class Camera(Polaroid):
             'name': task.name,
             'args': task.args,
             'kwargs': task.kwargs,
-            'eta': maybe_make_aware(maybe_iso8601(task.eta)),
-            'expires': maybe_make_aware(maybe_iso8601(task.expires)),
+            'eta': correct_awareness(maybe_iso8601(task.eta)),
+            'expires': correct_awareness(maybe_iso8601(task.expires)),
             'state': task.state,
             'tstamp': aware_tstamp(task.timestamp),
             'result': task.result or task.exception,
