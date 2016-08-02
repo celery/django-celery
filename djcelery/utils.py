@@ -67,14 +67,6 @@ def now():
     return make_aware(timezone.now())
 
 
-def maybe_make_aware(value):
-    if isinstance(value, datetime) and timezone.is_aware(value):
-        return value
-    if value:
-        return make_aware(value)
-    return value
-
-
 def correct_awareness(value):
     if isinstance(value, datetime):
         if settings.USE_TZ:
@@ -94,7 +86,7 @@ def is_database_scheduler(scheduler):
 
 
 def fromtimestamp(value):
-    if getattr(settings, 'CELERY_ENABLE_UTC', False):
-        return datetime.utcfromtimestamp(value)
+    if settings.USE_TZ:
+        return make_aware(datetime.utcfromtimestamp(value))
     else:
         return datetime.fromtimestamp(value)

@@ -123,12 +123,18 @@ class test_Camera(unittest.TestCase):
         worker.event('online', time(), time(), {})
         self.cam.handle_worker((worker.hostname, worker))
 
+        tstamp = 1464793200.0  # 2016-06-01T15:00:00Z
+
         with override_settings(USE_TZ=True, TIME_ZONE='Europe/Helsinki'):
             task = create_task(worker,
                                eta='2016-06-01T15:16:17.654321+00:00',
                                expires='2016-07-01T15:16:17.765432+03:00')
-            task.event('received', time(), time(), {})
+            task.event('received', tstamp, tstamp, {})
             mt = self.cam.handle_task((task.uuid, task))
+            self.assertEqual(
+                mt.tstamp,
+                datetime(2016, 6, 1, 15, 0, 0, tzinfo=timezone.utc),
+            )
             self.assertEqual(
                 mt.eta,
                 datetime(2016, 6, 1, 15, 16, 17, 654321, tzinfo=timezone.utc),
@@ -139,7 +145,7 @@ class test_Camera(unittest.TestCase):
             )
 
             task = create_task(worker, eta='2016-06-04T15:16:17.654321')
-            task.event('received', time(), time(), {})
+            task.event('received', tstamp, tstamp, {})
             mt = self.cam.handle_task((task.uuid, task))
             self.assertEqual(
                 mt.eta,
@@ -150,18 +156,22 @@ class test_Camera(unittest.TestCase):
             task = create_task(worker,
                                eta='2016-06-01T15:16:17.654321+00:00',
                                expires='2016-07-01T15:16:17.765432+03:00')
-            task.event('received', time(), time(), {})
+            task.event('received', tstamp, tstamp, {})
             mt = self.cam.handle_task((task.uuid, task))
+            self.assertEqual(mt.tstamp, datetime(2016, 6, 1, 18, 0, 0))
             self.assertEqual(mt.eta, datetime(2016, 6, 1, 18, 16, 17, 654321))
             self.assertEqual(mt.expires,
                              datetime(2016, 7, 1, 15, 16, 17, 765432))
 
             task = create_task(worker, eta='2016-06-04T15:16:17.654321')
-            task.event('received', time(), time(), {})
+            task.event('received', tstamp, tstamp, {})
             mt = self.cam.handle_task((task.uuid, task))
             self.assertEqual(mt.eta, datetime(2016, 6, 4, 15, 16, 17, 654321))
 
     def assertExpires(self, dec, expired, tasks=10):
+        # Cleanup leftovers from previous tests
+        self.cam.on_cleanup()
+
         worker = Worker(hostname='fuzzie')
         worker.event('online', time(), time(), {})
         for total in range(tasks):
