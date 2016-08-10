@@ -37,6 +37,10 @@
 
     Fix contributed by Rockallite Wulf.
 
+- Fix timezone handling in Camera and admin.
+
+    Fix contributed by Vytis Banaitis.
+
 .. _version-3.1.17:
 
 3.1.17
