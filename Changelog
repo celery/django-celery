@@ -5,6 +5,38 @@
 .. contents::
     :local:
 
+.. _version-3.2.0:
+
+3.2.0
+=====
+:release-date: TDB
+
+- Now compatible with Django 1.9
+
+- Dropped compatibility with Django 1.7 and earlier.
+
+    For older Django versions use ``django-celery`` 3.1.x
+
+- Prevented redundant migrations when using Python 3.
+
+    Fixes contributed by Ivan Larin and Vytis Banaitis.
+
+- Fixed task cleanup when TaskState has related models.
+
+    Fix contributed by georgewhewell.
+
+- Fixed Django 1.10 compatibility issue in scheduler
+
+    Fix contributed by Mathieu Fenniak.
+
+- Fixed cache backend compatibility issue with Django 1.9
+
+    Fix contributed by Vytis Banaitis, with initial patch by Brandon Craft.
+
+- Fixed missing app label in Django admin.
+
+    Fix contributed by Rockallite Wulf.
+
 .. _version-3.1.17:
 
 3.1.17
