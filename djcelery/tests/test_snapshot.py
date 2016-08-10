@@ -9,6 +9,9 @@ from celery.events import Event as _Event
 from celery.events.state import State, Worker, Task
 from celery.utils import gen_unique_id
 
+from django.test.utils import override_settings
+from django.utils import timezone
+
 from djcelery import celery
 from djcelery import snapshot
 from djcelery import models
@@ -74,7 +77,7 @@ class test_Camera(unittest.TestCase):
 
     def test_handle_task_received(self):
         worker = Worker(hostname='fuzzie')
-        worker.event('oneline', time(), time(), {})
+        worker.event('online', time(), time(), {})
         self.cam.handle_worker((worker.hostname, worker))
 
         task = create_task(worker)
@@ -115,7 +118,60 @@ class test_Camera(unittest.TestCase):
         mt = self.cam.handle_task((task3.uuid, task3))
         self.assertIsNone(mt)
 
+    def test_handle_task_timezone(self):
+        worker = Worker(hostname='fuzzie')
+        worker.event('online', time(), time(), {})
+        self.cam.handle_worker((worker.hostname, worker))
+
+        tstamp = 1464793200.0  # 2016-06-01T15:00:00Z
+
+        with override_settings(USE_TZ=True, TIME_ZONE='Europe/Helsinki'):
+            task = create_task(worker,
+                               eta='2016-06-01T15:16:17.654321+00:00',
+                               expires='2016-07-01T15:16:17.765432+03:00')
+            task.event('received', tstamp, tstamp, {})
+            mt = self.cam.handle_task((task.uuid, task))
+            self.assertEqual(
+                mt.tstamp,
+                datetime(2016, 6, 1, 15, 0, 0, tzinfo=timezone.utc),
+            )
+            self.assertEqual(
+                mt.eta,
+                datetime(2016, 6, 1, 15, 16, 17, 654321, tzinfo=timezone.utc),
+            )
+            self.assertEqual(
+                mt.expires,
+                datetime(2016, 7, 1, 12, 16, 17, 765432, tzinfo=timezone.utc),
+            )
+
+            task = create_task(worker, eta='2016-06-04T15:16:17.654321')
+            task.event('received', tstamp, tstamp, {})
+            mt = self.cam.handle_task((task.uuid, task))
+            self.assertEqual(
+                mt.eta,
+                datetime(2016, 6, 4, 15, 16, 17, 654321, tzinfo=timezone.utc),
+            )
+
+        with override_settings(USE_TZ=False, TIME_ZONE='Europe/Helsinki'):
+            task = create_task(worker,
+                               eta='2016-06-01T15:16:17.654321+00:00',
+                               expires='2016-07-01T15:16:17.765432+03:00')
+            task.event('received', tstamp, tstamp, {})
+            mt = self.cam.handle_task((task.uuid, task))
+            self.assertEqual(mt.tstamp, datetime(2016, 6, 1, 18, 0, 0))
+            self.assertEqual(mt.eta, datetime(2016, 6, 1, 18, 16, 17, 654321))
+            self.assertEqual(mt.expires,
+                             datetime(2016, 7, 1, 15, 16, 17, 765432))
+
+            task = create_task(worker, eta='2016-06-04T15:16:17.654321')
+            task.event('received', tstamp, tstamp, {})
+            mt = self.cam.handle_task((task.uuid, task))
+            self.assertEqual(mt.eta, datetime(2016, 6, 4, 15, 16, 17, 654321))
+
     def assertExpires(self, dec, expired, tasks=10):
+        # Cleanup leftovers from previous tests
+        self.cam.on_cleanup()
+
         worker = Worker(hostname='fuzzie')
         worker.event('online', time(), time(), {})
         for total in range(tasks):

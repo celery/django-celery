@@ -5,6 +5,7 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 
 from django.conf import settings
+from django.utils import timezone
 
 # Database-related exceptions.
 from django.db import DatabaseError
@@ -44,51 +45,35 @@ DATABASE_ERRORS = ((DatabaseError, ) +
                    _oracle_database_errors)
 
 
-try:
-    from django.utils import timezone
-    is_aware = timezone.is_aware
+def make_aware(value):
+    if settings.USE_TZ:
+        # naive datetimes are assumed to be in UTC.
+        if timezone.is_naive(value):
+            value = timezone.make_aware(value, timezone.utc)
+        # then convert to the Django configured timezone.
+        default_tz = timezone.get_default_timezone()
+        value = timezone.localtime(value, default_tz)
+    return value
 
-    # see Issue #222
-    now_localtime = getattr(timezone, 'template_localtime', timezone.localtime)
 
-    def make_aware(value):
-        if getattr(settings, 'USE_TZ', False):
-            # naive datetimes are assumed to be in UTC.
-            if timezone.is_naive(value):
-                value = timezone.make_aware(value, timezone.utc)
-            # then convert to the Django configured timezone.
+def make_naive(value):
+    if settings.USE_TZ:
+        default_tz = timezone.get_default_timezone()
+        value = timezone.make_naive(value, default_tz)
+    return value
+
+
+def now():
+    return make_aware(timezone.now())
+
+
+def correct_awareness(value):
+    if isinstance(value, datetime):
+        if settings.USE_TZ:
+            return make_aware(value)
+        elif timezone.is_aware(value):
             default_tz = timezone.get_default_timezone()
-            value = timezone.localtime(value, default_tz)
-        return value
-
-    def make_naive(value):
-        if getattr(settings, 'USE_TZ', False):
-            default_tz = timezone.get_default_timezone()
-            value = timezone.make_naive(value, default_tz)
-        return value
-
-    def now():
-        if getattr(settings, 'USE_TZ', False):
-            return now_localtime(timezone.now())
-        else:
-            return timezone.now()
-
-except ImportError:
-    now = datetime.now
-
-    def _pass(x):
-        return x
-    make_aware = make_naive = _pass
-
-    def is_aware(x):
-        return False
-
-
-def maybe_make_aware(value):
-    if isinstance(value, datetime) and is_aware(value):
-        return value
-    if value:
-        return make_aware(value)
+            return timezone.make_naive(value, default_tz)
     return value
 
 
@@ -101,7 +86,7 @@ def is_database_scheduler(scheduler):
 
 
 def fromtimestamp(value):
-    if getattr(settings, 'CELERY_ENABLE_UTC', False):
-        return datetime.utcfromtimestamp(value)
+    if settings.USE_TZ:
+        return make_aware(datetime.utcfromtimestamp(value))
     else:
         return datetime.fromtimestamp(value)

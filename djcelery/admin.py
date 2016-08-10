@@ -25,7 +25,7 @@ from .models import (
     PeriodicTask, IntervalSchedule, CrontabSchedule,
 )
 from .humanize import naturaldate
-from .utils import is_database_scheduler
+from .utils import is_database_scheduler, make_aware
 
 try:
     from django.utils.encoding import force_text
@@ -68,13 +68,15 @@ def node_state(node):
 def eta(task):
     if not task.eta:
         return '<span style="color: gray;">none</span>'
-    return escape(task.eta)
+    return escape(make_aware(task.eta))
 
 
 @display_field(_('when'), 'tstamp')
 def tstamp(task):
+    # convert to local timezone
+    value = make_aware(task.tstamp)
     return '<div title="{0}">{1}</div>'.format(
-        escape(str(task.tstamp)), escape(naturaldate(task.tstamp)),
+        escape(str(value)), escape(naturaldate(value)),
     )
 
 

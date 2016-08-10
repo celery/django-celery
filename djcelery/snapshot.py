@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.conf import settings
 
@@ -13,7 +13,7 @@ from celery.utils.log import get_logger
 from celery.utils.timeutils import maybe_iso8601
 
 from .models import WorkerState, TaskState
-from .utils import fromtimestamp, maybe_make_aware
+from .utils import fromtimestamp, correct_awareness
 
 WORKER_UPDATE_FREQ = 60  # limit worker timestamp write freq.
 SUCCESS_STATES = frozenset([states.SUCCESS])
@@ -29,11 +29,6 @@ NOT_SAVED_ATTRIBUTES = frozenset(['name', 'args', 'kwargs', 'eta'])
 
 logger = get_logger(__name__)
 debug = logger.debug
-
-
-def aware_tstamp(secs):
-    """Event timestamps uses the local timezone."""
-    return maybe_make_aware(fromtimestamp(secs))
 
 
 class Camera(Polaroid):
@@ -57,10 +52,7 @@ class Camera(Polaroid):
             heartbeat = worker.heartbeats[-1]
         except IndexError:
             return
-        # Check for timezone settings
-        if getattr(settings, "USE_TZ", False):
-            return aware_tstamp(heartbeat)
-        return datetime.fromtimestamp(heartbeat)
+        return fromtimestamp(heartbeat)
 
     def handle_worker(self, hostname_worker):
         (hostname, worker) = hostname_worker
@@ -86,10 +78,10 @@ class Camera(Polaroid):
             'name': task.name,
             'args': task.args,
             'kwargs': task.kwargs,
-            'eta': maybe_make_aware(maybe_iso8601(task.eta)),
-            'expires': maybe_make_aware(maybe_iso8601(task.expires)),
+            'eta': correct_awareness(maybe_iso8601(task.eta)),
+            'expires': correct_awareness(maybe_iso8601(task.expires)),
             'state': task.state,
-            'tstamp': aware_tstamp(task.timestamp),
+            'tstamp': fromtimestamp(task.timestamp),
             'result': task.result or task.exception,
             'traceback': task.traceback,
             'runtime': task.runtime,
@@ -121,9 +113,6 @@ class Camera(Polaroid):
 
         for k, v in defaults.items():
             setattr(obj, k, v)
-        for datefield in ('eta', 'expires', 'tstamp'):
-            # Brute force trying to fix #183
-            setattr(obj, datefield, maybe_make_aware(getattr(obj, datefield)))
         obj.save()
 
         return obj
