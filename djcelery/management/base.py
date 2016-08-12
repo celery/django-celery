@@ -54,7 +54,29 @@ patch_thread_ident()
 
 
 class CeleryCommand(BaseCommand):
-    options = BaseCommand.option_list
+    options = ()
+    if hasattr(BaseCommand, 'option_list'):
+        options = BaseCommand.option_list
+    else:
+        def add_arguments(self, parser):
+            option_typemap = {
+                "string": str,
+                "int": int,
+                "float": float
+            }
+            for opt in self.option_list:
+                option = {k: v
+                          for k, v in opt.__dict__.items()
+                          if v is not None}
+                flags = (option.get("_long_opts", []) +
+                         option.get("_short_opts", []))
+                del option["_long_opts"]
+                del option["_short_opts"]
+                if "type" in option:
+                    opttype = option["type"]
+                    option["type"] = option_typemap.get(opttype, opttype)
+                parser.add_argument(*flags, **option)
+
     skip_opts = ['--app', '--loader', '--config', '--no-color']
     requires_system_checks = False
     keep_base_opts = False
