@@ -214,6 +214,35 @@ class test_DatabaseScheduler(unittest.TestCase):
         self.s._dirty.add(self.m1.name)
         self.assertRaises(RuntimeError, self.s.sync)
 
+    def test_dynamic_create_update_delete_task(self):
+        schedule_dict = {
+            'task': 'some_task',
+            'schedule': timedelta(seconds=5),
+            'args': ('arg1', 'arg2'),
+        }
+        task1_name = 'test_task 1'
+        task2_name = 'test_task 2'
+        schedulers.DatabaseScheduler.create_or_update_task(task1_name,
+                                                           **schedule_dict)
+        schedulers.DatabaseScheduler.create_or_update_task(task2_name,
+                                                           **schedule_dict)
+        PeriodicTask.objects.get(name=task1_name)  # assert not raises
+        PeriodicTask.objects.get(name=task2_name)
+        schedulers.DatabaseScheduler.create_or_update_task(task1_name,
+                                                           args=('arg3',))
+        self.assertEqual(PeriodicTask.objects.get(name=task1_name).args,
+                         u'["arg3"]')
+        schedulers.DatabaseScheduler.create_or_update_task(
+            task2_name, schedule=timedelta(10))
+        self.assertEqual(PeriodicTask.objects.get(name=task2_name).schedule,
+                         timedelta(10))
+        schedulers.DatabaseScheduler.delete_task(task1_name)
+        schedulers.DatabaseScheduler.delete_task(task2_name)
+        self.assertRaises(PeriodicTask.DoesNotExist,
+                          lambda: PeriodicTask.objects.get(name=task1_name))
+        self.assertRaises(PeriodicTask.DoesNotExist,
+                          lambda: PeriodicTask.objects.get(name=task2_name))
+
 
 class test_models(unittest.TestCase):
 
