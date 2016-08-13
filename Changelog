@@ -41,6 +41,10 @@
 
     Fix contributed by Vytis Banaitis.
 
+- Added friendly API for dynamically creating/updating/deleting tasks
+
+    Fix contributed by Lev Berman
+
 .. _version-3.1.17:
 
 3.1.17
