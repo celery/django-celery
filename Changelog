@@ -45,6 +45,10 @@
 
     Fix contributed by Lev Berman
 
+- Fixed some django 2.0 deprecations.
+
+    Fix contributed by Éloi Rivard
+
 .. _version-3.1.17:
 
 3.1.17
