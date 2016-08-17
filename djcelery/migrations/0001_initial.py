@@ -59,8 +59,8 @@ class Migration(migrations.Migration):
                 ('total_run_count', models.PositiveIntegerField(default=0, editable=False)),
                 ('date_changed', models.DateTimeField(auto_now=True)),
                 ('description', models.TextField(verbose_name='description', blank=True)),
-                ('crontab', models.ForeignKey(blank=True, to='djcelery.CrontabSchedule', help_text='Use one of interval/crontab', null=True, verbose_name='crontab')),
-                ('interval', models.ForeignKey(verbose_name='interval', blank=True, to='djcelery.IntervalSchedule', null=True)),
+                ('crontab', models.ForeignKey(blank=True, to='djcelery.CrontabSchedule', help_text='Use one of interval/crontab', null=True, verbose_name='crontab', on_delete=models.CASCADE)),
+                ('interval', models.ForeignKey(verbose_name='interval', blank=True, to='djcelery.IntervalSchedule', null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'periodic task',
@@ -157,7 +157,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='taskstate',
             name='worker',
-            field=models.ForeignKey(verbose_name='worker', to='djcelery.WorkerState', null=True),
+            field=models.ForeignKey(verbose_name='worker', to='djcelery.WorkerState', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

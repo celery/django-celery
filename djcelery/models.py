@@ -215,9 +215,11 @@ class PeriodicTask(models.Model):
     interval = models.ForeignKey(
         IntervalSchedule,
         null=True, blank=True, verbose_name=_('interval'),
+        on_delete=models.CASCADE,
     )
     crontab = models.ForeignKey(
         CrontabSchedule, null=True, blank=True, verbose_name=_('crontab'),
+        on_delete=models.CASCADE,
         help_text=_('Use one of interval/crontab'),
     )
     args = models.TextField(
@@ -352,6 +354,7 @@ class TaskState(models.Model):
     retries = models.IntegerField(_('number of retries'), default=0)
     worker = models.ForeignKey(
         WorkerState, null=True, verbose_name=_('worker'),
+        on_delete=models.CASCADE,
     )
     hidden = models.BooleanField(editable=False, default=False, db_index=True)
 
