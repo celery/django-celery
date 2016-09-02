@@ -70,6 +70,8 @@ class CeleryCommand(BaseCommand):
                           if v is not None}
                 flags = (option.get("_long_opts", []) +
                          option.get("_short_opts", []))
+                if option.get('default') == ('NO', 'DEFAULT'):
+                    option['default'] = None
                 del option["_long_opts"]
                 del option["_short_opts"]
                 if "type" in option:
