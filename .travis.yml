@@ -22,15 +22,13 @@ matrix:
     fast_finish: true
 
 install:
-    # Virtualenv < 14 is required to keep the Python 3.2 builds running.
-    - pip install tox "virtualenv<14"
+    - travis_retry pip install tox
 
 script:
     - tox
 
 after_success:
-    - pip install codecov
-    - codecov -e TOXENV
+    - bash <(curl -s https://codecov.io/bash)
 
 notifications:
     email: false
