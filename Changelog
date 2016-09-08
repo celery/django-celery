@@ -11,7 +11,7 @@
 =====
 :release-date: TDB
 
-- Now compatible with Django 1.9
+- Now compatible with Django 1.10
 
 - Dropped compatibility with Django 1.7 and earlier.
 
@@ -28,6 +28,9 @@
 - Fixed Django 1.10 compatibility issue in scheduler
 
     Fix contributed by Mathieu Fenniak.
+    
+- Fixed Djandog 1.10 compatibility issue in command
+    Fix contributed by Stranger6667 and yjmade.
 
 - Fixed cache backend compatibility issue with Django 1.9
 
