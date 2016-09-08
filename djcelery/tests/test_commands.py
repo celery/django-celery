@@ -14,7 +14,7 @@ def test_celeryd_command():
     else:
         traceback = None
     with patch(CELERYD_COMMAND) as handle:
-        call_command('celeryd')
+        call_command('celeryd', hostname="test", loglevel="info")
         handle.assert_called_with(
             autoreload=None, autoscale=None, beat=None, broker=None,
             concurrency=0, detach=None, exclude_queues=[], executable=None,
