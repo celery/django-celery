@@ -18,7 +18,7 @@ def test_celeryd_command():
         handle.assert_called_with(
             autoreload=None, autoscale=None, beat=None, broker=None,
             concurrency=0, detach=None, exclude_queues=[], executable=None,
-            gid=None, heartbeat_interval=None, hostname=None, include=[],
+            gid=None, heartbeat_interval=None, hostname="test", include=[],
             logfile=None, loglevel='WARN', max_tasks_per_child=None,
             no_color=False, no_execv=False, optimization=None, pidfile=None,
             pool_cls='prefork', purge=False, pythonpath=None, queues=[],
