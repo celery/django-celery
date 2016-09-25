@@ -85,9 +85,9 @@ class test_ModelEntry(unittest.TestCase):
         self.assertTrue(e.schedule)
         self.assertEqual(e.total_run_count, 0)
         self.assertIsInstance(e.last_run_at, datetime)
-        self.assertDictContainsSubset({'queue': 'xaz',
-                                       'exchange': 'foo',
-                                       'routing_key': 'cpu'}, e.options)
+        self.assertEqual(e.options.get('queue'), 'xaz')
+        self.assertEqual(e.options.get('exchange'), 'foo')
+        self.assertEqual(e.options.get('routing_key'), 'cpu')
 
         right_now = celery.now()
         m2 = create_model_interval(schedule(timedelta(seconds=10)),

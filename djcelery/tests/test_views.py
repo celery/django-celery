@@ -5,7 +5,7 @@ import sys
 from functools import partial
 
 from billiard.einfo import ExceptionInfo
-from django.core.urlresolvers import reverse
+
 from django.http import HttpResponse
 from django.test.testcases import TestCase as DjangoTestCase
 from django.template import TemplateDoesNotExist
@@ -19,6 +19,11 @@ from celery.utils import gen_unique_id, get_full_cls_name
 
 from djcelery.views import task_webhook
 from djcelery.tests.req import MockRequest
+
+try:
+    from django.urls import reverse  # Django 1.10+
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 
 def reversestar(name, **kwargs):
@@ -77,13 +82,10 @@ class ViewTestCase(DjangoTestCase):
         except AttributeError:
             self.assertTrue(expected in source)
 
-    def assertDictContainsSubset(self, a, b, *args):
-        try:
-            DjangoTestCase.assertDictContainsSubset(self, a, b, *args)
-        except AttributeError:
-            for key, value in a.items():
-                self.assertTrue(key in b)
-                self.assertEqual(b[key], value)
+    def assertDictContainsSubset(self, subset, dictionary, *args):
+        for key, value in subset.items():
+            self.assertIn(key, dictionary)
+            self.assertEqual(dictionary[key], value)
 
 
 class test_task_apply(ViewTestCase):
