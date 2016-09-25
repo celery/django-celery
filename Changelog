@@ -49,6 +49,10 @@
 
     Fix contributed by Éloi Rivard
 
+- Resolved some deprecation warnings in the test suite.
+
+    Fix contributed by Vytis Banaitis.
+
 .. _version-3.1.17:
 
 3.1.17
