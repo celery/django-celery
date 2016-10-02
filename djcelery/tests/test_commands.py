@@ -14,11 +14,11 @@ def test_celeryd_command():
     else:
         traceback = None
     with patch(CELERYD_COMMAND) as handle:
-        call_command('celeryd')
+        call_command('celeryd', '--hostname=test', '--loglevel=WARN')
         handle.assert_called_with(
             autoreload=None, autoscale=None, beat=None, broker=None,
             concurrency=0, detach=None, exclude_queues=[], executable=None,
-            gid=None, heartbeat_interval=None, hostname=None, include=[],
+            gid=None, heartbeat_interval=None, hostname="test", include=[],
             logfile=None, loglevel='WARN', max_tasks_per_child=None,
             no_color=False, no_execv=False, optimization=None, pidfile=None,
             pool_cls='prefork', purge=False, pythonpath=None, queues=[],

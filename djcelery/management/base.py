@@ -72,6 +72,8 @@ class CeleryCommand(BaseCommand):
                          option.get("_short_opts", []))
                 if option.get('default') == ('NO', 'DEFAULT'):
                     option['default'] = None
+                if option.get("nargs") == 1:
+                    del option["nargs"]
                 del option["_long_opts"]
                 del option["_short_opts"]
                 if "type" in option:
