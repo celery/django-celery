@@ -36,9 +36,11 @@ def patch_thread_ident():
 
     if 'validate_thread_sharing' in BaseDatabaseWrapper.__dict__:
         try:
+            # py 2.x
             import thread
         except ImportError:
-            return
+            # py 3.x
+            import _thread as thread
         _get_ident = thread.get_ident
 
         __old__init__ = BaseDatabaseWrapper.__init__
