@@ -321,6 +321,8 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
     form = PeriodicTaskForm
     model = PeriodicTask
     list_display = ('__unicode__', 'enabled')
+    actions = ['enable_tasks',
+               'disable_tasks']
     fieldsets = (
         (None, {
             'fields': ('name', 'regtask', 'task', 'enabled'),
@@ -350,6 +352,14 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(PeriodicTaskAdmin, self).get_queryset(request)
         return qs.select_related('interval', 'crontab')
+
+    @action(_('Enable selected periodic tasks'))
+    def enable_tasks(self, request, queryset):
+        queryset.update(enabled=True)
+
+    @action(_('Disable selected periodic tasks'))
+    def disable_tasks(self, request, queryset):
+        queryset.update(enabled=False)
 
 
 admin.site.register(IntervalSchedule)
