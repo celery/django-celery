@@ -74,7 +74,7 @@ class ExtendedQuerySet(QuerySet):
             fields.update(kwargs)
             update_model_with_dict(obj, fields)
 
-        return obj
+        return obj, created
 
 
 class ExtendedManager(models.Manager):

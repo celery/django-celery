@@ -126,9 +126,10 @@ class ModelEntry(ScheduleEntry):
         fields['queue'] = options.get('queue')
         fields['exchange'] = options.get('exchange')
         fields['routing_key'] = options.get('routing_key')
-        return cls(PeriodicTask._default_manager.update_or_create(
+        obj, _ = PeriodicTask._default_manager.update_or_create(
             name=name, defaults=fields,
-        ))
+        )
+        return cls(obj)
 
     def __repr__(self):
         return '<ModelEntry: {0} {1}(*{2}, **{3}) {4}>'.format(
