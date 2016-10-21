@@ -320,7 +320,15 @@ class PeriodicTaskForm(forms.ModelForm):
 class PeriodicTaskAdmin(admin.ModelAdmin):
     form = PeriodicTaskForm
     model = PeriodicTask
-    list_display = ('__unicode__', 'enabled')
+    list_display = (
+        'enabled',
+        '__unicode__',
+        'task',
+        'args',
+        'kwargs',
+    )
+    search_fields = ('name', 'task')
+    ordering = ('-enabled', 'name')
     fieldsets = (
         (None, {
             'fields': ('name', 'regtask', 'task', 'enabled'),
@@ -339,6 +347,16 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
             'classes': ('extrapretty', 'wide', 'collapse'),
         }),
     )
+    actions = ['enable_tasks',
+               'disable_tasks']
+
+    @action(_('Enable selected periodic tasks'))
+    def enable_tasks(self, request, queryset):
+        queryset.update(enabled=True)
+
+    @action(_('Disable selected periodic tasks'))
+    def disable_tasks(self, request, queryset):
+        queryset.update(enabled=False)
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}

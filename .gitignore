@@ -17,3 +17,5 @@ Documentation/
 cover/
 coverage.xml
 nosetests.xml
+djcelery-test-db
+.idea/
