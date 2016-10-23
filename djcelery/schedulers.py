@@ -198,7 +198,7 @@ class DatabaseScheduler(Scheduler):
         return new_entry
 
     def sync(self):
-        info('Writing entries...')
+        info('Writing entries (%s)...', len(self._dirty))
         _tried = set()
         try:
             with commit_on_success():
