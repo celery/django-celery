@@ -57,6 +57,18 @@
 
     Fix contributed by Vytis Banaitis.
 
+- PeriodicTask admin list view changes:
+
+    - ``task``, ``args``, ``kwargs`` fields added to ``list_display``.
+
+    - Added ability to search tasks by ``name`` and ``task``.
+
+    - Tasks now ordered by ``('-enabled', 'name')``.
+
+    - Added enable/disable actions.
+
+    Contributed by Armenak Baburyan.
+
 .. _version-3.1.17:
 
 3.1.17
