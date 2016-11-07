@@ -23,6 +23,7 @@ from .admin_utils import action, display_field, fixedwidth
 from .models import (
     TaskState, WorkerState,
     PeriodicTask, IntervalSchedule, CrontabSchedule,
+    PeriodicTasks
 )
 from .humanize import naturaldate
 from .utils import is_database_scheduler, make_aware
@@ -350,13 +351,20 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
     actions = ['enable_tasks',
                'disable_tasks']
 
+    def update_periodic_tasks(self):
+        dummy_periodic_task = PeriodicTask()
+        dummy_periodic_task.no_changes = False
+        PeriodicTasks.changed(dummy_periodic_task)
+
     @action(_('Enable selected periodic tasks'))
     def enable_tasks(self, request, queryset):
         queryset.update(enabled=True)
+        self.update_periodic_tasks()
 
     @action(_('Disable selected periodic tasks'))
     def disable_tasks(self, request, queryset):
         queryset.update(enabled=False)
+        self.update_periodic_tasks()
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
