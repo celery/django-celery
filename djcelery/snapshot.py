@@ -59,7 +59,7 @@ class Camera(Polaroid):
         last_write, obj = self._last_worker_write[hostname]
         if not last_write or \
                 monotonic() - last_write > self.worker_update_freq:
-            obj = self.WorkerState.objects.update_or_create(
+            obj, _ = self.WorkerState.objects.update_or_create(
                 hostname=hostname,
                 defaults={'last_heartbeat': self.get_heartbeat(worker)},
             )
