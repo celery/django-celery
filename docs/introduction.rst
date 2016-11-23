@@ -4,7 +4,7 @@
 
 .. image:: http://cloud.github.com/downloads/celery/celery/celery_128.png
 
-:Version: 3.1.9
+:Version: 3.2.0
 :Web: http://celeryproject.org/
 :Download: http://pypi.python.org/pypi/django-celery/
 :Source: http://github.com/celery/django-celery/
@@ -15,7 +15,7 @@
 
 .. warning::
 
-    **THIS PROJECT IS NO LONGER REQUIRED**
+    **THIS PROJECT IS NO LONGER REQUIRED IF YOU USE Celery Version 4.0**
 
     Please follow the new tutorial at:
 
