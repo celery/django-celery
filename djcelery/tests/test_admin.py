@@ -4,7 +4,9 @@ from django.contrib import admin
 from django.test import RequestFactory, TestCase
 
 from djcelery.admin import PeriodicTaskAdmin
-from djcelery.models import PeriodicTask, IntervalSchedule, PERIOD_CHOICES
+from djcelery.models import (
+    PeriodicTask, IntervalSchedule, PERIOD_CHOICES, PeriodicTasks
+)
 
 
 class MockRequest(object):
@@ -52,8 +54,11 @@ class TestPeriodicTaskAdmin(TestCase):
         PeriodicTask.objects.create(name='Killer Queen', task='killer_queen',
                                     interval=self.interval, enabled=False),
         queryset = PeriodicTask.objects.filter(pk=1)
+        last_update = PeriodicTasks.objects.get(ident=1).last_update
         self.pt_admin.enable_tasks(request, queryset)
+        new_last_update = PeriodicTasks.objects.get(ident=1).last_update
         self.assertTrue(PeriodicTask.objects.get(pk=1).enabled)
+        self.assertNotEqual(last_update, new_last_update)
 
     def test_disable_tasks_should_disable_enabled_periodic_tasks(self):
         """
