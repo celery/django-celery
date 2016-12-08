@@ -12,6 +12,7 @@ from djcelery.models import (
 class MockRequest(object):
     pass
 
+
 request = MockRequest()
 
 site = admin.AdminSite()

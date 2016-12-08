@@ -21,6 +21,8 @@ def mytask(i):
 def get_db_connection(i):
     from django.db import connection
     return id(connection)
+
+
 get_db_connection.ignore_result = True
 
 
