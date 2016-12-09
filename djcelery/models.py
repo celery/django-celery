@@ -29,7 +29,7 @@ def cronexp(field):
 @python_2_unicode_compatible
 class TaskMeta(models.Model):
     """Task result/status."""
-    task_id = models.CharField(_('task id'), max_length=255, unique=True)
+    task_id = models.CharField(_('task id'), max_length=36, unique=True)
     status = models.CharField(
         _('state'),
         max_length=50, default=states.PENDING, choices=TASK_STATE_CHOICES,
