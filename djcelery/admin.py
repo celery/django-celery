@@ -239,6 +239,7 @@ class WorkerMonitor(ModelMonitor):
         actions.pop('delete_selected', None)
         return actions
 
+
 admin.site.register(TaskState, TaskMonitor)
 admin.site.register(WorkerState, WorkerMonitor)
 

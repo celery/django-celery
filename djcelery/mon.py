@@ -72,5 +72,6 @@ def main(argv=sys.argv):
     management.call_command('migrate')
     run_monitor(argv)
 
+
 if __name__ == '__main__':
     main()
