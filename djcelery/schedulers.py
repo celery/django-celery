@@ -170,20 +170,16 @@ class DatabaseScheduler(Scheduler):
         return s
 
     def schedule_changed(self):
+        # If MySQL is running with transaction isolation level
+        # REPEATABLE-READ (default), then we won't see changes done by
+        # other transactions until the current transaction is
+        # committed (Issue #41).
         try:
-            # If MySQL is running with transaction isolation level
-            # REPEATABLE-READ (default), then we won't see changes done by
-            # other transactions until the current transaction is
-            # committed (Issue #41).
-            try:
-                transaction.commit()
-            except transaction.TransactionManagementError:
-                pass  # not in transaction management.
+            transaction.commit()
+        except transaction.TransactionManagementError:
+            pass  # not in transaction management.
 
-            last, ts = self._last_timestamp, self.Changes.last_change()
-        except DATABASE_ERRORS as exc:
-            error('Database gave error: %r', exc, exc_info=1)
-            return False
+        last, ts = self._last_timestamp, self.Changes.last_change()
         try:
             if ts and ts > (last if last else ts):
                 return True
