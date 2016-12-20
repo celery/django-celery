@@ -182,6 +182,8 @@ class DatabaseScheduler(Scheduler):
 
             last, ts = self._last_timestamp, self.Changes.last_change()
         except DATABASE_ERRORS as exc:
+            # Close the connection when it is broken
+            transaction.get_connection().close_if_unusable_or_obsolete()
             error('Database gave error: %r', exc, exc_info=1)
             return False
         try:
