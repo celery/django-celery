@@ -297,7 +297,7 @@
 
     Fix contributed by Jeffrey Hu
 
-- Now compatible with Django 2.5
+- Now compatible with Django 1.5
 
     Fixes contributed by Jay States, AlexRiina
 
