@@ -15,7 +15,10 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.conf import settings
 
-from celery.utils.timeutils import maybe_timedelta
+try:
+    from celery.utils.timeutils import maybe_timedelta
+except ImportError:
+    from celery.utils.time import maybe_timedelta
 
 from .db import commit_on_success, get_queryset, rollback_unless_managed
 from .utils import now
