@@ -2,7 +2,10 @@ from __future__ import absolute_import, unicode_literals
 
 from celery import current_app
 from celery.backends.base import BaseDictBackend
-from celery.utils.timeutils import maybe_timedelta
+try:
+    from celery.utils.timeutils import maybe_timedelta
+except ImportError:
+    from celery.utils.time import maybe_timedelta
 
 from ..models import TaskMeta, TaskSetMeta
 
