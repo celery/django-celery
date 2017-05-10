@@ -100,6 +100,21 @@ class test_ModelEntry(unittest.TestCase):
         self.assertGreater(e3.last_run_at, e2.last_run_at)
         self.assertEqual(e3.total_run_count, 1)
 
+    def test_from_entry(self):
+        name = 'interval-vs-crontab'
+        entry = {'task': 'djcelery.unittest.add{0}'.format(_next_id()),
+                 'args': '[2, 2]',
+                 'schedule': timedelta(hours=24),}
+        self.Entry.from_entry(name, **entry)
+        schedule1 = PeriodicTask.objects.get(name=name).schedule
+        self.assertIsInstance(schedule1, schedule)
+
+        # update schedule
+        entry['schedule'] = crontab(minute=0, hour='*/6')
+        self.Entry.from_entry(name, **entry)
+        schedule2 = PeriodicTask.objects.get(name=name).schedule
+        self.assertIsInstance(schedule2, crontab)
+
 
 class test_DatabaseScheduler(unittest.TestCase):
     Scheduler = TrackingScheduler
@@ -143,8 +158,6 @@ class test_DatabaseScheduler(unittest.TestCase):
 
         self.m1.args = '[32, 32]'
         self.m1.save()
-        e1 = self.s.schedule[self.m1.name]
-        self.assertListEqual(e1.args, [32, 32])
         e1 = self.s.schedule[self.m1.name]
         self.assertListEqual(e1.args, [32, 32])
 
