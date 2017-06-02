@@ -12,6 +12,7 @@ from celery.utils.encoding import safe_str, safe_repr
 from celery.utils.log import get_logger
 from celery.utils.timeutils import is_naive
 
+import django
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -161,6 +162,9 @@ class DatabaseScheduler(Scheduler):
             DEFAULT_MAX_INTERVAL)
 
     def setup_schedule(self):
+        if hasattr(django, 'setup'):
+            # For Django 1.7+
+            django.setup()
         self.install_default_entries(self.schedule)
         self.update_from_dict(self.app.conf.CELERYBEAT_SCHEDULE)
 
