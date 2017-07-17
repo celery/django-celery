@@ -10,7 +10,11 @@ from celery.events.state import Task
 from celery.events.snapshot import Polaroid
 from celery.five import monotonic
 from celery.utils.log import get_logger
-from celery.utils.timeutils import maybe_iso8601
+
+try:
+    from celery.utils.timeutils import maybe_iso8601
+except ImportError:
+    from celery.utils.time import maybe_iso8601
 
 from .models import WorkerState, TaskState
 from .utils import fromtimestamp, correct_awareness

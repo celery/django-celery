@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from celery import current_app
 from celery.backends.base import BaseDictBackend
+
 try:
     from celery.utils.timeutils import maybe_timedelta
 except ImportError:
