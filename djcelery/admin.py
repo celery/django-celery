@@ -330,6 +330,7 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
         'kwargs',
     )
     search_fields = ('name', 'task')
+    list_display_links = ('enabled', '__unicode__', 'task')
     ordering = ('-enabled', 'name')
     fieldsets = (
         (None, {
