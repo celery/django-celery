@@ -104,7 +104,7 @@ class test_ModelEntry(unittest.TestCase):
         name = 'interval-vs-crontab'
         entry = {'task': 'djcelery.unittest.add{0}'.format(next(_ids)),
                  'args': '[2, 2]',
-                 'schedule': timedelta(hours=24),}
+                 'schedule': timedelta(hours=24), }
         self.Entry.from_entry(name, **entry)
         schedule1 = PeriodicTask.objects.get(name=name).schedule
         self.assertIsInstance(schedule1, schedule)
