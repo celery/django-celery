@@ -83,4 +83,4 @@ class TestPeriodicTaskAdmin(TestCase):
             kwargs = {query: 'Queen'}
             # We have no content, so the number of results if we search on
             # something should be zero.
-            self.assertEquals(PeriodicTask.objects.filter(**kwargs).count(), 0)
+            self.assertEqual(PeriodicTask.objects.filter(**kwargs).count(), 0)
