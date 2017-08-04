@@ -7,6 +7,14 @@
 
 .. _version-3.2.0:
 
+3.2.2
+=====
+:release-date: 2017-08-04
+
+- Django 1.11 testing and support
+
+- Version bump for edX fork for proper re-installation.
+
 3.2.0
 =====
 :release-date: TDB
@@ -28,7 +36,7 @@
 - Fixed Django 1.10 compatibility issue in scheduler
 
     Fix contributed by Mathieu Fenniak.
-    
+
 - Fixed Django 1.10 compatibility issue in management commands
 
     Fix contributed by Stranger6667, yjmade and Vytis Banaitis.
