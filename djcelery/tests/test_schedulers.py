@@ -167,8 +167,9 @@ class test_DatabaseScheduler(unittest.TestCase):
     def test_should_sync(self):
         self.assertTrue(self.s.should_sync())
         self.s._last_sync = monotonic()
+        self.s._tasks_since_sync = 0
         self.assertFalse(self.s.should_sync())
-        self.s._last_sync -= self.s.sync_every
+        self.s._last_sync -= self.s.sync_every + 1
         self.assertTrue(self.s.should_sync())
 
     def test_reserve(self):
