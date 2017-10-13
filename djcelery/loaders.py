@@ -8,7 +8,10 @@ from datetime import datetime
 from warnings import warn
 
 from celery import signals
-from celery.datastructures import DictAttribute
+try:
+    from celery.utils.collections import DictAttribute
+except ImportError:
+    from celery.datastructures import DictAttribute
 from celery.loaders.base import BaseLoader
 
 from django import db
