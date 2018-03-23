@@ -17,6 +17,10 @@ except ImportError:
     from celery.utils.time import is_naive
 
 from django.db import transaction
+try:
+    from django.db import close_old_connections
+except ImportError:
+    from django.db import close_connection as close_old_connections
 from django.core.exceptions import ObjectDoesNotExist
 
 from .db import commit_on_success
@@ -194,6 +198,7 @@ class DatabaseScheduler(Scheduler):
             # Close the connection when it is broken
             transaction.get_connection().close_if_unusable_or_obsolete()
             error('Database gave error: %r', exc, exc_info=1)
+            close_old_connections()
             return False
         try:
             if ts and ts > (last if last else ts):
@@ -225,6 +230,7 @@ class DatabaseScheduler(Scheduler):
             # retry later
             self._dirty |= _tried
             error('Database error while sync: %r', exc, exc_info=1)
+            close_old_connections()
 
     def update_from_dict(self, dict_):
         s = {}
