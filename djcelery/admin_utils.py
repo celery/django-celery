@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from pprint import pformat
 
-from django.utils.html import escape
+from django.utils.html import format_html, mark_safe
 
 FIXEDWIDTH_STYLE = '''\
 <span title="{0}" style="font-size: {1}pt; \
@@ -43,8 +43,6 @@ def fixedwidth(field, name=None, pt=6, width=16, maxlen=64, pretty=False):
 
         if len(shortval) > maxlen:
             shortval = shortval[:maxlen] + '...'
-        styled = FIXEDWIDTH_STYLE.format(
-            escape(val[:255]), pt, escape(shortval),
-        )
-        return styled.replace('|br/|', '<br/>')
+        styled = format_html(FIXEDWIDTH_STYLE, val[:255], pt, shortval)
+        return mark_safe(styled.replace('|br/|', '<br/>'))
     return f

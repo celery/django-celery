@@ -10,7 +10,7 @@ from django.contrib.admin.views import main as main_views
 from django.forms.widgets import Select
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.utils.html import escape
+from django.utils.html import escape, format_html, mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from celery import current_app
@@ -55,20 +55,24 @@ class MonitorList(main_views.ChangeList):
 def colored_state(task):
     state = escape(task.state)
     color = TASK_STATE_COLORS.get(task.state, 'black')
-    return '<b><span style="color: {0};">{1}</span></b>'.format(color, state)
+    return format_html(
+        '<b><span style="color: {0};">{1}</span></b>', color, state
+    )
 
 
 @display_field(_('state'), 'last_heartbeat')
 def node_state(node):
     state = node.is_alive() and 'ONLINE' or 'OFFLINE'
     color = NODE_STATE_COLORS[state]
-    return '<b><span style="color: {0};">{1}</span></b>'.format(color, state)
+    return format_html(
+        '<b><span style="color: {0};">{1}</span></b>', color, state
+    )
 
 
 @display_field(_('ETA'), 'eta')
 def eta(task):
     if not task.eta:
-        return '<span style="color: gray;">none</span>'
+        return mark_safe('<span style="color: gray;">none</span>')
     return escape(make_aware(task.eta))
 
 
@@ -76,16 +80,16 @@ def eta(task):
 def tstamp(task):
     # convert to local timezone
     value = make_aware(task.tstamp)
-    return '<div title="{0}">{1}</div>'.format(
-        escape(str(value)), escape(naturaldate(value)),
+    return format_html(
+        '<div title="{0}">{1}</div>', str(value), naturaldate(value)
     )
 
 
 @display_field(_('name'), 'name')
 def name(task):
     short_name = abbrtask(task.name, 16)
-    return '<div title="{0}"><b>{1}</b></div>'.format(
-        escape(task.name), escape(short_name),
+    return format_html(
+        '<div title="{0}"><b>{1}</b></div>', task.name, short_name
     )
 
 
