@@ -137,7 +137,7 @@ class Camera(Polaroid):
             # When connection already closed exception is raised,
             # force to close connection and Django will automatically reconnect
             if str(e) == 'connection already closed':
-                connction.close()
+                connection.close()
                 logger.info('Django db connection is closed and will reconnect')
 
     def on_cleanup(self):
