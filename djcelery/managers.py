@@ -129,6 +129,9 @@ class PeriodicTaskManager(ExtendedManager):
     def enabled(self):
         return self.filter(enabled=True)
 
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
 
 class TaskManager(ResultManager):
     """Manager for :class:`celery.models.Task` models."""

@@ -295,6 +295,9 @@ class PeriodicTask(models.Model):
         if self.crontab:
             return self.crontab.schedule
 
+    def natural_key(self):
+        return (self.name,)
+
 
 signals.pre_delete.connect(PeriodicTasks.changed, sender=PeriodicTask)
 signals.pre_save.connect(PeriodicTasks.changed, sender=PeriodicTask)
