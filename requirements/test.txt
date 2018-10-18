@@ -5,3 +5,4 @@ nose-cover3
 mock
 django-nose
 python-memcached
+tox==3.5.2
