@@ -8,8 +8,7 @@ from django.contrib import admin
 from django.contrib.admin import helpers
 from django.contrib.admin.views import main as main_views
 from django.forms.widgets import Select
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.utils.html import escape, format_html, mark_safe
 from django.utils.translation import ugettext_lazy as _
 
