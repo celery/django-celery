@@ -199,10 +199,7 @@ class TaskMonitor(ModelMonitor):
             'app_label': app_label,
         }
 
-        return render_to_response(
-            self.rate_limit_confirmation_template, context,
-            context_instance=RequestContext(request),
-        )
+        return render(request, self.rate_limit_confirmation_template, context)
 
     def get_actions(self, request):
         actions = super(TaskMonitor, self).get_actions(request)
