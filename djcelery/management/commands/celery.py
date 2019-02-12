@@ -17,6 +17,7 @@ class Command(CeleryCommand):
         preload_options = base.preload_options if base.preload_options else []
     else:
         preload_options = []
+    preload_options = base.preload_options if base.preload_options else []
     options = (cc_options +
                base_options +
                preload_options)
