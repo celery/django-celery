@@ -18,7 +18,7 @@ extra = {}
 is_py3k = sys.version_info[0] == 3
 
 # -*- Distribution Meta -*-
-NAME = 'django-celery-hp'
+NAME = 'django-celery'
 
 re_meta = re.compile(r'__(\w+?)__\s*=\s*(.*)')
 re_vers = re.compile(r'VERSION\s*=\s*\((.*?)\)')
