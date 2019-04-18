@@ -5,18 +5,15 @@
 Generating a template in a task doesn't seem to respect my i18n settings?
 -------------------------------------------------------------------------
 
-**Answer**: To enable the Django translation machinery you need to activate
-it with a language. **Note**: Be sure to reset to the previous language when
-done.
+**Answer**: To enable the Django translation machinery you need to 
+activate it with a language. **Note**: Using `translation.override` 
+resets to the previous language automatically when it is exited. If you 
+use `translation.activate` remember to reset to the previous language.
 
     >>> from django.utils import translation
 
-    >>> prev_language = translation.get_language()
-    >>> translation.activate(language)
-    >>> try:
+    >>> with translation.override(language):
     ...     render_template()
-    ... finally:
-            translation.activate(prev_language)
 
 The common pattern here would be for the task to take a ``language``
 argument:
@@ -30,12 +27,10 @@ argument:
 
     @task()
     def generate_report(template="report.html", language=None):
-        prev_language = translation.get_language()
-        language and translation.activate(language)
-        try:
+        if language is None:
+            language = translation.get_language()
+        with translation.override(language)
             report = render_to_string(template)
-        finally:
-            translation.activate(prev_language)
         save_report_somewhere(report)
 
 The celery test-suite is failing
