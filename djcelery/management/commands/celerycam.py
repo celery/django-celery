@@ -21,6 +21,10 @@ class Command(CeleryCommand):
     preload_options = getattr(ev, 'preload_options', []) or []
     options = cc_options + ev_options + preload_options
 
+    options = CeleryCommand.options
+    options += ev.get_options()
+    options += ev.preload_options
+
     def handle(self, *args, **options):
         """Handle the management command."""
         options['camera'] = 'djcelery.snapshot.Camera'

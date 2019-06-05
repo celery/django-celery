@@ -16,10 +16,9 @@ worker = worker.worker(app=app)
 class Command(CeleryCommand):
     """Run the celery daemon."""
     help = 'Old alias to the "celery worker" command.'
-    cc_options = CeleryCommand.options if CeleryCommand.options else []
-    worker_options = worker.get_options() if worker.get_options() else []
-    preload_options = getattr(worker, 'preload_options', []) or []
-    options = cc_options + worker_options + preload_options
+    options = CeleryCommand.options
+    options += worker.get_options()
+    options += worker.preload_options
 
     def handle(self, *args, **options):
         worker.check_args(args)
