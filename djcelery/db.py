@@ -27,7 +27,7 @@ except ImportError:  # pragma: no cover
                 transaction.managed(True, *args, **kwargs)
                 try:
                     yield
-                except:
+                except Exception:
                     if transaction.is_dirty(*args, **kwargs):
                         transaction.rollback(*args, **kwargs)
                     raise
@@ -35,7 +35,7 @@ except ImportError:  # pragma: no cover
                     if transaction.is_dirty(*args, **kwargs):
                         try:
                             transaction.commit(*args, **kwargs)
-                        except:
+                        except Exception:
                             transaction.rollback(*args, **kwargs)
                             raise
             finally:

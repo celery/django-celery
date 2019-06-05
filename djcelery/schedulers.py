@@ -159,10 +159,11 @@ class DatabaseScheduler(Scheduler):
         self._dirty = set()
         self._finalize = Finalize(self, self.sync, exitpriority=5)
         Scheduler.__init__(self, *args, **kwargs)
-        self.max_interval = (
-            kwargs.get('max_interval') or
-            self.app.conf.CELERYBEAT_MAX_LOOP_INTERVAL or
-            DEFAULT_MAX_INTERVAL)
+        self.max_interval = kwargs.get('max_interval')
+        if self.max_interval is None:
+            self.max_interval = self.app.conf.CELERYBEAT_MAX_LOOP_INTERVAL
+        if self.max_interval is None:
+            self.max_interval = DEFAULT_MAX_INTERVAL
 
     def setup_schedule(self):
         self.install_default_entries(self.schedule)

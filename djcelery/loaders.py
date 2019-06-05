@@ -59,8 +59,8 @@ class DjangoLoader(BaseLoader):
         self.configured = True
         # Default backend needs to be the database backend for backward
         # compatibility.
-        backend = (getattr(settings, 'CELERY_RESULT_BACKEND', None) or
-                   getattr(settings, 'CELERY_BACKEND', None))
+        backend = getattr(settings, 'CELERY_RESULT_BACKEND', None)
+        backend = backend or getattr(settings, 'CELERY_BACKEND', None)
         if not backend:
             settings.CELERY_RESULT_BACKEND = 'database'
         return DictAttribute(settings)

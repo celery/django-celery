@@ -35,15 +35,20 @@ def patch_thread_ident():
                 __old__init__(self, *args, **kwargs)
                 self._thread_ident = _get_ident()
 
+            def _validate_thread(self):
+                is_valid = self.allow_thread_sharing
+                is_valid = is_valid or self._thread_ident == _get_ident()
+                return is_valid
+
             def _validate_thread_sharing(self):
-                if (not self.allow_thread_sharing and
-                        self._thread_ident != _get_ident()):
+                if not self.validate_thread():
                     raise DatabaseError(
                         DB_SHARED_THREAD % (
                             self.alias, self._thread_ident, _get_ident()),
                     )
 
             BaseDatabaseWrapper.__init__ = _init
+            BaseDatabaseWrapper.validate_thread = _validate_thread
             BaseDatabaseWrapper.validate_thread_sharing = \
                 _validate_thread_sharing
 
@@ -70,8 +75,8 @@ class CeleryCommand(BaseCommand):
                 option = {k: v
                           for k, v in opt.__dict__.items()
                           if v is not None}
-                flags = (option.get("_long_opts", []) +
-                         option.get("_short_opts", []))
+                flags = option.get("_long_opts", [])
+                flags += option.get("_short_opts", [])
                 if option.get('default') == ('NO', 'DEFAULT'):
                     option['default'] = None
                 if option.get("nargs") == 1:
