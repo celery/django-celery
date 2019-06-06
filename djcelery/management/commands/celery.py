@@ -13,14 +13,8 @@ class Command(CeleryCommand):
     help = 'celery commands, see celery help'
     cc_options = CeleryCommand.options if CeleryCommand.options else []
     base_options = base.get_options() if base.get_options() else []
-    if hasattr(base, "preload_options"):
-        preload_options = base.preload_options if base.preload_options else []
-    else:
-        preload_options = []
-    preload_options = base.preload_options if base.preload_options else []
-    options = (cc_options +
-               base_options +
-               preload_options)
+    preload_options = getattr(base, 'preload_options', []) or []
+    options = cc_options + base_options + preload_options
 
     def run_from_argv(self, argv):
         argv = self.handle_default_options(argv)

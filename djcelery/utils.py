@@ -38,11 +38,11 @@ try:
 except ImportError:
     _oracle_database_errors = ()  # noqa
 
-DATABASE_ERRORS = ((DatabaseError, ) +
-                   _my_database_errors +
-                   _pg_database_errors +
-                   _lite_database_errors +
-                   _oracle_database_errors)
+DATABASE_ERRORS = (DatabaseError, )
+DATABASE_ERRORS += _my_database_errors
+DATABASE_ERRORS += _pg_database_errors
+DATABASE_ERRORS += _lite_database_errors
+DATABASE_ERRORS += _oracle_database_errors
 
 
 def make_aware(value):
