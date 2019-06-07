@@ -1,10 +1,10 @@
-Looking for sponsor for working on django 1.11 to 2.22 support https://github.com/celery/django-celery/issues/568
+Looking for sponsor for working on django 1.11 to 2.2 support https://github.com/celery/django-celery/issues/568
 
 ===============================================
  django-celery - Celery Integration for Django
 ===============================================
 
-.. image:: http://cloud.github.com/downloads/celery/celery/celery_128.png
+.. image:: https://user-images.githubusercontent.com/26336/59113881-917c5180-890b-11e9-9863-f5a98d0e235e.png
 
 :Version: 3.2.2
 :Web: http://celeryproject.org/
