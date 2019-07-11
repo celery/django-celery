@@ -31,8 +31,13 @@ or if you're still using easy_install (shame on you!)
 class Command(CeleryCommand):
     """Run the celery monitor."""
     help = 'Run the celery monitor'
-    options = CeleryCommand.options
-    options += (mon and mon.get_options() + mon.preload_options or ())
+    options = (
+        tuple(CeleryCommand.options) +
+        (
+            tuple(mon.get_options()) +
+            tuple(getattr(mon, 'preload_options', ()))
+        ) if mon else ()
+    )
 
     def handle(self, *args, **options):
         """Handle the management command."""

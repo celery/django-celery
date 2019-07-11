@@ -11,10 +11,11 @@ base = celery.CeleryCommand(app=app)
 class Command(CeleryCommand):
     """The celery command."""
     help = 'celery commands, see celery help'
-    cc_options = CeleryCommand.options if CeleryCommand.options else []
-    base_options = base.get_options() if base.get_options() else []
-    preload_options = getattr(base, 'preload_options', []) or []
-    options = cc_options + base_options + preload_options
+    options = (
+        tuple(CeleryCommand.options) +
+        tuple(base.get_options()) +
+        tuple(getattr(base, 'preload_options', ()))
+    )
 
     def run_from_argv(self, argv):
         argv = self.handle_default_options(argv)
