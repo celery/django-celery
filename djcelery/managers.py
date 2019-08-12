@@ -1,6 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 
+import sys
 import warnings
+import re
 
 from functools import wraps
 from itertools import count
@@ -189,11 +191,11 @@ class TaskManager(ResultManager):
     def warn_if_repeatable_read(self):
         if 'mysql' in self.current_engine().lower():
             cursor = self.connection_for_read().cursor()
-            if self._is_mysql and self.server_version_info >= (5, 7, 20):
-                ti = cursor.execute("SELECT @@transaction_isolation")
+            if self._get_server_version_info_for_mysql() >= (5, 7, 20):
+                ok = cursor.execute("SELECT @@transaction_isolation")
             else:
-                ti = cursor.execute("SELECT @@tx_isolation")
-            if ti:
+                ok = cursor.execute("SELECT @@tx_isolation")
+            if ok:
                 isolation = cursor.fetchone()[0]
                 if isolation == 'REPEATABLE-READ':
                     warnings.warn(TxIsolationWarning(
@@ -201,6 +203,24 @@ class TaskManager(ResultManager):
                         'repeatable-read within the same transaction '
                         'may give outdated results. Be sure to commit the '
                         'transaction for each poll iteration.'))
+
+    def _get_server_version_info_for_mysql(self):
+        cursor = self.connection_for_read().cursor()
+        cursor.execute("select version()")
+        val = cursor.fetchone()[0]
+        cursor.close()
+
+        if sys.version_info >= (3, 0) and isinstance(val, bytes):
+            val = val.decode()
+
+        version = []
+        r = re.compile(r"[.\-]")
+        for n in r.split(val):
+            try:
+                version.append(int(n))
+            except ValueError:
+                version.append(n)
+        return tuple(version)
 
 
 class TaskSetManager(ResultManager):
