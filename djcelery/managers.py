@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
+import sys
 import warnings
 import re
 
@@ -208,6 +209,9 @@ class TaskManager(ResultManager):
         cursor.execute("select version()")
         val = cursor.fetchone()[0]
         cursor.close()
+
+        if sys.version_info >= (3, 0) and isinstance(val, bytes):
+            val = val.decode()
 
         version = []
         r = re.compile(r"[.\-]")
