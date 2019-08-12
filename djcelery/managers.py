@@ -189,7 +189,11 @@ class TaskManager(ResultManager):
     def warn_if_repeatable_read(self):
         if 'mysql' in self.current_engine().lower():
             cursor = self.connection_for_read().cursor()
-            if cursor.execute('SELECT @@tx_isolation'):
+            if self._is_mysql and self.server_version_info >= (5, 7, 20):
+                ti = cursor.execute("SELECT @@transaction_isolation")
+            else:
+                ti = cursor.execute("SELECT @@tx_isolation")
+            if ti:
                 isolation = cursor.fetchone()[0]
                 if isolation == 'REPEATABLE-READ':
                     warnings.warn(TxIsolationWarning(
