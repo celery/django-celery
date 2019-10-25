@@ -71,7 +71,7 @@ Then we can put the tests in a ``tests.py`` somewhere:
             self.assertEqual([task_state.result for task_state
                               in TaskState.objects.all()], [16, 8])
 
-This test assumes that you put your example ``add`` task in ``maypp.tasks``
+This test assumes that you put your example ``add`` task in ``myapp.tasks``
 so adjust the import for wherever you put the class.
 
 If you're  going to use
