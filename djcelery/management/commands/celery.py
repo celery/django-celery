@@ -13,7 +13,7 @@ class Command(CeleryCommand):
     help = 'celery commands, see celery help'
     options = (
         tuple(CeleryCommand.options) +
-        tuple(base.get_options()) +
+        tuple(base.get_options() or ()) +
         tuple(getattr(base, 'preload_options', ()))
     )
 
