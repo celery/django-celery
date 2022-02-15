@@ -34,7 +34,7 @@ class test_CacheBackend(unittest.TestCase):
         cb.mark_as_done(tid, 42)
         self.assertEqual(cb.get_status(tid), states.SUCCESS)
         self.assertEqual(cb.get_result(tid), 42)
-        self.assertTrue(cb.get_result(tid), 42)
+        self.assertEqual(cb.get_result(tid), 42)
 
     def test_forget(self):
         b = CacheBackend(app=app)
