@@ -175,6 +175,9 @@ setup(
     author=meta['author'],
     author_email=meta['contact'],
     url=meta['homepage'],
+    project_urls={
+        'Source': 'https://github.com/celery/django-celery',
+    },
     platforms=['any'],
     license='BSD',
     packages=packages,
