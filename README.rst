@@ -15,14 +15,14 @@ Looking for sponsor for working on django 1.11 to 2.2 support https://github.com
 
 --
 
-.. warning::
+.. warning:: 
 
     **THIS PROJECT IS ONLY REQUIRED IF YOU WANT TO USE DJANGO RESULT BACKEND
     AND ADMIN INTEGRATION**
 
     Please follow the new tutorial at:
 
-    http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
+    https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
 
 django-celery provides Celery integration for Django; Using the Django ORM
 and cache backend for storing results, autodiscovery of task modules
