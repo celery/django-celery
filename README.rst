@@ -150,7 +150,7 @@ to our issue tracker at http://github.com/celery/django-celery/issues/
 Wiki
 ====
 
-http://wiki.github.com/celery/celery/
+https://github.com/celery/celery/wiki
 
 Contributing
 ============
