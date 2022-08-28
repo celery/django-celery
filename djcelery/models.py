@@ -146,6 +146,8 @@ class CrontabSchedule(models.Model):
         _('month of year'), max_length=64, default='*',
     )
 
+    no_changes = False
+
     class Meta:
         verbose_name = _('crontab')
         verbose_name_plural = _('crontabs')
@@ -188,6 +190,8 @@ class CrontabSchedule(models.Model):
 class PeriodicTasks(models.Model):
     ident = models.SmallIntegerField(default=1, primary_key=True, unique=True)
     last_update = models.DateTimeField(null=False)
+
+    no_changes = False
 
     objects = managers.ExtendedManager()
 
@@ -302,6 +306,11 @@ class PeriodicTask(models.Model):
 signals.pre_delete.connect(PeriodicTasks.changed, sender=PeriodicTask)
 signals.pre_save.connect(PeriodicTasks.changed, sender=PeriodicTask)
 
+signals.pre_delete.connect(PeriodicTasks.changed, sender=IntervalSchedule)
+signals.pre_save.connect(PeriodicTasks.changed, sender=IntervalSchedule)
+
+signals.pre_delete.connect(PeriodicTasks.changed, sender=CrontabSchedule)
+signals.pre_save.connect(PeriodicTasks.changed, sender=CrontabSchedule)
 
 class WorkerState(models.Model):
     hostname = models.CharField(_('hostname'), max_length=255, unique=True)
