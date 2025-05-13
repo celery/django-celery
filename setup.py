@@ -181,7 +181,7 @@ setup(
     package_data=package_data,
     zip_safe=False,
     install_requires=[
-        'celery>=3.1.15,<4.0',
+        'celery>=3.1.15,<4.5',
         'django>=1.8',
     ],
     cmdclass={'test': RunTests,
@@ -205,7 +205,6 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
-        'Programming Language :: Python :: Implementation :: Jython',
     ],
     long_description=long_description,
     **extra
