@@ -4,6 +4,8 @@ from collections import defaultdict
 from datetime import timedelta
 
 from django.conf import settings
+from django.db import connection
+from django.db.utils import InterfaceError
 
 from celery import states
 from celery.events.state import Task
@@ -127,9 +129,18 @@ class Camera(Polaroid):
             for i, task in enumerate(state.tasks.items()):
                 self.handle_task(task)
 
-        for worker in state.workers.items():
-            self.handle_worker(worker)
-        _handle_tasks()
+        try:
+            for worker in state.workers.items():
+                self.handle_worker(worker)
+            _handle_tasks()
+        except InterfaceError as e:
+            # When connection already closed exception is raised,
+            # force to close connection and Django will automatically reconnect
+            if str(e) == 'connection already closed':
+                connection.close()
+                logger.info(
+                    'Django db connection is closed and will reconnect'
+                )
 
     def on_cleanup(self):
         expired = (self.TaskState.objects.expire_by_states(states, expires)
