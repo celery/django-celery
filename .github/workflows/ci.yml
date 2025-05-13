@@ -46,5 +46,3 @@ jobs:
                     python-version: ${{ matrix.python-version }}
             -   run: pip install tox
             -   run: tox -v -- -v
-                env:
-                    TOXENV: py-django${{ matrix.django }}
