@@ -1,6 +1,6 @@
 Looking for sponsor for working on django 1.11 to 2.2 support https://github.com/celery/django-celery/issues/568
 
-THIS Project is only for celery v3.x only!
+THIS Project is only for celery v3.x to v4.x only for now!
 
 ===============================================
  django-celery - Celery Integration for Django
