@@ -1,24 +1,50 @@
-  - name: Setup Python
-  uses: actions/setup-python@v5.6.0
-  with:
-    # Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset.
-    python-version: # optional
-    # File containing the Python version to use. Example: .python-version
-    python-version-file: # optional
-    # Used to specify a package manager for caching in the default directory. Supported values: pip, pipenv, poetry.
-    cache: # optional
-    # The target architecture (x86, x64, arm64) of the Python or PyPy interpreter.
-    architecture: # optional
-    # Set this option if you want the action to check for the latest available version that satisfies the version spec.
-    check-latest: # optional
-    # The token used to authenticate when fetching Python distributions from https://github.com/actions/python-versions. When running this action on github.com, the default value is sufficient. When running on GHES, you can pass a personal access token for github.com if you are experiencing rate limiting.
-    token: # optional, default is ${{ github.server_url == 'https://github.com' && github.token || '' }}
-    # Used to specify the path to dependency files. Supports wildcards or a list of file names for caching multiple dependencies.
-    cache-dependency-path: # optional
-    # Set this option if you want the action to update environment variables.
-    update-environment: # optional, default is true
-    # When 'true', a version range passed to 'python-version' input will match prerelease versions if no GA versions are found. Only 'x.y' version range is supported for CPython.
-    allow-prereleases: # optional
-    # When 'true', use the freethreaded version of Python.
-    freethreaded: # optional
-          
+name: CI Test
+
+on:
+    pull_request:
+        branches: [ "master" ]
+
+    push:
+        branches: [ "master" ]
+
+jobs:
+    matrix:
+        name: Unittest Matrix
+        runs-on: ubuntu-22.04
+        strategy:
+            matrix:
+                python-version: ["3.7","3.8","3.9"]
+                django: [ "11", "22",]
+                exclude:
+                    - python-version: "3.8"
+                      django: "11"
+                    
+                    - python-version: "3.9"
+                      django: "11"
+                    
+
+        services:
+            postgres:
+                image: postgres
+                # Set health checks to wait until postgres has started
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    # Maps tcp port 5432 on service container to the host
+                    - 5432:5432
+                env:
+                    # Docker image requires a password to be set
+                    POSTGRES_PASSWORD: "postgres"
+
+        steps:
+            -   uses: actions/checkout@v3
+            -   uses: actions/setup-python@v3
+                with:
+                    python-version: ${{ matrix.python-version }}
+            -   run: pip install tox
+            -   run: tox -v -- -v
+                env:
+                    TOXENV: py${{ matrix.python-version }}-django${{ matrix.django }}
