@@ -138,6 +138,13 @@ class ModelEntry(ScheduleEntry):
         obj, _ = PeriodicTask._default_manager.update_or_create(
             name=name, defaults=fields,
         )
+        expires = options.get('expires')
+        if expires and not obj.expires:
+            # if expires is not properly recognized from options
+            # delete django DateTimeField from the model instance
+            # and use just simple int as attribute for this call
+            del obj.expires
+            obj.expires = expires
         return cls(obj)
 
     def __repr__(self):
