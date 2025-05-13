@@ -42,7 +42,9 @@ class CeleryTestSuiteRunnerStoringResult(DiscoverRunner):
     """Django test runner allowing testing of celery delayed tasks,
     and storing the results of those tasks in ``TaskMeta``.
 
-    Requires setting CELERY_RESULT_BACKEND = 'database'.
+    Requires setting CELERY_RESULT_BACKEND to be one of:
+        'database'
+        'djcelery.backends.database:DatabaseBackend'
 
     USAGE:
 
@@ -65,5 +67,8 @@ class CeleryTestSuiteRunnerStoringResult(DiscoverRunner):
             **kwargs
         )
 
-        settings.CELERY_RESULT_BACKEND = 'database'
+        if not hasattr(settings, 'CELERY_RESULT_BACKEND') or \
+                settings.CELERY_RESULT_BACKEND not in \
+                ['database', 'djcelery.contrib.test_runner:CeleryTestSuiteRunnerStoringResult']:
+            settings.CELERY_RESULT_BACKEND = 'database'
         _set_eager()
