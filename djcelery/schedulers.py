@@ -141,12 +141,27 @@ class ModelEntry(ScheduleEntry):
         expires = options.get('expires')
         if expires and not obj.expires:
             # if expires is not properly recognized from options
-            # delete django DateTimeField from the model instance
-            # and use just simple int as attribute for this call
-            del obj.expires
-            obj.expires = expires
+            # Use a helper function to handle the deletion and reassignment
+            # of the `expires` field. This ensures clarity and maintainability.
+            self._handle_expires_field(obj, expires)
         return cls(obj)
 
+    @staticmethod
+    def _handle_expires_field(obj, expires):
+        """
+        Safely handle the deletion and reassignment of the `expires` field.
+
+        This is necessary because the `expires` field might not be properly
+        recognized from options, and we need to reset it as a simple attribute.
+
+        Args:
+            obj: The model instance (PeriodicTask).
+            expires: The new value to assign to the `expires` field.
+        """
+        # Delete the `expires` field from the model instance
+        del obj.expires
+        # Reassign the `expires` attribute with the provided value
+        obj.expires = expires
     def __repr__(self):
         return '<ModelEntry: {0} {1}(*{2}, **{3}) {4}>'.format(
             safe_str(self.name), self.task, safe_repr(self.args),
