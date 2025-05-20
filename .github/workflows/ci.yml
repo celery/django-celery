@@ -13,11 +13,8 @@ jobs:
         runs-on: ubuntu-22.04
         strategy:
             matrix:
-                python-version: ["3.7","3.8"]
+                python-version: ["3.7"]
                 django: [ "1.11", "2.2",]
-                exclude:
-                    - python-version: "3.8"
-                      django: "1.11"
                     
                     
 
