@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
 import re
@@ -181,8 +181,8 @@ setup(
     package_data=package_data,
     zip_safe=False,
     install_requires=[
-        'celery>=3.1.15,<4.5',
-        'django>=1.8',
+        'celery>=3.1.26,<4.5',
+        'django>=1.11.17,<3.0',
     ],
     cmdclass={'test': RunTests,
               'quicktest': QuickRunTests,
@@ -202,7 +202,9 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',      
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ],
