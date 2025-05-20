@@ -136,7 +136,7 @@ class Camera(Polaroid):
         except InterfaceError as e:
             # When connection already closed exception is raised,
             # force to close connection and Django will automatically reconnect
-            if str(e) == 'connection already closed':
+            if getattr(e, 'args', None) and 'connection already closed' in e.args[0]:
                 connection.close()
                 logger.info(
                     'Django db connection is closed and will reconnect'
