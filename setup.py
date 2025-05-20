@@ -181,7 +181,7 @@ setup(
     package_data=package_data,
     zip_safe=False,
     install_requires=[
-        'celery>=3.1.26,<4.5',
+        'celery>=3.1.26,<4.1',
         'django>=1.11.17,<3.0',
     ],
     cmdclass={'test': RunTests,
