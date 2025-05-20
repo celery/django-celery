@@ -4,7 +4,7 @@ from functools import wraps
 
 from django.http import HttpResponse, Http404
 
-from anyjson import serialize
+import simplejson as json
 
 from celery import states
 from celery.five import keys, items
@@ -18,7 +18,7 @@ import celery.task  # noqa
 
 
 def JsonResponse(response):
-    return HttpResponse(serialize(response), content_type='application/json')
+    return HttpResponse(json.dumps(response), content_type='application/json')
 
 
 def task_view(task):
