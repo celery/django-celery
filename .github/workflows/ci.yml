@@ -44,7 +44,7 @@ jobs:
             -   uses: actions/setup-python@v3
                 with:
                     python-version: ${{ matrix.python-version }}
-            -   run: pip install setuptools==57.0.0 pip==23.0 tox==3.5.2
+            -   run: pip install setuptools==56.0.0 pip==23.0 tox==3.5.2
             -   run: tox -v -- -v
                 env:
                     TOXENV: py${{ matrix.python-version }}-django${{ matrix.django }}
